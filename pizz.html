@@ -1,5 +1,92 @@
 <!DOCTYPE html>
-<head lang="es">
-    <meta charset="UTF-8">
-    ,
+<html>
+<head>
+    <title>Crea Tu Pizza</title>
+    <style>
+        body {
+            background-color: #bdf7ff;
+            color: #add6ff;
+            font-family: 'Georgia', serif;
+            text-align: center;
+        }
+        .contenedor {
+            max-width: 550px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 15px;
+            background-color: #98ffe5;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .seccion {
+            display: none;
+        }
+        .activa {
+            display: block;
+        }
+        h1 {
+            color: #ffb9b1;
+        }
+        button {
+            background-color: #da9aff;
+            color: white;
+            border: none;
+            padding: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            width: 100%;
+            margin-top: 15px;
+            border-radius: 8px;
+        }
+        button:hover {
+            background-color: #dfa7ff;
+        }
+        label, input, select {
+            display: block;
+            margin: 12px 0;
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        input, select {
+            border: 1px solid #9fffda;
+            background-color: #ff419a;
+            color: #a1abff;
+        }
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+    </style>
 </head>
+<body>
+    <div id="bienvenida" class="seccion activa contenedor">
+        <h1>¡Crea Tu Pizza!</h1>
+        <p>Personaliza y disfruta la mejor pizza hecha a tu gusto.</p>
+        <img src="pizz.jfif" alt="Delicious Pizza">
+        <button id="comenzar">Comenzar Pedido</button>
+    </div>
+
+    <div id="formulario-seccion" class="seccion contenedor">
+        <h1>Selecciona Tu Pizza</h1>
+        <form id="formulario">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" placeholder="Introduce tu nombre" required>
+
+            <label for="Fecha">Fecha del Pedido:</label>
+            <input type="date" id="Fecha" required>
+
+            <label for="Pizza1">Primera Pizza:</label>
+            <select id="Pizza1">
+                <option value="12">Clásica Margarita ($12)</option>
+                <option value="14">Cuatro Quesos ($14)</option>
+                <option value="15">Vegetariana ($15)</option>
+            </select>
+
+            <label for="Pizza2">Segunda Pizza (Opcional):</label>
+            <select id="Pizza2">
+                <option value="12">Clásica Margarita ($12)</option>
+                <option value="14">Cuatro Quesos ($14)</option>
+                <option value="15">Vegetariana ($15)</option>
+            </select>
