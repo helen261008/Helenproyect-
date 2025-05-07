@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Crea Tu Pizza</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido a tu pizzeria favorita</title>
     <style>
         body {
             background-color: #bdf7ff;
@@ -10,7 +12,7 @@
             text-align: center;
         }
         .contenedor {
-            max-width: 550px;
+            max-width: 600px;
             margin: auto;
             padding: 30px;
             border-radius: 15px;
@@ -58,18 +60,33 @@
             border-radius: 15px;
             margin-top: 20px;
         }
+        .ticket {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: left;
+            max-width: 500px;
+            margin: auto;
+            border: 2px solid #add6ff;
+        }
+        .ticket h2 {
+            color: #ffb9b1;
+        }
+        .ticket p {
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
     <div id="bienvenida" class="seccion activa contenedor">
-        <h1>¡Crea Tu Pizza!</h1>
-        <p>Personaliza y disfruta la mejor pizza hecha a tu gusto.</p>
-        <img src="pizz.jfif" alt="Delicious Pizza">
+        <h1>¡Bienvenido a tu pizzeria favorita!</h1>
+        <p>Haz tu pedido en tu pizzeria favita y disfruta el sabor único.</p>
+        <img src="https://images.app.goo.gl/JPWoJPV4xnSBbn7c6" alt="Delicious Pizza">
         <button id="comenzar">Comenzar Pedido</button>
     </div>
 
     <div id="formulario-seccion" class="seccion contenedor">
-        <h1>Selecciona Tu Pizza</h1>
+        <h1>Selecciona Tus Pizzas</h1>
         <form id="formulario">
             <label for="nombre">Nombre:</label>
             <input type="text" id="nombre" placeholder="Introduce tu nombre" required>
@@ -77,16 +94,234 @@
             <label for="Fecha">Fecha del Pedido:</label>
             <input type="date" id="Fecha" required>
 
+            <label for="hora">Hora del Pedido:</label>
+            <input type="time" id="hora" required>
+
             <label for="Pizza1">Primera Pizza:</label>
             <select id="Pizza1">
-                <option value="12">Clásica Margarita ($12)</option>
-                <option value="14">Cuatro Quesos ($14)</option>
-                <option value="15">Vegetariana ($15)</option>
+                <option value="12">Mexicana($10)</option>
+                <option value="14">Hawaiana ($11)</option>
+                <option value="15">Pepperoni ($12)</option>
+                <option value="0">Ninguna</option>
             </select>
 
             <label for="Pizza2">Segunda Pizza (Opcional):</label>
             <select id="Pizza2">
-                <option value="12">Clásica Margarita ($12)</option>
-                <option value="14">Cuatro Quesos ($14)</option>
-                <option value="15">Vegetariana ($15)</option>
+                <option value="12">Mexicana($10)</option>
+                <option value="14">Hawaiana ($11)</option>
+                <option value="15">Pepperoni ($12)</option>
+                <option value="0">Ninguna</option>
             </select>
+
+            <label for="Pizza3">Tercera Pizza (Opcional):</label>
+            <select id="Pizza3">
+                <option value="12">Mexicana($10)</option>
+                <option value="14">Hawaiana ($11)</option>
+                <option value="15">Pepperoni ($12)</option>
+                <option value="0">Ninguna</option>
+            </select>
+
+            <label for="Pizza4">Cuarta Pizza (Opcional):</label>
+            <select id="Pizza4">
+                <option value="12">Mexicana($10)</option>
+                <option value="14">Hawaiana ($11)</option>
+                <option value="15">VPepperoni ($12)</option>
+                <option value="0">Ninguna</option>
+            </select>
+
+            <h3>Adicionales:</h3>
+            <input type="checkbox" id="extraQueso" value="3">
+            <label for="extraQueso">Extra Queso ($10)</label>
+
+            <input type="checkbox" id="extraAceitunas" value="2">
+            <label for="extraAceitunas">Aceitunas ($8)</label>
+
+            <input type="checkbox" id="extraJamon" value="4">
+            <label for="extraJamon">Jamon ($7)</label>
+
+            <input type="checkbox" id="extraPimientos" value="2">
+            <label for="extraPimientos">Pimientos ($5)</label>
+
+            <button type="button" id="calcular">Calcular Total</button>
+        </form>
+    </div>
+
+    <div id="detalle-seccion" class="seccion contenedor">
+        <h2>Detalle del Pedido</h2>
+        <p id="detallePedido"></p>
+        <img src="pedido.avif" alt="Order Summary">
+        <button type="button" id="continuarPago">Proceder al Pago</button>
+    </div>
+
+    <div id="pago-seccion" class="seccion contenedor">
+        <h2>Completa Tu Pago</h2>
+        
+        <h3>Método de Pago:</h3>
+        <input type="radio" name="metodoPago" value="Efectivo" id="pagoEfectivo">
+        <label for="pagoEfectivo">Efectivo</label>
+
+        <input type="radio" name="metodoPago" value="Tarjeta" id="pagoTarjeta">
+        <label for="pagoTarjeta">Tarjeta</label>
+
+        <div id="pago-efectivo" class="seccion">
+            <label for="cantidadPagar">Total a pagar:</label>
+            <input type="text" id="cantidadPagar" readonly>
+
+            <label for="cantidadRecibida">Dinero recibido:</label>
+            <input type="number" id="cantidadRecibida">
+
+            <p><strong>Tu Cambio:</strong> <span id="cambio"></span></p>
+            <img src="cam.jpg" alt="Paying with Cash">
+            <button type="button" id="pagarEfectivo">Confirmar Pago</button>
+        </div>
+
+        <div id="pago-tarjeta" class="seccion">
+            <label for="nombreTitular">Nombre del Titular:</label>
+            <input type="text" id="nombreTitular">
+
+            <label for="numeroTarjeta">Número de Tarjeta:</label>
+            <input type="text" id="numeroTarjeta">
+
+            <label for="fechaVencimiento">Fecha de Vencimiento:</label>
+            <input type="month" id="fechaVencimiento">
+
+            <label for="cvv">CVV:</label>
+            <input type="password" id="cvv" maxlength="3">
+
+            <img src="tarjeta.avif" alt="Card Payment">
+            <button type="button" id="pagarTarjeta">Confirmar Pago</button>
+        </div>
+    </div>
+
+    <div id="ticket-seccion" class="seccion contenedor">
+        <h2>Tu Ticket de Compra</h2>
+        <div class="ticket" id="ticket">
+            <h2>Resumen de Pedido</h2>
+            <p><strong>Nombre:</strong> <span id="ticketNombre"></span></p>
+            <p><strong>Fecha:</strong> <span id="ticketFecha"></span></p>
+            <p><strong>Hora:</strong> <span id="ticketHora"></span></p>
+            <p><strong>Pizza 1:</strong> <span id="ticketPizza1"></span></p>
+            <p><strong>Pizza 2:</strong> <span id="ticketPizza2"></span></p>
+            <p><strong>Pizza 3:</strong> <span id="ticketPizza3"></span></p>
+            <p><strong>Pizza 4:</strong> <span id="ticketPizza4"></span></p>
+            <p><strong>Adicionales:</strong> <span id="ticketExtras"></span></p>
+            <p><strong>Total:</strong> $<span id="ticketTotal"></span></p>
+            <p><strong>Método de Pago:</strong> <span id="ticketPago"></span></p>
+            <p><strong>Cambio:</strong> $<span id="ticketCambio"></span></p>
+            <button id="terminarCompra">Finalizar Compra</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("comenzar").addEventListener("click", function () {
+            document.getElementById("bienvenida").classList.remove("activa");
+            document.getElementById("formulario-seccion").classList.add("activa");
+        });
+
+        document.getElementById("calcular").addEventListener("click", function () {
+            const nombre = document.getElementById("nombre").value;
+            const Fecha = document.getElementById("Fecha").value;
+            const hora = document.getElementById("hora").value;
+
+            const pizza1 = parseFloat(document.getElementById("Pizza1").value);
+            const pizza2 = parseFloat(document.getElementById("Pizza2").value);
+            const pizza3 = parseFloat(document.getElementById("Pizza3").value);
+            const pizza4 = parseFloat(document.getElementById("Pizza4").value);
+
+            const extras = [];
+            if (document.getElementById("extraQueso").checked) extras.push("Extra Queso ($3)");
+            if (document.getElementById("extraAceitunas").checked) extras.push("Aceitunas ($2)");
+            if (document.getElementById("extraJamon").checked) extras.push("Jamon ($4)");
+            if (document.getElementById("extraPimientos").checked) extras.push("Pimientos ($2)");
+
+            let total = pizza1 + pizza2 + pizza3 + pizza4;
+            if (document.getElementById("extraQueso").checked) total += 3;
+            if (document.getElementById("extraAceitunas").checked) total += 2;
+            if (document.getElementById("extraJamon").checked) total += 4;
+            if (document.getElementById("extraPimientos").checked) total += 2;
+
+            document.getElementById("detalle-seccion").classList.add("activa");
+            document.getElementById("formulario-seccion").classList.remove("activa");
+
+            document.getElementById("detallePedido").innerHTML = `
+                <strong>Nombre:</strong> ${nombre}<br>
+                <strong>Fecha:</strong> ${Fecha}<br>
+                <strong>Hora:</strong> ${hora}<br>
+                <strong>Total:</strong> $${total.toFixed(2)}
+            `;
+            document.getElementById("cantidadPagar").value = total.toFixed(2);
+        });
+
+        document.getElementById("continuarPago").addEventListener("click", function () {
+            document.getElementById("detalle-seccion").classList.remove("activa");
+            document.getElementById("pago-seccion").classList.add("activa");
+        });
+
+        document.querySelectorAll('input[name="metodoPago"]').forEach(radio => {
+            radio.addEventListener("change", function () {
+                document.getElementById("pago-efectivo").style.display = this.value === "Efectivo" ? "block" : "none";
+                document.getElementById("pago-tarjeta").style.display = this.value === "Tarjeta" ? "block" : "none";
+            });
+        });
+
+        document.getElementById("pagarEfectivo").addEventListener("click", function () {
+            const total = parseFloat(document.getElementById("cantidadPagar").value);
+            const cantidadRecibida = parseFloat(document.getElementById("cantidadRecibida").value);
+
+            if (cantidadRecibida >= total) {
+                const cambio = cantidadRecibida - total;
+                document.getElementById("cambio").textContent = `$${cambio.toFixed(2)}`;
+                alert("Pago en efectivo realizado con éxito.");
+                mostrarTicket(cambio);
+            } else {
+                alert("El dinero recibido es insuficiente.");
+            }
+        });
+
+        document.getElementById("pagarTarjeta").addEventListener("click", function () {
+            alert("Pago con tarjeta realizado con éxito.");
+            mostrarTicket(0);
+        });
+
+        function mostrarTicket(cambio) {
+            const nombre = document.getElementById("nombre").value;
+            const Fecha = document.getElementById("Fecha").value;
+            const hora = document.getElementById("hora").value;
+
+            const pizza1 = document.getElementById("Pizza1").options[document.getElementById("Pizza1").selectedIndex].text;
+            const pizza2 = document.getElementById("Pizza2").options[document.getElementById("Pizza2").selectedIndex].text;
+            const pizza3 = document.getElementById("Pizza3").options[document.getElementById("Pizza3").selectedIndex].text;
+            const pizza4 = document.getElementById("Pizza4").options[document.getElementById("Pizza4").selectedIndex].text;
+
+            const extras = [];
+            if (document.getElementById("extraQueso").checked) extras.push("Extra Queso ($3)");
+            if (document.getElementById("extraAceitunas").checked) extras.push("Aceitunas ($2)");
+            if (document.getElementById("extraJamon").checked) extras.push("Jamon ($4)");
+            if (document.getElementById("extraPimientos").checked) extras.push("Pimientos ($2)");
+
+            const total = parseFloat(document.getElementById("cantidadPagar").value);
+            const metodoPago = document.querySelector('input[name="metodoPago"]:checked').value;
+
+            document.getElementById("ticketNombre").textContent = nombre;
+            document.getElementById("ticketFecha").textContent = Fecha;
+            document.getElementById("ticketHora").textContent = hora;
+            document.getElementById("ticketPizza1").textContent = pizza1;
+            document.getElementById("ticketPizza2").textContent = pizza2;
+            document.getElementById("ticketPizza3").textContent = pizza3;
+            document.getElementById("ticketPizza4").textContent = pizza4;
+            document.getElementById("ticketExtras").textContent = extras.join(", ") || "Ninguno";
+            document.getElementById("ticketTotal").textContent = total.toFixed(2);
+            document.getElementById("ticketPago").textContent = metodoPago;
+            document.getElementById("ticketCambio").textContent = cambio.toFixed(2);
+
+            document.getElementById("ticket-seccion").classList.add("activa");
+            document.getElementById("pago-seccion").classList.remove("activa");
+        }
+
+        document.getElementById("terminarCompra").addEventListener("click", function () {
+            alert("¡Gracias por tu compra!");
+            location.reload();
+        });
+    </script>
+</body>
+</html>
