@@ -1,13 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crea Tu Pizza</title>
     <style>
         body {
-            background-color: rosa pastel;
-            color: #add6ff;
+            background-color: #ffc0cb; /* Color pastel válido */
+            color: #4a4a4a;
             font-family: 'Georgia', serif;
             text-align: center;
+            margin: 0;
+            padding: 0;
         }
         .contenedor {
             max-width: 550px;
@@ -24,7 +28,7 @@
             display: block;
         }
         h1 {
-            color: #ffb9b1;
+            color: #ff6f61;
         }
         button {
             background-color: #da9aff;
@@ -48,9 +52,9 @@
             border-radius: 8px;
         }
         input, select {
-            border: 1px solid #9fffda;
-            background-color: #ff419a;
-            color: #a1abff;
+            border: 1px solid #ccc;
+            background-color: #ffffff;
+            color: #333;
         }
         img {
             width: 100%;
@@ -74,18 +78,18 @@
             <label for="nombre">Nombre:</label>
             <input type="text" id="nombre" placeholder="Introduce tu nombre" required>
 
-            <label for="Fecha">Fecha del Pedido:</label>
-            <input type="date" id="Fecha" required>
+            <label for="fecha">Fecha del Pedido:</label>
+            <input type="date" id="fecha" required>
 
-            <label for="Pizza1">Primera Pizza:</label>
-            <select id="Pizza1">
+            <label for="pizza1">Primera Pizza:</label>
+            <select id="pizza1">
                 <option value="12">Clásica Margarita ($12)</option>
                 <option value="14">Cuatro Quesos ($14)</option>
                 <option value="15">Vegetariana ($15)</option>
             </select>
 
-            <label for="Pizza2">Segunda Pizza (Opcional):</label>
-            <select id="Pizza2">
+            <label for="pizza2">Segunda Pizza (Opcional):</label>
+            <select id="pizza2">
                 <option value="0">Ninguna</option>
                 <option value="12">Clásica Margarita ($12)</option>
                 <option value="14">Cuatro Quesos ($14)</option>
@@ -120,8 +124,8 @@
 
         // Calcular el total de las pizzas seleccionadas
         btnCalcular.addEventListener('click', () => {
-            const pizza1 = parseFloat(document.getElementById('Pizza1').value);
-            const pizza2 = parseFloat(document.getElementById('Pizza2').value);
+            const pizza1 = parseFloat(document.getElementById('pizza1').value);
+            const pizza2 = parseFloat(document.getElementById('pizza2').value);
             const total = pizza1 + pizza2;
 
             totalElement.textContent = `Total a pagar: $${total}`;
