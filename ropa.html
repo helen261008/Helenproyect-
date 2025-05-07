@@ -1,180 +1,157 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Tienda de Ropa</title>
-<style>
-body {
-background-color: #1e1e1e;
-color: white;
-font-family: 'Arial', sans-serif;
-text-align: center;
-.contenedor {
-max-width: 500px;
-margin: auto;
-padding: 20px;
-border-radius: 10px;
-background-color: #292929;
-box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1);
-}
-.seccion {
-display: none;
-}
-.activa {
-display: block;
-}
-h1 {
-color: #ff914d;
-}
-button {
-background-color: #ff914d;
-color: white;
-border: none;
-padding: 10px;
-cursor: pointer;
-font-size: 16px;
-width: 100%;
-margin-top: 1;
-borderborder-radius: 5px;
-}
-button:hover {
-background-color: #e67e22;
-}
-label, input, select {
-display: block;
-margin: 10px 0;
-width: 100%;
-padding: 8px;
-border-radius: 
-padding
-}
-input, select {
-border: input
-background-color: #444;
-color: white;
-}
-img {
-width: 100%;
-border-radius: 10px;
-margin-top: 10px;
-}
-</style>
+    <title>Tienda de Ropa</title>
+    <style>
+        body {
+            background-color: #1e1e1e;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+        }
+        .contenedor {
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #292929;
+            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1);
+        }
+        .seccion {
+            display: none;
+        }
+        .activa {
+            display: block;
+        }
+        h1 {
+            color: #ff914d;
+        }
+        button {
+            background-color: #ff914d;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #e67e22;
+        }
+        label, input, select {
+            display: block;
+            margin: 10px 0;
+            width: 100%;
+            padding: 8px;
+            border-radius: 5px;
+        }
+        input, select {
+            border: 1px solid #ddd;
+            background-color: #444;
+            color: white;
+        }
+        img {
+            width: 100%;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
 
-<div id="bienvenida" class="seccion activa contenedor">
-<h1>¡Bienvenido a la Tienda de Ropa!</h1>
-<p>Explora nuestra colección y compra tu outfit ideal.</p>
-<img src="ropa.jpeg" alt="Ropa">
-<button id="comenzar">Comprar Ahora</button>
-</div>
+    <div id="bienvenida" class="seccion activa contenedor">
+        <h1>¡Bienvenido a la Tienda de Ropa!</h1>
+        <p>Explora nuestra colección y compra tu outfit ideal.</p>
+        <img src="ropa.jpeg" alt="Ropa">
+        <button id="comenzar">Comprar Ahora</button>
+    </div>
 
-<div id="formulario-seccion" class="seccion contenedor">
-<h1>Elige tu Ropa</h1>
-<form id="formulario">
-<label for="nombre">Tu Nombre:</label>
-<input type="text" id="nombre" required>
+    <div id="formulario-seccion" class="seccion contenedor">
+        <h1>Elige tu Ropa</h1>
+        <form id="formulario">
+            <label for="nombre">Tu Nombre:</label>
+            <input type="text" id="nombre" required>
 
-<label for="fecha">Fecha:</label>
-<input type="date" id="fecha" required>
+            <label for="fecha">Fecha:</label>
+            <input type="date" id="fecha" required>
 
-<label for="prenda1">Prenda 1:</label>
-<select id="prenda1">
-<option value="15">Camiseta ($15)</option>
-<option value="25">Jeans ($25)</option>
-<option value="30">Chaqueta ($30)</option>
-</select>
+            <label for="prenda1">Prenda 1:</label>
+            <select id="prenda1">
+                <option value="15">Camiseta ($15)</option>
+                <option value="25">Jeans ($25)</option>
+                <option value="30">Chaqueta ($30)</option>
+            </select>
 
-<label for="prenda2">Prenda 2:</label>
-<select id="prenda2">
-<option value="15">Camiseta ($15)</option>
-<option value="25">Jeans ($25)</option>
-<option value="30">Chaqueta ($30)</option>
-</select>
+            <label for="prenda2">Prenda 2:</label>
+            <select id="prenda2">
+                <option value="15">Camiseta ($15)</option>
+                <option value="25">Jeans ($25)</option>
+                <option value="30">Chaqueta ($30)</option>
+            </select>
 
-<button type="button" id="calcular">Calcular Total</button>
-</form>
-</div>
+            <button type="button" id="calcular">Calcular Total</button>
+        </form>
+    </div>
 
-<div id="detalle-seccion" class="seccion contenedor;
-<h2>Resumen del Pedido </h2>
-<p id="detallePedido"></p>
-<button type="button" id="continuarPago">Continuar</button>
-</div>
-<div id="pago-seccion" class="seccion contenedor">
-<h2>Pago</h2>
-<h3>Selecciona el método de pago:</h3>
-<input type="radio" name="metodoPago" value="Efectivo" id="pagoEfectivo">
-<label for="pagoEfectivo">Efectivo</label>
+    <div id="detalle-seccion" class="seccion contenedor">
+        <h2>Resumen del Pedido</h2>
+        <p id="detallePedido"></p>
+        <button type="button" id="continuarPago">Continuar</button>
+    </div>
 
-<input type="radio" name="metodoPago" value="Tarjeta" id="pagoTarjeta">
-<label for="pagoTarjeta">Tarjeta</label>
+    <div id="pago-seccion" class="seccion contenedor">
+        <h2>Pago</h2>
+        <h3>Selecciona el método de pago:</h3>
+        <input type="radio" name="metodoPago" value="Efectivo" id="pagoEfectivo">
+        <label for="pagoEfectivo">Efectivo</label>
 
-<div id="pago-efectivo" class="seccion">
-<label for="cantidadPagar">Cantidad a pagar:</label>
-<input type="text" id="cantidadPagar" readonly>
+        <input type="radio" name="metodoPago" value="Tarjeta" id="pagoTarjeta">
+        <label for="pagoTarjeta">Tarjeta</label>
 
-<label for="cantidadRecibida">Cantidad recibida:</label>
-<input type="number" id="cantidadRecibida">
-<p><strong>Su cambio es:</strong> <span id="cambio"></span></p>
-<button type="button" id="pagarEfectivo">Pagar</button>
-</div>
+        <div id="pago-efectivo" class="seccion">
+            <label for="cantidadPagar">Cantidad a pagar:</label>
+            <input type="text" id="cantidadPagar" readonly>
 
-<div id="pago-tarjeta" class="seccion">
-<label for="nombreTitular">Nombre del Titular:</label>
-<input type="text" id="nombreTitular">
-<label for="numeroTarjeta">Número de Tarjeta:</label>
-<input type="text" id="numeroTarjeta">
+            <label for="cantidadRecibida">Cantidad recibida:</label>
+            <input type="number" id="cantidadRecibida">
+            <p><strong>Su cambio es:</strong> <span id="cambio"></span></p>
+            <button type="button" id="pagarEfectivo">Pagar</button>
+        </div>
 
-<label for="fechaVencimiento">Válida hasta:</label>
-<input type="month" id="fechaVencimiento">
+        <div id="pago-tarjeta" class="seccion">
+            <label for="nombreTitular">Nombre del Titular:</label>
+            <input type="text" id="nombreTitular">
+            <label for="numeroTarjeta">Número de Tarjeta:</label>
+            <input type="text" id="numeroTarjeta">
 
-<label for="cvv">CVV:</label>
-<input type="password" id="cvv" maxlength="3">
+            <label for="fechaVencimiento">Válida hasta:</label>
+            <input type="month" id="fechaVencimiento">
 
-<button type="button" id="pagarTarjeta">Pagar</button>
-</div>
-</div>
-<script>
-document.getElementById("comenzar").addEventListener("click", function () 
-{
-document.getElementById("bienvenida").classList.remove("activa");
-document.getElementById("formulario-seccion").classList.add("activa");
-});
-document.getElementById("calcular").addEventListener("click", function () 
-const nombre = document.getElementById("nombre").value;
-const fecha = document.getElementById("fecha").value;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-const prenda1 = parseFloat(document.getElementById("prenda1").value);
-const prenda2 = parseFloat(document.getElementById("prenda2").value);
+            <label for="cvv">CVV:</label>
+            <input type="password" id="cvv" maxlength="3">
 
-const total = prenda1 + prendadocument.getElementById("detalle-seccion").classList.add("activa");
-document.getElementById("formulario-seccion").classList.remove("activa");
-document.getElementById("detallePedido").innerHTML = `
-<strong>Nombre:</strong> ${nombre}<br>
-<strong>Fecha:</strong> ${fecha}<br>
-<strong>Total:</strong> $${total.toFixed(2);
-document.getElementById("cantidadPagar").value = total.toFixed(2);
-});
+            <button type="button" id="pagarTarjeta">Pagar</button>
+        </div>
+    </div>
 
-document.getElementById("continuarPago").addEventListener("click", function () {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        document.getElementById("detalle-seccion").classList.remove("activa");
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    document.getElementById("pago-seccion").classList.add("activa");
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            });
+    <script>
+        document.getElementById("comenzar").addEventListener("click", function () {
+            document.getElementById("bienvenida").classList.remove("activa");
+            document.getElementById("formulario-seccion").classList.add("activa");
+        });
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    document.querySelectorAll('input[name="metodoPago"]').forEach(radio => {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                radio.addEventListener("change", function () {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                document.getElementById("pago-efectivo").style.display = this.value === "Efectivo" ? "block" : "none";
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                document.getElementById("pago-tarjeta").style.display = this.value === "Tarjeta" ? "block" : "none";
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            });
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    });
+        document.getElementById("calcular").addEventListener("click", function () {
+            const nombre = document.getElementById("nombre").value;
+            const fecha = document.getElementById("fecha").value;
+            const prenda1 = parseFloat(document.getElementById("prenda1").value);
+            const prenda2 = parseFloat(document.getElementById("prenda2").value);
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            document.getElementById("pagarEfectivo").addEventListener("click", function () {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        alert("Pago en efectivo realizado con éxito.");
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                });
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        document.getElementById("pagarTarjeta").addEventListener("click", function () {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    alert("Pago con tarjeta realizado con éxito.");
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            });
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </script>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </body>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </html>
+            const total = prenda1 + prenda2;
+            document.getElementById("detalle-seccion").classList.add("activa");
+            document.getElementById("formulario-seccion").classList.remove("activa");
+            document.getElementById("detallePedido").innerHTML = `
+                <strong>Nombre:</strong> ${nombre}<br>
+                <strong>Fecha:</strong> ${fecha}<br>
+                <strong>Total:</strong> $${total.to`
