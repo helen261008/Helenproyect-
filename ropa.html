@@ -120,24 +120,25 @@
 
         <div id="pago-tarjeta" class="seccion">
             <label for="nombreTitular">Nombre del Titular:</label>
-            <input type="text" id="nombreTitular" required>
+            <input type="text" id="nombreTitular">
+
             <label for="numeroTarjeta">Número de Tarjeta:</label>
-            <input type="text" id="numeroTarjeta" required>
+            <input type="text" id="numeroTarjeta">
 
             <label for="fechaVencimiento">Válida hasta:</label>
-            <input type="month" id="fechaVencimiento" required>
+            <input type="month" id="fechaVencimiento">
 
             <label for="cvv">CVV:</label>
-            <input type="password" id="cvv" maxlength="3" required>
+            <input type="password" id="cvv" maxlength="3">
 
             <button type="button" id="pagarTarjeta">Pagar</button>
         </div>
     </div>
 
     <script>
+        // Navegación entre secciones
         document.getElementById("comenzar").addEventListener("click", function () {
-            document.getElementById("bienvenida").classList.remove("activa");
-            document.getElementById("categorias-seccion").classList.add("activa");
+            cambiarSeccion("bienvenida", "categorias-seccion");
         });
 
         document.getElementById("salir").addEventListener("click", function () {
@@ -174,14 +175,19 @@
                 return;
             }
 
-            document.getElementById("detalle-seccion").classList.add("activa");
-            document.getElementById("formulario-seccion").classList.remove("activa");
+            cambiarSeccion("formulario-seccion", "detalle-seccion");
             document.getElementById("detallePedido").innerHTML = `
                 <strong>Nombre:</strong> ${nombre}<br>
                 <strong>Fecha:</strong> ${fecha}<br>
                 <strong>Hora:</strong> ${hora}<br>
             `;
         });
+
+        // Función para cambiar de secciones
+        function cambiarSeccion(seccionActual, seccionNueva) {
+            document.getElementById(seccionActual).classList.remove("activa");
+            document.getElementById(seccionNueva).classList.add("activa");
+        }
     </script>
 </body>
 </html>
