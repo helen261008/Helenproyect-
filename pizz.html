@@ -4,561 +4,150 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pizzería Bella Napoli</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-    <style>
-        :root {
-            --primary-color: #ff6b6b;
-            --secondary-color: #4ecdc4;
-            --accent-color: #ffe66d;
-            --dark-color: #292f36;
-            --light-color: #f7fff7;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-        }
-        
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f9f9f9;
-            color: var(--dark-color);
-            line-height: 1.6;
-        }
-        
-        .contenedor {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 2rem;
-            border-radius: 15px;
-            background-color: white;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-        }
-        
-        .contenedor:hover {
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-        
-        .seccion {
-            display: none;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .activa {
-            display: block;
-        }
-        
-        h1, h2, h3 {
-            color: var(--primary-color);
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-        
-        h1 {
-            font-size: 2.5rem;
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        p {
-            margin-bottom: 1rem;
-            color: #555;
-        }
-        
-        button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 500;
-            border-radius: 50px;
-            margin-top: 1.5rem;
-            width: 100%;
-            transition: var(--transition);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        button:hover {
-            background-color: #ff5252;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
-        }
-        
-        button:active {
-            transform: translateY(0);
-        }
-        
-        .btn-secundario {
-            background-color: var(--secondary-color);
-        }
-        
-        .btn-secundario:hover {
-            background-color: #3dbeb6;
-        }
-        
-        .btn-terciario {
-            background-color: var(--accent-color);
-            color: var(--dark-color);
-        }
-        
-        .btn-terciario:hover {
-            background-color: #f5d84e;
-        }
-        
-        label {
-            display: block;
-            margin: 1rem 0 0.5rem;
-            font-weight: 500;
-            color: var(--dark-color);
-        }
-        
-        input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: var(--transition);
-            margin-bottom: 1rem;
-        }
-        
-        input:focus, select:focus {
-            border-color: var(--secondary-color);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2);
-        }
-        
-        input[type="checkbox"], input[type="radio"] {
-            width: auto;
-            margin-right: 0.5rem;
-        }
-        
-        .checkbox-label, .radio-label {
-            display: inline-flex;
-            align-items: center;
-            margin: 0.5rem 1rem 0.5rem 0;
-            cursor: pointer;
-        }
-        
-        .extras-container, .pago-container, .tipo-entrega-container {
-            display: flex;
-            flex-wrap: wrap;
-            margin: 1rem 0;
-        }
-        
-        img {
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-            margin: 1.5rem 0;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-        }
-        
-        img:hover {
-            transform: scale(1.02);
-        }
-        
-        .ticket {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 10px;
-            text-align: left;
-            margin: 2rem auto;
-            border: 2px solid var(--secondary-color);
-            box-shadow: var(--shadow);
-        }
-        
-        .ticket h2 {
-            color: var(--primary-color);
-            text-align: center;
-            margin-bottom: 1.5rem;
-            border-bottom: 2px solid var(--secondary-color);
-            padding-bottom: 0.5rem;
-        }
-        
-        .ticket p {
-            margin: 0.8rem 0;
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        .ticket p strong {
-            color: var(--dark-color);
-        }
-        
-        .ticket p span {
-            color: #555;
-            text-align: right;
-        }
-        
-        .total {
-            font-weight: bold;
-            font-size: 1.2rem;
-            color: var(--primary-color);
-            margin-top: 1.5rem;
-            padding-top: 1rem;
-            border-top: 2px dashed #ccc;
-        }
-        
-        .pizza-option {
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        .pizza-price {
-            color: var(--primary-color);
-            font-weight: 500;
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
-        .acciones-ticket {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-        
-        .acciones-ticket button {
-            margin-top: 0;
-            width: auto;
-            flex: 1;
-        }
-        
-        @media (max-width: 768px) {
-            .contenedor {
-                margin: 1rem;
-                padding: 1.5rem;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .acciones-ticket {
-                flex-direction: column;
-            }
-        }
-    </style>
+    <!-- Tu código existente -->
 </head>
 <body>
-    <div id="bienvenida" class="seccion activa contenedor">
-        <h1>¡Bienvenido a Pizzería Bella Napoli!</h1>
-        <p>Haz tu pedido y disfruta del auténtico sabor italiano.</p>
-        <img src="https://images.unsplash.com/photo-1571066811602-716837d681de?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Deliciosa pizza italiana">
-        <button id="comenzar">Comenzar Pedido</button>
-    </div>
-
-    <div id="formulario-seccion" class="seccion contenedor">
-        <h1>Armar Tu Pedido</h1>
-        <form id="formulario">
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" placeholder="Introduce tu nombre" required>
-
-            <label for="fecha">Fecha del Pedido:</label>
-            <input type="date" id="fecha" required>
-
-            <label for="hora">Hora del Pedido:</label>
-            <input type="time" id="hora" required>
-
-            <h3>Selecciona tus pizzas:</h3>
-            
-            <label for="pizza1">Primera Pizza:</label>
-            <select id="pizza1" required>
-                <option value="" disabled selected>Selecciona una pizza</option>
-                <option value="12">Mexicana ($12)</option>
-                <option value="14">Hawaiana ($14)</option>
-                <option value="15">Pepperoni ($15)</option>
-                <option value="0">Ninguna</option>
-            </select>
-
-            <label for="pizza2">Segunda Pizza (Opcional):</label>
-            <select id="pizza2">
-                <option value="0" selected>Ninguna</option>
-                <option value="12">Mexicana ($12)</option>
-                <option value="14">Hawaiana ($14)</option>
-                <option value="15">Pepperoni ($15)</option>
-            </select>
-
-            <label for="pizza3">Tercera Pizza (Opcional):</label>
-            <select id="pizza3">
-                <option value="0" selected>Ninguna</option>
-                <option value="12">Mexicana ($12)</option>
-                <option value="14">Hawaiana ($14)</option>
-                <option value="15">Pepperoni ($15)</option>
-            </select>
-
-            <label for="pizza4">Cuarta Pizza (Opcional):</label>
-            <select id="pizza4">
-                <option value="0" selected>Ninguna</option>
-                <option value="12">Mexicana ($12)</option>
-                <option value="14">Hawaiana ($14)</option>
-                <option value="15">Pepperoni ($15)</option>
-            </select>
-
-            <h3>Adicionales:</h3>
-            <div class="extras-container">
-                <input type="checkbox" id="extraQueso" value="3">
-                <label for="extraQueso" class="checkbox-label">Extra Queso ($3)</label>
-
-                <input type="checkbox" id="extraAceitunas" value="2">
-                <label for="extraAceitunas" class="checkbox-label">Aceitunas ($2)</label>
-
-                <input type="checkbox" id="extraJamon" value="4">
-                <label for="extraJamon" class="checkbox-label">Jamón ($4)</label>
-
-                <input type="checkbox" id="extraPimientos" value="2">
-                <label for="extraPimientos" class="checkbox-label">Pimientos ($2)</label>
-            </div>
-
-            <button type="button" id="calcular" class="btn-secundario">Calcular Total</button>
-        </form>
-    </div>
-
-    <div id="detalle-seccion" class="seccion contenedor">
-        <h2>Resumen de tu Pedido</h2>
-        <div id="detallePedido"></div>
-        <img src="https://images.unsplash.com/photo-1559847844-5315695dadae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Preparando tu pedido">
-        <button type="button" id="continuarPago" class="btn-secundario">Proceder al Pago</button>
-        <button type="button" id="regresarPedido" class="btn-terciario">Modificar Pedido</button>
-    </div>
-
-    <div id="pago-seccion" class="seccion contenedor">
-        <h2>Método de Pago</h2>
-        
-        <h3>Selecciona tu método de pago:</h3>
-        <div class="pago-container">
-            <input type="radio" name="metodoPago" value="Efectivo" id="pagoEfectivo" checked>
-            <label for="pagoEfectivo" class="radio-label">Efectivo</label>
-
-            <input type="radio" name="metodoPago" value="Tarjeta" id="pagoTarjeta">
-            <label for="pagoTarjeta" class="radio-label">Tarjeta</label>
-        </div>
-
-        <div id="pago-efectivo">
-            <label for="cantidadPagar">Total a pagar:</label>
-            <input type="text" id="cantidadPagar" readonly>
-
-            <label for="cantidadRecibida">Dinero recibido:</label>
-            <input type="number" id="cantidadRecibida" min="0" step="0.01">
-
-            <p><strong>Tu Cambio:</strong> $<span id="cambio">0.00</span></p>
-            <img src="https://images.unsplash.com/photo-1601593768790-1a7b7a0c0b9d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Pago en efectivo">
-            <button type="button" id="pagarEfectivo">Confirmar Pago</button>
-        </div>
-
-        <div id="pago-tarjeta" class="hidden">
-            <label for="nombreTitular">Nombre del Titular:</label>
-            <input type="text" id="nombreTitular" placeholder="Nombre como aparece en la tarjeta">
-
-            <label for="numeroTarjeta">Número de Tarjeta:</label>
-            <input type="text" id="numeroTarjeta" placeholder="1234 5678 9012 3456" maxlength="19">
-
-            <label for="fechaVencimiento">Fecha de Vencimiento:</label>
-            <input type="month" id="fechaVencimiento">
-
-            <label for="cvv">CVV:</label>
-            <input type="password" id="cvv" maxlength="3" placeholder="123">
-
-            <img src="https://images.unsplash.com/photo-1550565360-6985a3df9d6e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Pago con tarjeta">
-            <button type="button" id="pagarTarjeta">Confirmar Pago</button>
-        </div>
-        
-        <button type="button" id="regresarResumen" class="btn-terciario">Volver al Resumen</button>
-    </div>
-
-    <div id="ticket-seccion" class="seccion contenedor">
-        <h2>¡Gracias por tu compra!</h2>
-        <div class="ticket" id="ticket">
-            <h2>Ticket de Compra</h2>
-            <p><strong>Nombre:</strong> <span id="ticketNombre"></span></p>
-            <p><strong>Fecha:</strong> <span id="ticketFecha"></span></p>
-            <p><strong>Hora:</strong> <span id="ticketHora"></span></p>
-            <p><strong>Pizza 1:</strong> <span id="ticketPizza1"></span></p>
-            <p><strong>Pizza 2:</strong> <span id="ticketPizza2"></span></p>
-            <p><strong>Pizza 3:</strong> <span id="ticketPizza3"></span></p>
-            <p><strong>Pizza 4:</strong> <span id="ticketPizza4"></span></p>
-            <p><strong>Adicionales:</strong> <span id="ticketExtras"></span></p>
-            <p class="total"><strong>Total:</strong> $<span id="ticketTotal"></span></p>
-            <p><strong>Método de Pago:</strong> <span id="ticketPago"></span></p>
-            <p><strong>Cambio:</strong> $<span id="ticketCambio"></span></p>
-        </div>
-        <img src="https://images.unsplash.com/photo-1571929343562-437bc538a5a3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Enjoy your meal">
-        <div class="acciones-ticket">
-            <button id="descargarTicket" class="btn-secundario">Descargar Ticket (PDF)</button>
-            <button id="terminarCompra">Finalizar</button>
-        </div>
-    </div>
+    <!-- Tu contenido HTML existente -->
 
     <script>
-        // Configuración de jsPDF
-        const { jsPDF } = window.jspdf;
-        
-        // Variables globales
-        let pedido = {
-            nombre: '',
-            fecha: '',
-            hora: '',
-            pizzas: [],
-            extras: [],
-            total: 0,
-            metodoPago: '',
-            cambio: 0
-        };
+        document.addEventListener("DOMContentLoaded", function() {
+            // Configuración de jsPDF
+            const { jsPDF } = window.jspdf;
 
-        // Navegación entre secciones
-        document.getElementById("comenzar").addEventListener("click", function() {
-            cambiarSeccion("bienvenida", "formulario-seccion");
-        });
+            // Variables globales
+            let pedido = {
+                nombre: '',
+                fecha: '',
+                hora: '',
+                pizzas: [],
+                extras: [],
+                total: 0,
+                metodoPago: '',
+                cambio: 0
+            };
 
-        document.getElementById("calcular").addEventListener("click", function() {
-            if (!validarFormulario()) return;
-            
-            calcularPedido();
-            mostrarResumen();
-            cambiarSeccion("formulario-seccion", "detalle-seccion");
-        });
-
-        document.getElementById("continuarPago").addEventListener("click", function() {
-            cambiarSeccion("detalle-seccion", "pago-seccion");
-        });
-
-        document.getElementById("regresarPedido").addEventListener("click", function() {
-            cambiarSeccion("detalle-seccion", "formulario-seccion");
-        });
-
-        document.getElementById("regresarResumen").addEventListener("click", function() {
-            cambiarSeccion("pago-seccion", "detalle-seccion");
-        });
-
-        // Métodos de pago
-        document.querySelectorAll('input[name="metodoPago"]').forEach(radio => {
-            radio.addEventListener("change", function() {
-                document.getElementById("pago-efectivo").classList.toggle("hidden", this.value !== "Efectivo");
-                document.getElementById("pago-tarjeta").classList.toggle("hidden", this.value !== "Tarjeta");
+            // Navegación entre secciones
+            document.getElementById("comenzar").addEventListener("click", function() {
+                cambiarSeccion("bienvenida", "formulario-seccion");
             });
-        });
 
-        document.getElementById("pagarEfectivo").addEventListener("click", function() {
-            const recibido = parseFloat(document.getElementById("cantidadRecibida").value);
-
-            
-            if (recibido < pedido.total) {
-                alert(`El dinero recibido ($${recibido.toFixed(2)}) es menor al total ($${pedido.total.toFixed(2)})`);
-                return;
-            }
-            
-            pedido.cambio = recibido - pedido.total;
-            pedido.metodoPago = "Efectivo";
-            document.getElementById("cambio").textContent = pedido.cambio.toFixed(2);
-            mostrarTicket();
-        });
-
-        document.getElementById("pagarTarjeta").addEventListener("click", function() {
-            if (!validarTarjeta()) return;
-            
-            pedido.metodoPago = "Tarjeta";
-            pedido.cambio = 0;
-            mostrarTicket();
-        });
-
-        // Generar PDF
-        document.getElementById("descargarTicket").addEventListener("click", function() {
-            generarPDF();
-        });
-
-        // Finalizar compra
-        document.getElementById("terminarCompra").addEventListener("click", function() {
-            alert("¡Gracias por tu compra! Tu pedido está en camino.");
-            location.reload();
-        });
-
-        // Funciones auxiliares
-        function cambiarSeccion(ocultar, mostrar) {
-            document.getElementById(ocultar).classList.remove("activa");
-            document.getElementById(mostrar).classList.add("activa");
-            window.scrollTo(0, 0);
-        }
-
-        function validarFormulario() {
-            const nombre = document.getElementById("nombre").value.trim();
-            const fecha = document.getElementById("fecha").value;
-            const hora = document.getElementById("hora").value;
-            const pizza1 = document.getElementById("pizza1").value;
-            
-            if (!nombre) {
-                alert("Por favor ingresa tu nombre");
-                return false;
-            }
-            
-            if (!fecha) {
-                alert("Por favor selecciona una fecha");
-                return false;
-            }
-            
-            if (!hora) {
-                alert("Por favor selecciona una hora");
-                return false;
-            }
-            
-            if (pizza1 === "" || pizza1 === "0") {
-                alert("Por favor selecciona al menos una pizza");
-                return false;
-            }
-            
-            return true;
-        }
-
-        function calcularPedido() {
-            // Guardar datos del cliente
-            pedido.nombre = document.getElementById("nombre").value;
-            pedido.fecha = document.getElementById("fecha").value;
-            pedido.hora = document.getElementById("hora").value;
-            
-            // Calcular pizzas
-            pedido.pizzas = [];
-            pedido.total = 0;
-            
-            const pizzas = [
-                { id: "pizza1", nombre: "Pizza 1" },
-                { id: "pizza2", nombre: "Pizza 2" },
-                { id: "pizza3", nombre: "Pizza 3" },
-                { id: "pizza4", nombre: "Pizza 4" }
-            ];
-            
-            pizzas.forEach(pizza => {
-                const select = document.getElementById(pizza.id);
-                const valor = parseFloat(select.value);
-                const texto = select.options[select.selectedIndex].text;
+            document.getElementById("calcular").addEventListener("click", function() {
+                if (!validarFormulario()) return;
                 
-                if (valor > 0) {
-                    pedido.pizzas.push(texto);
-                    pedido.total += valor;
-                }
+                calcularPedido();
+                mostrarResumen();
+                cambiarSeccion("formulario-seccion", "detalle-seccion");
             });
-            
-            // Calcular extras
-            pedido.extras = [];
-            
-            const extras = [
-                { id: "extraQueso", nombre: "Extra Queso ($3)", valor: 3 },
-                { id: "extraAceitunas", nombre: "Aceitunas ($2)", valor: 2 },
-                { id: "extraJamon", nombre: "Jamón ($4)", valor: 
+
+            document.getElementById("continuarPago").addEventListener("click", function() {
+                cambiarSeccion("detalle-seccion", "pago-seccion");
+            });
+
+            document.getElementById("regresarPedido").addEventListener("click", function() {
+                cambiarSeccion("detalle-seccion", "formulario-seccion");
+            });
+
+            document.getElementById("regresarResumen").addEventListener("click", function() {
+                cambiarSeccion("pago-seccion", "detalle-seccion");
+            });
+
+            // Métodos de pago
+            document.querySelectorAll('input[name="metodoPago"]').forEach(radio => {
+                radio.addEventListener("change", function() {
+                    document.getElementById("pago-efectivo").classList.toggle("hidden", this.value !== "Efectivo");
+                    document.getElementById("pago-tarjeta").classList.toggle("hidden", this.value !== "Tarjeta");
+                });
+            });
+
+            document.getElementById("pagarEfectivo").addEventListener("click", function() {
+                const recibido = parseFloat(document.getElementById("cantidadRecibida").value);
+
+                if (recibido < pedido.total) {
+                    alert(`El dinero recibido ($${recibido.toFixed(2)}) es menor al total ($${pedido.total.toFixed(2)})`);
+                    return;
+                }
+
+                pedido.cambio = recibido - pedido.total;
+                pedido.metodoPago = "Efectivo";
+                document.getElementById("cambio").textContent = pedido.cambio.toFixed(2);
+                mostrarTicket();
+            });
+
+            document.getElementById("pagarTarjeta").addEventListener("click", function() {
+                if (!validarTarjeta()) return;
+
+                pedido.metodoPago = "Tarjeta";
+                pedido.cambio = 0;
+                mostrarTicket();
+            });
+
+            // Generar PDF
+            document.getElementById("descargarTicket").addEventListener("click", function() {
+                generarPDF();
+            });
+
+            // Finalizar compra
+            document.getElementById("terminarCompra").addEventListener("click", function() {
+                alert("¡Gracias por tu compra! Tu pedido está en camino.");
+                location.reload();
+            });
+
+            // Funciones auxiliares
+            function cambiarSeccion(ocultar, mostrar) {
+                document.getElementById(ocultar).classList.remove("activa");
+                document.getElementById(mostrar).classList.add("activa");
+                window.scrollTo(0, 0);
+            }
+
+            function validarFormulario() {
+                const nombre = document.getElementById("nombre").value.trim();
+                const fecha = document.getElementById("fecha").value;
+                const hora = document.getElementById("hora").value;
+                const pizza1 = document.getElementById("pizza1").value;
+
+                if (!nombre) {
+                    alert("Por favor ingresa tu nombre");
+                    return false;
+                }
+
+                if (!fecha) {
+                    alert("Por favor selecciona una fecha");
+                    return false;
+                }
+
+                if (!hora) {
+                    alert("Por favor selecciona una hora");
+                    return false;
+                }
+
+                if (pizza1 === "" || pizza1 === "0") {
+                    alert("Por favor selecciona al menos una pizza");
+                    return false;
+                }
+
+                return true;
+            }
+
+            function calcularPedido() {
+                // Tu lógica existente para calcular el pedido
+            }
+
+            function mostrarResumen() {
+                // Tu lógica existente para mostrar el resumen
+            }
+
+            function validarTarjeta() {
+                // Tu lógica existente para validar el pago con tarjeta
+            }
+
+            function generarPDF() {
+                // Tu lógica existente para generar un PDF
+            }
+
+            function mostrarTicket() {
+                // Tu lógica existente para mostrar el ticket
+            }
+        });
+    </script>
+</body>
+</html>
