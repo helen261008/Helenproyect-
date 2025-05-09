@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tienda de Ropa</title>
     <style>
         body {
-            background: linear-gradient(to bottom, #8e44ad, #3498db); /* Degradado */
+            background: linear-gradient(to bottom, #8e44ad, #3498db);
             color: white;
             font-family: 'Arial', sans-serif;
             text-align: center;
@@ -16,7 +18,7 @@
             margin: auto;
             padding: 20px;
             border-radius: 15px;
-            background: rgba(0, 0, 0, 0.8); /* Fondo semitransparente */
+            background: rgba(0, 0, 0, 0.8);
             box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
         }
         .seccion {
@@ -26,11 +28,11 @@
             display: block;
         }
         h1 {
-            color: #f1c40f; /* Amarillo brillante */
+            color: #f1c40f;
             margin-bottom: 20px;
         }
         button {
-            background-color: #e74c3c; /* Rojo vivo */
+            background-color: #e74c3c;
             color: white;
             border: none;
             padding: 12px;
@@ -43,7 +45,7 @@
             transition: background-color 0.3s, transform 0.2s;
         }
         button:hover {
-            background-color: #c0392b; /* Rojo oscuro */
+            background-color: #c0392b;
             transform: translateY(-2px);
         }
         label, input, select {
@@ -55,7 +57,7 @@
         }
         input, select {
             border: 1px solid #ddd;
-            background-color: #2c3e50; /* Azul oscuro */
+            background-color: #2c3e50;
             color: white;
         }
         img {
@@ -67,7 +69,6 @@
     </style>
 </head>
 <body>
-
     <div id="bienvenida" class="seccion activa contenedor">
         <h1>¡Bienvenido a la Tienda de Ropa!</h1>
         <p>Explora nuestra colección y compra tu outfit ideal.</p>
@@ -79,12 +80,13 @@
     <div id="categorias-seccion" class="seccion contenedor">
         <h1>Categorías de Ropa</h1>
         <select id="categoria">
+            <option value="">Selecciona una categoría</option>
             <option value="camisetas">Camisetas</option>
             <option value="jeans">Jeans</option>
             <option value="chaquetas">Chaquetas</option>
         </select>
         <div id="opciones-prendas"></div>
-        <button id="continuarCompra">Continuar</button>
+        <button id="continuarCompra" disabled>Continuar</button>
     </div>
 
     <div id="formulario-seccion" class="seccion contenedor">
@@ -106,88 +108,55 @@
     <div id="detalle-seccion" class="seccion contenedor">
         <h2>Resumen del Pedido</h2>
         <p id="detallePedido"></p>
-        <button type="button" id="continuarPago">Continuar</button>
-    </div>
-
-    <div id="pago-seccion" class="seccion contenedor">
-        <h2>Pago</h2>
-        <h3>Selecciona el método de pago:</h3>
-        <input type="radio" name="metodoPago" value="Efectivo" id="pagoEfectivo">
-        <label for="pagoEfectivo">Efectivo</label>
-
-        <input type="radio" name="metodoPago" value="Tarjeta" id="pagoTarjeta">
-        <label for="pagoTarjeta">Tarjeta</label>
-
-        <div id="pago-tarjeta" class="seccion">
-            <label for="nombreTitular">Nombre del Titular:</label>
-            <input type="text" id="nombreTitular">
-
-            <label for="numeroTarjeta">Número de Tarjeta:</label>
-            <input type="text" id="numeroTarjeta">
-
-            <label for="fechaVencimiento">Válida hasta:</label>
-            <input type="month" id="fechaVencimiento">
-
-            <label for="cvv">CVV:</label>
-            <input type="password" id="cvv" maxlength="3">
-
-            <button type="button" id="pagarTarjeta">Pagar</button>
-        </div>
+        <button type="button" id="continuarPago">Continuar al Pago</button>
     </div>
 
     <script>
-        // Navegación entre secciones
-        document.getElementById("comenzar").addEventListener("click", function () {
-            cambiarSeccion("bienvenida", "categorias-seccion");
-        });
+        document.addEventListener("DOMContentLoaded", function () {
+            // Utilidades generales
+            const getElement = (id) => document.getElementById(id);
 
-        document.getElementById("salir").addEventListener("click", function () {
-            alert("Gracias por visitar nuestra tienda.");
-        });
+            // Navegación entre secciones
+            getElement("comenzar").addEventListener("click", () => navegarSeccion("bienvenida", "categorias-seccion"));
+            getElement("salir").addEventListener("click", () => alert("Gracias por visitar nuestra tienda."));
 
-        document.getElementById("categoria").addEventListener("change", function () {
-            const categoria = this.value;
-            const opciones = {
-                camisetas: [
-                    "Camiseta Básica - $10",
-                    "Camiseta Estampada - $12"
-                ],
-                jeans: [
-                    "Jeans Clásicos - $20",
-                    "Jeans Rasgados - $25"
-                ],
-                chaquetas: [
-                    "Chaqueta de Cuero - $50",
-                    "Chaqueta Deportiva - $30"
-                ]
-            };
-            const opcionesDiv = document.getElementById("opciones-prendas");
-            opcionesDiv.innerHTML = opciones[categoria].map(item => `<p>${item}</p>`).join("");
-        });
+            getElement("categoria").addEventListener("change", function () {
+                const categoria = this.value;
+                const opciones = {
+                    camisetas: ["Camiseta Básica - $10", "Camiseta Estampada - $12"],
+                    jeans: ["Jeans Clásicos - $20", "Jeans Rasgados - $25"],
+                    chaquetas: ["Chaqueta de Cuero - $50", "Chaqueta Deportiva - $30"]
+                };
 
-        document.getElementById("calcular").addEventListener("click", function () {
-            const nombre = document.getElementById("nombre").value;
-            const fecha = document.getElementById("fecha").value;
-            const hora = document.getElementById("hora").value;
+                const opcionesDiv = getElement("opciones-prendas");
+                opcionesDiv.innerHTML = opciones[categoria]?.map(item => `<p>${item}</p>`).join("") || "";
+                getElement("continuarCompra").disabled = !opciones[categoria];
+            });
 
-            if (!nombre || !fecha || !hora) {
-                alert("Por favor, completa todos los campos.");
-                return;
+            getElement("calcular").addEventListener("click", () => {
+                const nombre = getElement("nombre").value.trim();
+                const fecha = getElement("fecha").value;
+                const hora = getElement("hora").value;
+
+                if (!nombre || !fecha || !hora) {
+                    alert("Por favor, completa todos los campos.");
+                    return;
+                }
+
+                navegarSeccion("formulario-seccion", "detalle-seccion");
+                getElement("detallePedido").innerHTML = `
+                    <strong>Nombre:</strong> ${nombre}<br>
+                    <strong>Fecha:</strong> ${fecha}<br>
+                    <strong>Hora:</strong> ${hora}<br>
+                `;
+            });
+
+            // Función para cambiar entre secciones
+            function navegarSeccion(actual, nueva) {
+                getElement(actual).classList.remove("activa");
+                getElement(nueva).classList.add("activa");
             }
-
-            cambiarSeccion("formulario-seccion", "detalle-seccion");
-            document.getElementById("detallePedido").innerHTML = `
-                <strong>Nombre:</strong> ${nombre}<br>
-                <strong>Fecha:</strong> ${fecha}<br>
-                <strong>Hora:</strong> ${hora}<br>
-            `;
         });
-
-        // Función para cambiar de secciones
-        function cambiarSeccion(seccionActual, seccionNueva) {
-            document.getElementById(seccionActual).classList.remove("activa");
-            document.getElementById(seccionNueva).classList.add("activa");
-        }
     </script>
 </body>
 </html>
