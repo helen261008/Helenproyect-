@@ -4,7 +4,7 @@
     <title>Tienda de Ropa</title>
     <style>
         body {
-            background-color: #1e1e1e;
+            background-color:morado;
             color: white;
             font-family: 'Arial', sans-serif;
             text-align: center;
@@ -14,7 +14,7 @@
             margin: auto;
             padding: 20px;
             border-radius: 10px;
-            background-color: #292929;
+            background-color: rosa;
             box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1);
         }
         .seccion {
@@ -24,10 +24,10 @@
             display: block;
         }
         h1 {
-            color: #ff914d;
+            color: azul celeste;
         }
         button {
-            background-color: #ff914d;
+            background-color: jade;
             color: white;
             border: none;
             padding: 10px;
@@ -148,10 +148,21 @@
             const prenda1 = parseFloat(document.getElementById("prenda1").value);
             const prenda2 = parseFloat(document.getElementById("prenda2").value);
 
+            if (!nombre || !fecha || isNaN(prenda1) || isNaN(prenda2)) {
+                alert("Por favor, completa todos los campos.");
+                return;
+            }
+
             const total = prenda1 + prenda2;
+
             document.getElementById("detalle-seccion").classList.add("activa");
             document.getElementById("formulario-seccion").classList.remove("activa");
             document.getElementById("detallePedido").innerHTML = `
                 <strong>Nombre:</strong> ${nombre}<br>
                 <strong>Fecha:</strong> ${fecha}<br>
-                <strong>Total:</strong> $${total.to`
+                <strong>Total:</strong> $${total.toFixed(2)}
+            `;
+        });
+    </script>
+</body>
+</html>
