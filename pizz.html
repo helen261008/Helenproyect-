@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pizzería Bella Napoli</title>
-    <!-- Tu código existente -->
 </head>
 <body>
     <!-- Tu contenido HTML existente -->
@@ -12,10 +11,10 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             // Configuración de jsPDF
-            const { jsPDF } = window.jspdf;
+            const { jsPDF } = window.jspdf || {};
 
             // Variables globales
-            let pedido = {
+            const pedido = {
                 nombre: '',
                 fecha: '',
                 hora: '',
@@ -26,54 +25,70 @@
                 cambio: 0
             };
 
+            // Validar existencia de elementos antes de usarlos
+            const getElement = (id) => document.getElementById(id);
+            const validarElemento = (id) => {
+                const element = getElement(id);
+                if (!element) {
+                    console.error(`El elemento con ID "${id}" no existe en el DOM.`);
+                }
+                return element;
+            };
+
             // Navegación entre secciones
-            document.getElementById("comenzar").addEventListener("click", function() {
+            validarElemento("comenzar")?.addEventListener("click", function() {
                 cambiarSeccion("bienvenida", "formulario-seccion");
             });
 
-            document.getElementById("calcular").addEventListener("click", function() {
+            validarElemento("calcular")?.addEventListener("click", function() {
                 if (!validarFormulario()) return;
-                
+
                 calcularPedido();
                 mostrarResumen();
                 cambiarSeccion("formulario-seccion", "detalle-seccion");
             });
 
-            document.getElementById("continuarPago").addEventListener("click", function() {
+            validarElemento("continuarPago")?.addEventListener("click", function() {
                 cambiarSeccion("detalle-seccion", "pago-seccion");
             });
 
-            document.getElementById("regresarPedido").addEventListener("click", function() {
+            validarElemento("regresarPedido")?.addEventListener("click", function() {
                 cambiarSeccion("detalle-seccion", "formulario-seccion");
             });
 
-            document.getElementById("regresarResumen").addEventListener("click", function() {
+            validarElemento("regresarResumen")?.addEventListener("click", function() {
                 cambiarSeccion("pago-seccion", "detalle-seccion");
             });
 
             // Métodos de pago
             document.querySelectorAll('input[name="metodoPago"]').forEach(radio => {
                 radio.addEventListener("change", function() {
-                    document.getElementById("pago-efectivo").classList.toggle("hidden", this.value !== "Efectivo");
-                    document.getElementById("pago-tarjeta").classList.toggle("hidden", this.value !== "Tarjeta");
+                    const pagoEfectivo = validarElemento("pago-efectivo");
+                    const pagoTarjeta = validarElemento("pago-tarjeta");
+
+                    if (pagoEfectivo && pagoTarjeta) {
+                        pagoEfectivo.classList.toggle("hidden", this.value !== "Efectivo");
+                        pagoTarjeta.classList.toggle("hidden", this.value !== "Tarjeta");
+                    }
                 });
             });
 
-            document.getElementById("pagarEfectivo").addEventListener("click", function() {
-                const recibido = parseFloat(document.getElementById("cantidadRecibida").value);
+            validarElemento("pagarEfectivo")?.addEventListener("click", function() {
+                const recibidoInput = validarElemento("cantidadRecibida");
+                const recibido = parseFloat(recibidoInput?.value || 0);
 
                 if (recibido < pedido.total) {
-                    alert(`El dinero recibido ($${recibido.toFixed(2)}) es menor al total ($${pedido.total.toFixed(2)})`);
+                    alert(`El dinero recibido ($${recibido.toFixed(2)}) es menor al total ($${pedido.total.toFixed(2)}).`);
                     return;
                 }
 
                 pedido.cambio = recibido - pedido.total;
                 pedido.metodoPago = "Efectivo";
-                document.getElementById("cambio").textContent = pedido.cambio.toFixed(2);
+                validarElemento("cambio").textContent = pedido.cambio.toFixed(2);
                 mostrarTicket();
             });
 
-            document.getElementById("pagarTarjeta").addEventListener("click", function() {
+            validarElemento("pagarTarjeta")?.addEventListener("click", function() {
                 if (!validarTarjeta()) return;
 
                 pedido.metodoPago = "Tarjeta";
@@ -82,70 +97,93 @@
             });
 
             // Generar PDF
-            document.getElementById("descargarTicket").addEventListener("click", function() {
+            validarElemento("descargarTicket")?.addEventListener("click", function() {
                 generarPDF();
             });
 
             // Finalizar compra
-            document.getElementById("terminarCompra").addEventListener("click", function() {
+            validarElemento("terminarCompra")?.addEventListener("click", function() {
                 alert("¡Gracias por tu compra! Tu pedido está en camino.");
-                location.reload();
+                reiniciarPedido();
             });
 
             // Funciones auxiliares
             function cambiarSeccion(ocultar, mostrar) {
-                document.getElementById(ocultar).classList.remove("activa");
-                document.getElementById(mostrar).classList.add("activa");
-                window.scrollTo(0, 0);
+                const seccionOcultar = validarElemento(ocultar);
+                const seccionMostrar = validarElemento(mostrar);
+
+                if (seccionOcultar && seccionMostrar) {
+                    seccionOcultar.classList.remove("activa");
+                    seccionMostrar.classList.add("activa");
+                    window.scrollTo(0, 0);
+                }
             }
 
             function validarFormulario() {
-                const nombre = document.getElementById("nombre").value.trim();
-                const fecha = document.getElementById("fecha").value;
-                const hora = document.getElementById("hora").value;
-                const pizza1 = document.getElementById("pizza1").value;
+                const nombre = validarElemento("nombre")?.value.trim();
+                const fecha = validarElemento("fecha")?.value;
+                const hora = validarElemento("hora")?.value;
+                const pizza1 = validarElemento("pizza1")?.value;
 
                 if (!nombre) {
-                    alert("Por favor ingresa tu nombre");
+                    alert("Por favor, ingresa tu nombre.");
                     return false;
                 }
 
                 if (!fecha) {
-                    alert("Por favor selecciona una fecha");
+                    alert("Por favor, selecciona una fecha.");
                     return false;
                 }
 
                 if (!hora) {
-                    alert("Por favor selecciona una hora");
+                    alert("Por favor, selecciona una hora.");
                     return false;
                 }
 
-                if (pizza1 === "" || pizza1 === "0") {
-                    alert("Por favor selecciona al menos una pizza");
+                if (!pizza1 || pizza1 === "0") {
+                    alert("Por favor, selecciona al menos una pizza.");
                     return false;
                 }
 
+                pedido.nombre = nombre;
+                pedido.fecha = fecha;
+                pedido.hora = hora;
                 return true;
             }
 
             function calcularPedido() {
-                // Tu lógica existente para calcular el pedido
+                // Implementa la lógica para calcular el total del pedido aquí
+                console.log("Calculando pedido...");
             }
 
             function mostrarResumen() {
-                // Tu lógica existente para mostrar el resumen
+                // Implementa la lógica para mostrar el resumen aquí
+                console.log("Mostrando resumen...");
             }
 
             function validarTarjeta() {
-                // Tu lógica existente para validar el pago con tarjeta
+                // Implementa la validación del pago con tarjeta aquí
+                console.log("Validando tarjeta...");
+                return true;
             }
 
             function generarPDF() {
-                // Tu lógica existente para generar un PDF
+                // Implementa la lógica para generar un PDF aquí usando jsPDF
+                console.log("Generando PDF...");
             }
 
             function mostrarTicket() {
-                // Tu lógica existente para mostrar el ticket
+                // Implementa la lógica para mostrar el ticket aquí
+                console.log("Mostrando ticket...");
+            }
+
+            function reiniciarPedido() {
+                Object.keys(pedido).forEach(key => {
+                    if (Array.isArray(pedido[key])) pedido[key] = [];
+                    else if (typeof pedido[key] === "number") pedido[key] = 0;
+                    else pedido[key] = '';
+                });
+                cambiarSeccion("pago-seccion", "bienvenida");
             }
         });
     </script>
