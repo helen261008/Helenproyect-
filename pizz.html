@@ -1,7 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pizzería Bella Napoli</title>
     <link href="https://fonts.googleapis.com/css?family=Montserrat:600,700&display=swap" rel="stylesheet">
@@ -189,6 +186,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            // Configuración de jsPDF
             const { jsPDF } = window.jspdf || {};
 
             // Variables globales
@@ -202,6 +200,7 @@
                 metodoPago: '',
                 cambio: 0
             };
+            
             const preciosPizza = {
                 "Margarita": 120,
                 "Pepperoni": 130,
@@ -211,6 +210,7 @@
 
             // Utilidades
             const getElement = id => document.getElementById(id);
+            
             const validarElemento = id => {
                 const el = getElement(id);
                 if (!el) console.error(`No existe el elemento ${id}`);
@@ -224,10 +224,9 @@
                 window.scrollTo(0,0);
             };
 
-            // Bienvenida
+            // Event listeners
             validarElemento("comenzar")?.addEventListener("click", ()=>cambiarSeccion("bienvenida","formulario-seccion"));
-
-            // Calcular pedido y mostrar resumen
+            
             validarElemento("calcular")?.addEventListener("click", function() {
                 if (!validarFormulario()) return;
                 calcularPedido();
@@ -235,14 +234,11 @@
                 cambiarSeccion("formulario-seccion", "detalle-seccion");
             });
 
-            // Modificar pedido
             validarElemento("regresarPedido")?.addEventListener("click", ()=>cambiarSeccion("detalle-seccion","formulario-seccion"));
-
-            // Continuar a pago
             validarElemento("continuarPago")?.addEventListener("click", ()=>cambiarSeccion("detalle-seccion","pago-seccion"));
             validarElemento("regresarResumen")?.addEventListener("click", ()=>cambiarSeccion("pago-seccion","detalle-seccion"));
 
-            // Elegir método de pago
+            // Métodos de pago
             document.querySelectorAll('input[name="metodoPago"]').forEach(radio=>{
                 radio.addEventListener("change", function() {
                     getElement("pago-efectivo").classList.toggle("hidden", this.value !== "Efectivo");
@@ -258,6 +254,7 @@
                     alert(`El dinero recibido ($${recibido.toFixed(2)}) es menor al total ($${pedido.total.toFixed(2)}).`);
                     return;
                 }
+
                 pedido.cambio = recibido - pedido.total;
                 pedido.metodoPago = "Efectivo";
                 getElement("cambio").textContent = pedido.cambio.toFixed(2);
@@ -280,37 +277,46 @@
 
             // Terminar compra
             validarElemento("terminarCompra")?.addEventListener("click", function() {
-                alert("¡Gracias por tu compra! Tu pedido está en camino.");
                 reiniciarPedido();
             });
 
-            // Validar formulario
+            // Funciones auxiliares
             function validarFormulario() {
                 const nombre = getElement("nombre").value.trim();
                 const fecha = getElement("fecha").value;
                 const hora = getElement("hora").value;
                 const pizza1 = getElement("pizza1").value;
                 const cantidad = parseInt(getElement("cantidadPizza1").value) || 0;
+                
                 if (!nombre) return alert("Por favor, ingresa tu nombre."), false;
                 if (!fecha) return alert("Por favor, selecciona una fecha."), false;
                 if (!hora) return alert("Por favor, selecciona una hora."), false;
                 if (!pizza1 || pizza1 === "0" || cantidad < 1) return alert("Por favor, selecciona al menos una pizza."), false;
+                
                 pedido.nombre = nombre;
                 pedido.fecha = fecha;
                 pedido.hora = hora;
                 return true;
             }
 
-            // Calcular pedido
             function calcularPedido() {
                 const pizza1 = getElement("pizza1").value;
                 const cantidad = parseInt(getElement("cantidadPizza1").value) || 1;
-                pedido.pizzas = pizza1 !== "0" ? [{ tipo: pizza1, cantidad, precio: preciosPizza[pizza1] }] : [];
+                pedido.pizzas = pizza1 !== "0" ? [{ 
+                    tipo: pizza1, 
+                    cantidad: cantidad, 
+                    precio: preciosPizza[pizza1] 
+                }] : [];
+                
                 // Extras
                 pedido.extras = [];
                 document.querySelectorAll('input.extra:checked').forEach(chk=>{
-                    pedido.extras.push({, precio: parseFloat(chk.getAttribute("data-precio")) });
+                    pedido.extras.push({
+                        nombre: chk.value,
+                        precio: parseFloat(chk.getAttribute("data-precio"))
+                    });
                 });
+                
                 // Total
                 let total = 0;
                 pedido.pizzas.forEach(p => total += p.precio * p.cantidad);
@@ -318,7 +324,6 @@
                 pedido.total = total;
             }
 
-            // Mostrar resumen
             function mostrarResumen() {
                 const res = [];
                 res.push(`<strong>Nombre:</strong> ${pedido.nombre}`);
@@ -331,7 +336,6 @@
                 getElement("resumenPedido").innerHTML = res.join("<br>");
             }
 
-            // Validar datos de tarjeta
             function validarTarjeta() {
                 const num = getElement("numeroTarjeta").value.trim().replace(/\s/g,'');
                 const cvv = getElement("cvv").value.trim();
@@ -342,7 +346,6 @@
                 return true;
             }
 
-            // Mostrar ticket
             function mostrarTicket() {
                 let ticket = `<strong>Cliente:</strong> ${pedido.nombre}<br>`;
                 ticket += `<strong>Fecha:</strong> ${pedido.fecha} &nbsp;&nbsp; <strong>Hora:</strong> ${pedido.hora}<br>`;
@@ -362,7 +365,6 @@
                 cambiarSeccion("pago-seccion","ticket-seccion");
             }
 
-            // Generar PDF
             function generarPDF() {
                 if (!jsPDF) return alert("No se pudo cargar jsPDF.");
                 const doc = new jsPDF();
@@ -386,14 +388,14 @@
                 doc.save("ticket_pizza.pdf");
             }
 
-            // Reiniciar pedido
             function reiniciarPedido() {
                 Object.keys(pedido).forEach(key=>{
                     if (Array.isArray(pedido[key])) pedido[key]=[];
                     else if (typeof pedido[key]==="number") pedido[key]=0;
                     else pedido[key]='';
                 });
-                getElement("formulario-seccion").reset?.();
+                
+                getElement("formulario-seccion").reset();
                 document.querySelectorAll('input[type=checkbox], input[type=radio]').forEach(i=>i.checked=false);
                 getElement("pizza1").value = "0";
                 getElement("cantidadPizza1").value = "1";
@@ -406,5 +408,3 @@
             }
         });
     </script>
-</body>
-</html>
