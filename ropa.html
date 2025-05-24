@@ -3,258 +3,684 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tienda de Ropa</title>
+    <title>ModaTrend - Tienda de Ropa Online</title>
     <style>
-        body {
-            background: linear-gradient(to bottom, #8e44ad, #3498db);
-            color: white;
-            font-family: 'Arial', sans-serif;
-            text-align: center;
+        /* Reset y estilos generales */
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
         }
-        .contenedor {
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            border-radius: 15px;
-            background: rgba(0, 0, 0, 0.8);
-            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
+        
+        body {
+            background-color: #f8f8f8;
+            color: #333;
         }
-        .seccion {
-            display: none;
+        
+        /* Header */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        .activa {
-            display: block;
+        
+        .top-bar {
+            background-color: #f6f6f6;
+            padding: 8px 0;
+            font-size: 12px;
+            text-align: center;
         }
-        h1 {
-            color: #f1c40f;
-            margin-bottom: 20px;
+        
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
         }
-        button {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 12px;
-            cursor: pointer;
-            font-size: 18px;
-            width: 100%;
-            margin-top: 15px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-            transition: background-color 0.3s, transform 0.2s;
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff2e63;
         }
-        button:hover {
-            background-color: #c0392b;
-            transform: translateY(-2px);
+        
+        .search-bar {
+            flex-grow: 1;
+            margin: 0 20px;
         }
-        label, input, select {
-            display: block;
-            margin: 15px 0;
-            width: 100%;
+        
+        .search-bar input {
+            width: 80%;
             padding: 10px;
-            border-radius: 8px;
-        }
-        input, select {
             border: 1px solid #ddd;
-            background-color: #2c3e50;
-            color: white;
+            border-radius: 20px;
+            outline: none;
         }
-        img {
-            width: 100%;
-            border-radius: 10px;
-            margin-top: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+        
+        .user-actions a {
+            margin-left: 15px;
+            color: #333;
+            text-decoration: none;
         }
-        .prenda-opcion {
+        
+        /* Navegación */
+        nav {
+            background-color: #fff;
+            border-top: 1px solid #eee;
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            padding: 15px 20px;
+            position: relative;
+        }
+        
+        .nav-links li a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .nav-links li:hover {
+            color: #ff2e63;
+        }
+        
+        /* Banner principal */
+        .main-banner {
+            height: 500px;
+            background-image: url('https://via.placeholder.com/1920x500');
+            background-size: cover;
+            background-position: center;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            background: rgba(255,255,255,0.05);
-            margin-bottom: 8px;
-            padding: 8px 14px;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .banner-content h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .banner-content p {
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .shop-now-btn {
+            background-color: #ff2e63;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .shop-now-btn:hover {
+            background-color: #e61e53;
+            transform: scale(1.05);
+        }
+        
+        /* Categorías */
+        .categories {
+            padding: 0 5%;
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        
+        .category-card {
+            position: relative;
+            height: 300px;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .category-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .category-card:hover img {
+            transform: scale(1.1);
+        }
+        
+        .category-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+            padding: 20px;
+            color: white;
+        }
+        
+        /* Productos destacados */
+        .featured-products {
+            padding: 0 5%;
+            margin-bottom: 50px;
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+        
+        .product-card {
+            background-color: white;
             border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
         }
-        .cantidad-prenda {
-            width: 60px;
-            margin-left: 8px;
+        
+        .product-card:hover {
+            transform: translateY(-10px);
         }
-        .volver {
-            background-color: #2980b9;
-            margin-top: 5px;
-            width: auto;
-            padding: 8px 20px;
+        
+        .product-image {
+            height: 250px;
+            overflow: hidden;
+            position: relative;
         }
-        .volver:hover {
-            background-color: #1c5980;
+        
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .discount-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ff2e63;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .product-info {
+            padding: 15px;
+        }
+        
+        .product-title {
+            font-size: 14px;
+            margin-bottom: 8px;
+            height: 40px;
+            overflow: hidden;
+        }
+        
+        .product-price {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .current-price {
+            font-weight: bold;
+            color: #ff2e63;
+            margin-right: 10px;
+        }
+        
+        .original-price {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 12px;
+        }
+        
+        .add-to-cart {
+            width: 100%;
+            padding: 8px 0;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .add-to-cart:hover {
+            background-color: #ff2e63;
+        }
+        
+        /* Newsletter */
+        .newsletter {
+            background-color: #ff2e63;
+            color: white;
+            padding: 50px 5%;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .newsletter h2 {
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .newsletter p {
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .newsletter-form {
+            display: flex;
+            justify-content: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .newsletter-form input {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 30px 0 0 30px;
+            outline: none;
+        }
+        
+        .newsletter-form button {
+            padding: 12px 25px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 0 30px 30px 0;
+            cursor: pointer;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #222;
+            color: #ddd;
+            padding: 50px 5% 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: #ddd;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .footer-column ul li a:hover {
+            color: #ff2e63;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-icons a {
+            color: white;
+            font-size: 20px;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            font-size: 12px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .product-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .product-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-header {
+                flex-direction: column;
+                padding: 15px;
+            }
+            
+            .logo {
+                margin-bottom: 15px;
+            }
+            
+            .search-bar {
+                width: 100%;
+                margin: 15px 0;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+            }
+            
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .main-banner {
+                height: 400px;
+            }
+            
+            .banner-content h1 {
+                font-size: 36px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .newsletter-form {
+                flex-direction: column;
+            }
+            
+            .newsletter-form input {
+                border-radius: 30px;
+                margin-bottom: 10px;
+            }
+            
+            .newsletter-form button {
+                border-radius: 30px;
+            }
         }
     </style>
 </head>
 <body>
-    <div id="bienvenida" class="seccion activa contenedor">
-        <h1>¡Bienvenido a la Tienda de Ropa!</h1>
-        <p>Explora nuestra colección y compra tu outfit ideal.</p>
-        <img src="ropa.jpeg" alt="Ropa">
-        <button id="comenzar">Comprar Ahora</button>
-        <button id="salir">Salir</button>
-    </div>
-
-    <div id="categorias-seccion" class="seccion contenedor">
-        <h1>Categorías de Ropa</h1>
-        <select id="categoria">
-            <option value="">Selecciona una categoría</option>
-            <option value="camisetas">Camisetas</option>
-            <option value="jeans">Jeans</option>
-            <option value="chaquetas">Chaquetas</option>
-        </select>
-        <div id="opciones-prendas"></div>
-        <button id="continuarCompra" disabled>Continuar</button>
-        <button class="volver" id="volverCat">Volver</button>
-    </div>
-
-    <div id="formulario-seccion" class="seccion contenedor">
-        <h1>Elige tu Ropa</h1>
-        <form id="formulario">
-            <label for="nombre">Tu Nombre:</label>
-            <input type="text" id="nombre" required>
-
-            <label for="fecha">Fecha:</label>
-            <input type="date" id="fecha" required>
-
-            <label for="hora">Hora:</label>
-            <input type="time" id="hora" required>
-
-            <button type="button" id="calcular">Calcular Total</button>
+    <!-- Header -->
+    <header>
+        <div class="top-bar">
+            ¡Envío gratis en pedidos superiores a $50!
+        </div>
+        <div class="main-header">
+            <div class="logo">ModaTrend</div>
+            <div class="search-bar">
+                <input type="text" placeholder="Buscar productos...">
+            </div>
+            <div class="user-actions">
+                <a href="#"><i class="fas fa-user"></i> Mi cuenta</a>
+                <a href="#"><i class="fas fa-heart"></i> Favoritos</a>
+                <a href="#"><i class="fas fa-shopping-cart"></i> Carrito</a>
+            </div>
+        </div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#">Novedades</a></li>
+                <li><a href="#">Mujer</a></li>
+                <li><a href="#">Hombre</a></li>
+                <li><a href="#">Niños</a></li>
+                <li><a href="#">Accesorios</a></li>
+                <li><a href="#">Zapatos</a></li>
+                <li><a href="#">Ofertas</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <!-- Banner principal -->
+    <section class="main-banner">
+        <div class="banner-content">
+            <h1>Nueva Colección Verano 2023</h1>
+            <p>Descubre las últimas tendencias a precios increíbles</p>
+            <button class="shop-now-btn">Comprar ahora</button>
+        </div>
+    </section>
+    
+    <!-- Categorías -->
+    <section class="categories">
+        <h2 class="section-title">Explora Nuestras Categorías</h2>
+        <div class="category-grid">
+            <div class="category-card">
+                <img src="https://via.placeholder.com/400x300" alt="Ropa de mujer">
+                <div class="category-overlay">
+                    <h3>Ropa de Mujer</h3>
+                </div>
+            </div>
+            <div class="category-card">
+                <img src="https://via.placeholder.com/400x300" alt="Ropa de hombre">
+                <div class="category-overlay">
+                    <h3>Ropa de Hombre</h3>
+                </div>
+            </div>
+            <div class="category-card">
+                <img src="https://via.placeholder.com/400x300" alt="Accesorios">
+                <div class="category-overlay">
+                    <h3>Accesorios</h3>
+                </div>
+            </div>
+            <div class="category-card">
+                <img src="https://via.placeholder.com/400x300" alt="Zapatos">
+                <div class="category-overlay">
+                    <h3>Zapatos</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Productos destacados -->
+    <section class="featured-products">
+        <h2 class="section-title">Productos Destacados</h2>
+        <div class="product-grid">
+            <!-- Producto 1 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://via.placeholder.com/300x400" alt="Vestido floral">
+                    <span class="discount-badge">-30%</span>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">Vestido Floral de Verano con Escote en V</h3>
+                    <div class="product-price">
+                        <span class="current-price">$24.99</span>
+                        <span class="original-price">$35.99</span>
+                    </div>
+                    <button class="add-to-cart">Añadir al carrito</button>
+                </div>
+            </div>
+            
+            <!-- Producto 2 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://via.placeholder.com/300x400" alt="Jeans skinny">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">Jeans Skinny Alto Talle Color Azul</h3>
+                    <div class="product-price">
+                        <span class="current-price">$29.99</span>
+                    </div>
+                    <button class="add-to-cart">Añadir al carrito</button>
+                </div>
+            </div>
+            
+            <!-- Producto 3 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://via.placeholder.com/300x400" alt="Camiseta básica">
+                    <span class="discount-badge">-50%</span>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">Pack de 3 Camisetas Básicas de Algodón</h3>
+                    <div class="product-price">
+                        <span class="current-price">$15.99</span>
+                        <span class="original-price">$32.99</span>
+                    </div>
+                    <button class="add-to-cart">Añadir al carrito</button>
+                </div>
+            </div>
+            
+            <!-- Producto 4 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://via.placeholder.com/300x400" alt="Zapatillas deportivas">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">Zapatillas Deportivas Running Ultra Light</h3>
+                    <div class="product-price">
+                        <span class="current-price">$39.99</span>
+                    </div>
+                    <button class="add-to-cart">Añadir al carrito</button>
+                </div>
+            </div>
+            
+            <!-- Producto 5 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://via.placeholder.com/300x400" alt="Bolso bandolera">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">Bolso Bandolera Multibolsillos Tamaño Grande</h3>
+                    <div class="product-price">
+                        <span class="current-price">$27.99</span>
+                    </div>
+                    <button class="add-to-cart">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Newsletter -->
+    <section class="newsletter">
+        <h2>¡Suscríbete a nuestro newsletter!</h2>
+        <p>Recibe ofertas exclusivas y las últimas tendencias directamente en tu email.</p>
+        <form class="newsletter-form">
+            <input type="email" placeholder="Tu dirección de email">
+            <button type="submit">Suscribirse</button>
         </form>
-        <button class="volver" id="volverForm">Volver</button>
-    </div>
-
-    <div id="detalle-seccion" class="seccion contenedor">
-        <h2>Resumen del Pedido</h2>
-        <p id="detallePedido"></p>
-        <button type="button" id="continuarPago">Continuar al Pago</button>
-        <button class="volver" id="volverDetalle">Volver</button>
-    </div>
-
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>ModaTrend</h3>
+                <p>Tu tienda de moda online con las últimas tendencias a precios increíbles.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Ayuda</h3>
+                <ul>
+                    <li><a href="#">Centro de ayuda</a></li>
+                    <li><a href="#">Cómo comprar</a></li>
+                    <li><a href="#">Tallas</a></li>
+                    <li><a href="#">Envíos y entregas</a></li>
+                    <li><a href="#">Devoluciones</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Sobre nosotros</h3>
+                <ul>
+                    <li><a href="#">Nuestra historia</a></li>
+                    <li><a href="#">Trabaja con nosotros</a></li>
+                    <li><a href="#">Responsabilidad social</a></li>
+                    <li><a href="#">Términos y condiciones</a></li>
+                    <li><a href="#">Política de privacidad</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Contacto</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> Calle Moda 123, Madrid, España</li>
+                    <li><i class="fas fa-phone"></i> +34 910 123 456</li>
+                    <li><i class="fas fa-envelope"></i> info@modatrend.com</li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 ModaTrend. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    
+    <!-- Font Awesome para iconos -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    
+    <!-- JavaScript básico -->
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Utilidades generales
-            const getElement = (id) => document.getElementById(id);
-
-            // Variables globales para la selección
-            let seleccion = {};
-
-            // Opciones de ropa
-            const opciones = {
-                camisetas: [
-                    { nombre: "Camiseta Básica", precio: 10 },
-                    { nombre: "Camiseta Estampada", precio: 12 }
-                ],
-                jeans: [
-                    { nombre: "Jeans Clásicos", precio: 20 },
-                    { nombre: "Jeans Rasgados", precio: 25 }
-                ],
-                chaquetas: [
-                    { nombre: "Chaqueta de Cuero", precio: 50 },
-                    { nombre: "Chaqueta Deportiva", precio: 30 }
-                ]
-            };
-
-            // Navegación entre secciones
-            getElement("comenzar").addEventListener("click", () => navegarSeccion("bienvenida", "categorias-seccion"));
-            getElement("salir").addEventListener("click", () => {
-                alert("Gracias por visitar nuestra tienda.");
-                location.reload();
+        // Cambiar clase activa en navegación
+        const navLinks = document.querySelectorAll('.nav-links li a');
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                navLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
             });
-
-            // Volver entre secciones
-            getElement("volverCat").addEventListener("click", () => navegarSeccion("categorias-seccion", "bienvenida"));
-            getElement("volverForm").addEventListener("click", () => navegarSeccion("formulario-seccion", "categorias-seccion"));
-            getElement("volverDetalle").addEventListener("click", () => navegarSeccion("detalle-seccion", "formulario-seccion"));
-
-            // Actualizar prendas según la categoría seleccionada
-            getElement("categoria").addEventListener("change", function () {
-                const categoria = this.value;
-                const opcionesDiv = getElement("opciones-prendas");
-                if (opciones[categoria]) {
-                    opcionesDiv.innerHTML = opciones[categoria].map((item, idx) => `
-                        <div class="prenda-opcion">
-                            <label style="flex:1;display:flex;align-items:center;">
-                                <input type="radio" name="prenda" value="${item.nombre}" data-precio="${item.precio}" ${idx === 0 ? "checked" : ""}>
-                                <span style="margin-left:12px;">${item.nombre} - $${item.precio}</span>
-                            </label>
-                            <input type="number" min="1" value="1" class="cantidad-prenda" data-idx="${idx}" ${idx !== 0 ? "disabled" : ""}>
-                        </div>
-                    `).join("");
-                    // Habilitar solo el input cantidad del radio seleccionado
-                    document.querySelectorAll('input[name="prenda"]').forEach((radio, idx) => {
-                        radio.addEventListener('change', function() {
-                            document.querySelectorAll('.cantidad-prenda').forEach((input, i) => {
-                                input.disabled = i !== idx;
-                            });
-                        });
-                    });
-                    getElement("continuarCompra").disabled = false;
-                } else {
-                    opcionesDiv.innerHTML = "";
-                    getElement("continuarCompra").disabled = true;
-                }
+        });
+        
+        // Simular añadir al carrito
+        const addToCartButtons = document.querySelectorAll('.add-to-cart');
+        
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                alert('Producto añadido al carrito');
             });
-
-            // Guardar selección y pasar al formulario
-            getElement("continuarCompra").addEventListener("click", () => {
-                const radio = document.querySelector('input[name="prenda"]:checked');
-                if (!radio) {
-                    alert("Selecciona una prenda.");
-                    return;
-                }
-                const idx = Array.from(document.querySelectorAll('input[name="prenda"]')).indexOf(radio);
-                const cantidadInput = document.querySelector(`.cantidad-prenda[data-idx="${idx}"]`);
-                const cantidad = parseInt(cantidadInput.value) || 1;
-                seleccion.prenda = radio.value;
-                seleccion.precio = parseFloat(radio.dataset.precio);
-                seleccion.cantidad = cantidad;
-                navegarSeccion("categorias-seccion", "formulario-seccion");
-            });
-
-            // Calcular total y mostrar resumen
-            getElement("calcular").addEventListener("click", () => {
-                const nombre = getElement("nombre").value.trim();
-                const fecha = getElement("fecha").value;
-                const hora = getElement("hora").value;
-
-                if (!nombre || !fecha || !hora) {
-                    alert("Por favor, completa todos los campos.");
-                    return;
-                }
-
-                seleccion.nombre = nombre;
-                seleccion.fecha = fecha;
-                seleccion.hora = hora;
-                const total = seleccion.precio * seleccion.cantidad;
-
-                navegarSeccion("formulario-seccion", "detalle-seccion");
-                getElement("detallePedido").innerHTML = `
-                    <strong>Nombre:</strong> ${nombre}<br>
-                    <strong>Fecha:</strong> ${fecha}<br>
-                    <strong>Hora:</strong> ${hora}<br>
-                    <strong>Prenda:</strong> ${seleccion.prenda}<br>
-                    <strong>Cantidad:</strong> ${seleccion.cantidad}<br>
-                    <strong>Total:</strong> $${total}
-                `;
-            });
-
-            // Confirmar compra
-            getElement("continuarPago").addEventListener("click", () => {
-                alert("¡Gracias por tu compra! Pronto recibirás un correo con los detalles.");
-                location.reload();
-            });
-
-            // Función para cambiar entre secciones
-            function navegarSeccion(actual, nueva) {
-                getElement(actual).classList.remove("activa");
-                getElement(nueva).classList.add("activa");
-            }
         });
     </script>
 </body>
