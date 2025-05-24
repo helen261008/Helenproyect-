@@ -186,6 +186,7 @@
             overflow: hidden;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
         }
         
         .category-card img {
@@ -506,6 +507,36 @@
             border-radius: 4px;
         }
         
+        .delivery-methods {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .delivery-method {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .delivery-method.selected {
+            border-color: #ff2e63;
+            background-color: rgba(255, 46, 99, 0.1);
+        }
+        
+        .delivery-method i {
+            font-size: 30px;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        .delivery-method.selected i {
+            color: #ff2e63;
+        }
+        
         .payment-methods {
             display: flex;
             gap: 15px;
@@ -637,6 +668,157 @@
             cursor: pointer;
         }
         
+        /* Página de categoría */
+        .category-page {
+            display: none;
+            padding: 30px 0;
+        }
+        
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .back-to-home {
+            display: flex;
+            align-items: center;
+            color: #333;
+            text-decoration: none;
+        }
+        
+        .back-to-home i {
+            margin-right: 5px;
+        }
+        
+        /* Información de contacto */
+        .contact-info {
+            background-color: #fff;
+            padding: 50px 0;
+            margin-bottom: 50px;
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        .contact-card {
+            text-align: center;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .contact-card i {
+            font-size: 40px;
+            color: #ff2e63;
+            margin-bottom: 20px;
+        }
+        
+        .contact-card h3 {
+            margin-bottom: 15px;
+        }
+        
+        /* Redes sociales */
+        .social-media {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #333;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s;
+        }
+        
+        .social-icon:hover {
+            transform: translateY(-5px);
+        }
+        
+        .facebook {
+            background-color: #3b5998;
+        }
+        
+        .instagram {
+            background: linear-gradient(45deg, #405de6, #5851db, #833ab4, #c13584, #e1306c, #fd1d1d);
+        }
+        
+        .twitter {
+            background-color: #1da1f2;
+        }
+        
+        .pinterest {
+            background-color: #e60023;
+        }
+        
+        /* Formulario de contacto */
+        .contact-form {
+            background-color: #fff;
+            padding: 50px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 0 auto 50px;
+        }
+        
+        .contact-form h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .submit-btn {
+            background-color: #ff2e63;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        /* Mapa */
+        .map-container {
+            height: 400px;
+            margin-bottom: 50px;
+        }
+        
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
         /* Responsive */
         @media (max-width: 1200px) {
             .product-grid {
@@ -651,6 +833,10 @@
             
             .product-grid {
                 grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .contact-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
         
@@ -691,6 +877,11 @@
             .checkout-container {
                 width: 90%;
             }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
         }
         
         @media (max-width: 576px) {
@@ -702,8 +893,16 @@
                 grid-template-columns: 1fr;
             }
             
-            .payment-methods {
+            .payment-methods, .delivery-methods {
                 flex-direction: column;
+            }
+            
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-form {
+                padding: 30px 15px;
             }
         }
     </style>
@@ -730,141 +929,222 @@
         <nav>
             <div class="container">
                 <ul class="nav-links">
-                    <li><a href="#">Novedades</a></li>
-                    <li><a href="#">Mujer</a></li>
-                    <li><a href="#">Hombre</a></li>
-                    <li><a href="#">Niños</a></li>
-                    <li><a href="#">Accesorios</a></li>
-                    <li><a href="#">Zapatos</a></li>
-                    <li><a href="#">Ofertas</a></li>
+                    <li><a href="#" class="nav-link" data-category="all">Inicio</a></li>
+                    <li><a href="#" class="nav-link" data-category="women">Mujer</a></li>
+                    <li><a href="#" class="nav-link" data-category="men">Hombre</a></li>
+                    <li><a href="#" class="nav-link" data-category="kids">Niños</a></li>
+                    <li><a href="#" class="nav-link" data-category="accessories">Accesorios</a></li>
+                    <li><a href="#" class="nav-link" data-category="shoes">Zapatos</a></li>
+                    <li><a href="#" class="nav-link" data-category="offers">Ofertas</a></li>
                 </ul>
             </div>
         </nav>
     </header>
     
-    <!-- Banner principal -->
-    <section class="main-banner">
-        <div class="banner-content">
-            <h1>Nueva Colección Verano 2023</h1>
-            <p>Descubre las últimas tendencias a precios increíbles</p>
-            <button class="shop-now-btn">Comprar ahora</button>
-        </div>
-    </section>
-    
-    <!-- Categorías -->
-    <section class="categories">
-        <div class="container">
-            <h2 class="section-title">Explora Nuestras Categorías</h2>
-            <div class="category-grid">
-                <div class="category-card">
-                    <img src="https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1351&q=80" alt="Ropa de mujer">
-                    <div class="category-overlay">
-                        <h3>Ropa de Mujer</h3>
+    <!-- Página principal -->
+    <div id="home-page">
+        <!-- Banner principal -->
+        <section class="main-banner">
+            <div class="banner-content">
+                <h1>Nueva Colección Verano 2023</h1>
+                <p>Descubre las últimas tendencias a precios increíbles</p>
+                <button class="shop-now-btn">Comprar ahora</button>
+            </div>
+        </section>
+        
+        <!-- Categorías -->
+        <section class="categories">
+            <div class="container">
+                <h2 class="section-title">Explora Nuestras Categorías</h2>
+                <div class="category-grid">
+                    <div class="category-card" data-category="women">
+                        <img src="https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1351&q=80" alt="Ropa de mujer">
+                        <div class="category-overlay">
+                            <h3>Ropa de Mujer</h3>
+                        </div>
                     </div>
-                </div>
-                <div class="category-card">
-                    <img src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1349&q=80" alt="Ropa de hombre">
-                    <div class="category-overlay">
-                        <h3>Ropa de Hombre</h3>
+                    <div class="category-card" data-category="men">
+                        <img src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1349&q=80" alt="Ropa de hombre">
+                        <div class="category-overlay">
+                            <h3>Ropa de Hombre</h3>
+                        </div>
                     </div>
-                </div>
-                <div class="category-card">
-                    <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-1.2.1&auto=format&fit=crop&w=1366&q=80" alt="Accesorios">
-                    <div class="category-overlay">
-                        <h3>Accesorios</h3>
+                    <div class="category-card" data-category="accessories">
+                        <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-1.2.1&auto=format&fit=crop&w=1366&q=80" alt="Accesorios">
+                        <div class="category-overlay">
+                            <h3>Accesorios</h3>
+                        </div>
                     </div>
-                </div>
-                <div class="category-card">
-                    <img src="https://images.unsplash.com/photo-1460353581641-37baddab0fa2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1351&q=80" alt="Zapatos">
-                    <div class="category-overlay">
-                        <h3>Zapatos</h3>
+                    <div class="category-card" data-category="shoes">
+                        <img src="https://images.unsplash.com/photo-1460353581641-37baddab0fa2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1351&q=80" alt="Zapatos">
+                        <div class="category-overlay">
+                            <h3>Zapatos</h3>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-    
-    <!-- Productos destacados -->
-    <section class="featured-products">
-        <div class="container">
-            <h2 class="section-title">Productos Destacados</h2>
-            <div class="product-grid">
-                <!-- Producto 1 -->
-                <div class="product-card" data-id="1" data-name="Vestido Floral" data-price="24.99" data-image="https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80">
-                    <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Vestido floral">
-                        <span class="discount-badge">-30%</span>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">Vestido Floral de Verano con Escote en V</h3>
-                        <div class="product-price">
-                            <span class="current-price">$24.99</span>
-                            <span class="original-price">$35.99</span>
-                        </div>
-                        <button class="add-to-cart">Añadir al carrito</button>
-                    </div>
+        </section>
+        
+        <!-- Productos destacados -->
+        <section class="featured-products">
+            <div class="container">
+                <h2 class="section-title">Productos Destacados</h2>
+                <div class="product-grid" id="product-grid">
+                    <!-- Los productos se cargarán dinámicamente -->
                 </div>
-                
-                <!-- Producto 2 -->
-                <div class="product-card" data-id="2" data-name="Jeans Skinny" data-price="29.99" data-image="https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80">
-                    <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Jeans skinny">
+            </div>
+        </section>
+        
+        <!-- Información de contacto -->
+        <section class="contact-info">
+            <div class="container">
+                <h2 class="section-title">¿Dónde encontrarnos?</h2>
+                <div class="contact-grid">
+                    <div class="contact-card">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h3>Nuestra Ubicación</h3>
+                        <p>Calle Moda 123, Colonia Centro, Ciudad de México</p>
                     </div>
-                    <div class="product-info">
-                        <h3 class="product-title">Jeans Skinny Alto Talle Color Azul</h3>
-                        <div class="product-price">
-                            <span class="current-price">$29.99</span>
-                        </div>
-                        <button class="add-to-cart">Añadir al carrito</button>
+                    <div class="contact-card">
+                        <i class="fas fa-phone"></i>
+                        <h3>Teléfono</h3>
+                        <p>+52 55 1234 5678</p>
+                        <p>Lunes a Viernes: 9am - 7pm</p>
                     </div>
-                </div>
-                
-                <!-- Producto 3 -->
-                <div class="product-card" data-id="3" data-name="Pack Camisetas" data-price="15.99" data-image="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80">
-                    <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Camiseta básica">
-                        <span class="discount-badge">-50%</span>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">Pack de 3 Camisetas Básicas de Algodón</h3>
-                        <div class="product-price">
-                            <span class="current-price">$15.99</span>
-                            <span class="original-price">$32.99</span>
-                        </div>
-                        <button class="add-to-cart">Añadir al carrito</button>
-                    </div>
-                </div>
-                
-                <!-- Producto 4 -->
-                <div class="product-card" data-id="4" data-name="Zapatillas Running" data-price="39.99" data-image="https://images.unsplash.com/photo-1600269452121-4f2416e55c28?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80">
-                    <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1600269452121-4f2416e55c28?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Zapatillas deportivas">
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">Zapatillas Deportivas Running Ultra Light</h3>
-                        <div class="product-price">
-                            <span class="current-price">$39.99</span>
-                        </div>
-                        <button class="add-to-cart">Añadir al carrito</button>
-                    </div>
-                </div>
-                
-                <!-- Producto 5 -->
-                <div class="product-card" data-id="5" data-name="Bolso Bandolera" data-price="27.99" data-image="https://images.unsplash.com/photo-1590874103328-eac38a683ce7?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80">
-                    <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1590874103328-eac38a683ce7?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Bolso bandolera">
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">Bolso Bandolera Multibolsillos Tamaño Grande</h3>
-                        <div class="product-price">
-                            <span class="current-price">$27.99</span>
-                        </div>
-                        <button class="add-to-cart">Añadir al carrito</button>
+                    <div class="contact-card">
+                        <i class="fas fa-envelope"></i>
+                        <h3>Correo Electrónico</h3>
+                        <p>info@fashionshop.com</p>
+                        <p>soporte@fashionshop.com</p>
                     </div>
                 </div>
             </div>
+        </section>
+        
+        <!-- Mapa -->
+        <section class="container map-container">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.888614771349!2d-99.1699496845337!3d19.42702074612172!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ff35f5bd1563%3A0x6c366f0e2de02ff7!2sEl%20%C3%81ngel%20de%20la%20Independencia!5e0!3m2!1ses-419!2smx!4v1624567890123!5m2!1ses-419!2smx" allowfullscreen="" loading="lazy"></iframe>
+        </section>
+        
+        <!-- Redes sociales -->
+        <section class="social-media">
+            <div class="container">
+                <h2 class="section-title">Síguenos en Redes Sociales</h2>
+                <p>Mantente al día con nuestras últimas colecciones y ofertas especiales</p>
+                <div class="social-icons">
+                    <a href="#" class="social-icon facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon pinterest"><i class="fab fa-pinterest"></i></a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Formulario de contacto -->
+        <section class="container">
+            <div class="contact-form">
+                <h2>Envíanos tus comentarios</h2>
+                <form id="feedback-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="feedback-name">Nombre completo</label>
+                            <input type="text" id="feedback-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="feedback-email">Correo electrónico</label>
+                            <input type="email" id="feedback-email" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="feedback-message">Tu mensaje</label>
+                        <textarea id="feedback-message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Enviar Mensaje</button>
+                </form>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Páginas de categoría -->
+    <div id="category-pages">
+        <!-- Página de categoría Mujer -->
+        <div class="category-page" id="women-page">
+            <div class="container">
+                <div class="category-header">
+                    <a href="#" class="back-to-home"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+                    <h2>Ropa para Mujer</h2>
+                </div>
+                <div class="product-grid" id="women-products">
+                    <!-- Productos de mujer se cargarán dinámicamente -->
+                </div>
+            </div>
         </div>
-    </section>
+        
+        <!-- Página de categoría Hombre -->
+        <div class="category-page" id="men-page">
+            <div class="container">
+                <div class="category-header">
+                    <a href="#" class="back-to-home"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+                    <h2>Ropa para Hombre</h2>
+                </div>
+                <div class="product-grid" id="men-products">
+                    <!-- Productos de hombre se cargarán dinámicamente -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Página de categoría Niños -->
+        <div class="category-page" id="kids-page">
+            <div class="container">
+                <div class="category-header">
+                    <a href="#" class="back-to-home"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+                    <h2>Ropa para Niños</h2>
+                </div>
+                <div class="product-grid" id="kids-products">
+                    <!-- Productos para niños se cargarán dinámicamente -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Página de categoría Accesorios -->
+        <div class="category-page" id="accessories-page">
+            <div class="container">
+                <div class="category-header">
+                    <a href="#" class="back-to-home"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+                    <h2>Accesorios</h2>
+                </div>
+                <div class="product-grid" id="accessories-products">
+                    <!-- Accesorios se cargarán dinámicamente -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Página de categoría Zapatos -->
+        <div class="category-page" id="shoes-page">
+            <div class="container">
+                <div class="category-header">
+                    <a href="#" class="back-to-home"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+                    <h2>Zapatos</h2>
+                </div>
+                <div class="product-grid" id="shoes-products">
+                    <!-- Zapatos se cargarán dinámicamente -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Página de categoría Ofertas -->
+        <div class="category-page" id="offers-page">
+            <div class="container">
+                <div class="category-header">
+                    <a href="#" class="back-to-home"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+                    <h2>Ofertas Especiales</h2>
+                </div>
+                <div class="product-grid" id="offers-products">
+                    <!-- Productos en oferta se cargarán dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
     
     <!-- Carrito de compras -->
     <div class="cart-overlay" id="cart-overlay">
@@ -921,18 +1201,34 @@
                         <label for="phone">Teléfono</label>
                         <input type="tel" id="phone" required>
                     </div>
-                    <div class="form-group">
-                        <label for="address">Dirección</label>
-                        <input type="text" id="address" required>
+                    
+                    <h3 style="margin-top: 30px;">Método de Entrega</h3>
+                    <div class="delivery-methods">
+                        <div class="delivery-method" data-method="delivery">
+                            <i class="fas fa-truck"></i>
+                            <div>Envío a domicilio</div>
+                        </div>
+                        <div class="delivery-method" data-method="pickup">
+                            <i class="fas fa-store"></i>
+                            <div>Recoger en tienda</div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="city">Ciudad</label>
-                        <input type="text" id="city" required>
+                    
+                    <div id="delivery-address-fields" style="margin-top: 20px;">
+                        <div class="form-group">
+                            <label for="address">Dirección</label>
+                            <input type="text" id="address">
+                        </div>
+                        <div class="form-group">
+                            <label for="city">Ciudad</label>
+                            <input type="text" id="city">
+                        </div>
+                        <div class="form-group">
+                            <label for="zip">Código Postal</label>
+                            <input type="text" id="zip">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="zip">Código Postal</label>
-                        <input type="text" id="zip" required>
-                    </div>
+                    
                     <div class="form-group">
                         <label for="notes">Notas adicionales (opcional)</label>
                         <textarea id="notes" rows="3"></textarea>
@@ -993,14 +1289,15 @@
                         </div>
                     </div>
                     
+                    <div id="delivery-info" style="margin-top: 20px; text-align: left;">
+                        <h4>Método de entrega:</h4>
+                        <p id="selected-delivery-method"></p>
+                        <p id="delivery-address"></p>
+                    </div>
+                    
                     <div id="payment-info" style="margin-top: 20px; text-align: left;">
                         <h4>Método de pago:</h4>
                         <p id="selected-payment-method"></p>
-                    </div>
-                    
-                    <div id="delivery-info" style="margin-top: 20px; text-align: left;">
-                        <h4>Dirección de envío:</h4>
-                        <p id="delivery-address"></p>
                     </div>
                     
                     <button type="button" id="confirm-order" class="btn-next" style="width: 100%; margin-top: 30px;">
@@ -1028,6 +1325,7 @@
                 <p><strong>Número de pedido:</strong> <span id="ticket-number">FS-2023-001</span></p>
                 <p><strong>Fecha:</strong> <span id="ticket-date">25/05/2023</span></p>
                 <p><strong>Cliente:</strong> <span id="ticket-customer">Juan Pérez</span></p>
+                <p><strong>Método de entrega:</strong> <span id="ticket-delivery">Envío a domicilio</span></p>
                 <p><strong>Método de pago:</strong> <span id="ticket-payment">Tarjeta de crédito</span></p>
             </div>
             
@@ -1048,6 +1346,7 @@
         // Variables globales
         let cart = [];
         let currentStep = 1;
+        let selectedDeliveryMethod = '';
         
         // Elementos del DOM
         const cartBtn = document.getElementById('cart-btn');
@@ -1064,6 +1363,143 @@
         const confirmOrder = document.getElementById('confirm-order');
         const ticketOverlay = document.getElementById('ticket-overlay');
         const downloadTicket = document.getElementById('download-ticket');
+        const homePage = document.getElementById('home-page');
+        const categoryPages = document.getElementById('category-pages');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const categoryCards = document.querySelectorAll('.category-card');
+        const backToHomeLinks = document.querySelectorAll('.back-to-home');
+        const deliveryMethods = document.querySelectorAll('.delivery-method');
+        const deliveryAddressFields = document.getElementById('delivery-address-fields');
+        const feedbackForm = document.getElementById('feedback-form');
+        
+        // Datos de productos (simulados)
+        const products = {
+            all: generateProducts(10, 'all'),
+            women: generateProducts(50, 'women'),
+            men: generateProducts(50, 'men'),
+            kids: generateProducts(50, 'kids'),
+            accessories: generateProducts(50, 'accessories'),
+            shoes: generateProducts(50, 'shoes'),
+            offers: generateProducts(50, 'offers')
+        };
+        
+        // Función para generar productos ficticios
+        function generateProducts(count, category) {
+            const categories = {
+                women: ['Vestido', 'Blusa', 'Falda', 'Jeans', 'Abrigo', 'Top', 'Short', 'Chamarra'],
+                men: ['Camisa', 'Pantalón', 'Sudadera', 'Chaqueta', 'Jeans', 'Playera', 'Short', 'Chaleco'],
+                kids: ['Vestido', 'Playera', 'Pantalón', 'Chamarra', 'Falda', 'Short', 'Sudadera', 'Pijama'],
+                accessories: ['Bolso', 'Cinturón', 'Gorra', 'Bufanda', 'Lentes', 'Collar', 'Reloj', 'Sombrero'],
+                shoes: ['Tenis', 'Zapatillas', 'Botas', 'Sandalias', 'Tacones', 'Mocasines', 'Zapatos formales', 'Chanclas'],
+                offers: ['Oferta Especial', 'Descuento', 'Liquidación', 'Promoción', 'Pack', 'Combo', 'Edición Limitada', 'Últimas Unidades']
+            };
+            
+            const adjectives = ['Elegante', 'Moderno', 'Cómodo', 'Estiloso', 'Fashion', 'Exclusivo', 'Premium', 'Básico'];
+            const colors = ['Negro', 'Blanco', 'Azul', 'Rojo', 'Verde', 'Rosa', 'Gris', 'Beige'];
+            
+            const result = [];
+            
+            for(let i = 1; i <= count; i++) {
+                let name, price, discount;
+                
+                if(category === 'all') {
+                    // Mezclar productos de todas las categorías
+                    const randomCategory = Object.keys(categories)[Math.floor(Math.random() * Object.keys(categories).length)];
+                    const type = categories[randomCategory][Math.floor(Math.random() * categories[randomCategory].length)];
+                    name = `${adjectives[Math.floor(Math.random() * adjectives.length)]} ${type} ${colors[Math.floor(Math.random() * colors.length)]}`;
+                } else {
+                    const type = categories[category][Math.floor(Math.random() * categories[category].length)];
+                    name = `${adjectives[Math.floor(Math.random() * adjectives.length)]} ${type} ${colors[Math.floor(Math.random() * colors.length)]}`;
+                }
+                
+                // Precios aleatorios con algunos en oferta
+                if(Math.random() > 0.7 && category !== 'offers') {
+                    const originalPrice = Math.floor(Math.random() * 100) + 20;
+                    discount = Math.floor(Math.random() * 50) + 10;
+                    price = originalPrice - (originalPrice * discount / 100);
+                } else if(category === 'offers') {
+                    const originalPrice = Math.floor(Math.random() * 100) + 20;
+                    discount = Math.floor(Math.random() * 70) + 20;
+                    price = originalPrice - (originalPrice * discount / 100);
+                } else {
+                    price = Math.floor(Math.random() * 80) + 10;
+                    discount = 0;
+                }
+                
+                // Imágenes aleatorias de Unsplash basadas en categoría
+                let imageUrl;
+                switch(category) {
+                    case 'women':
+                        imageUrl = `https://source.unsplash.com/random/300x400/?women,fashion,clothing,dress,${i}`;
+                        break;
+                    case 'men':
+                        imageUrl = `https://source.unsplash.com/random/300x400/?men,fashion,clothing,shirt,${i}`;
+                        break;
+                    case 'kids':
+                        imageUrl = `https://source.unsplash.com/random/300x400/?kids,fashion,clothing,children,${i}`;
+                        break;
+                    case 'accessories':
+                        imageUrl = `https://source.unsplash.com/random/300x400/?accessories,bag,hat,jewelry,${i}`;
+                        break;
+                    case 'shoes':
+                        imageUrl = `https://source.unsplash.com/random/300x400/?shoes,sneakers,boots,heels,${i}`;
+                        break;
+                    case 'offers':
+                        imageUrl = `https://source.unsplash.com/random/300x400/?sale,discount,offer,${i}`;
+                        break;
+                    default:
+                        imageUrl = `https://source.unsplash.com/random/300x400/?fashion,clothing,${i}`;
+                }
+                
+                result.push({
+                    id: `${category}-${i}`,
+                    name: name,
+                    price: price,
+                    discount: discount,
+                    image: imageUrl,
+                    category: category
+                });
+            }
+            
+            return result;
+        }
+        
+        // Función para renderizar productos
+        function renderProducts(products, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.dataset.id = product.id;
+                productCard.dataset.name = product.name;
+                productCard.dataset.price = product.price.toFixed(2);
+                productCard.dataset.image = product.image;
+                
+                productCard.innerHTML = `
+                    <div class="product-image">
+                        <img src="${product.image}" alt="${product.name}">
+                        ${product.discount > 0 ? `<span class="discount-badge">-${product.discount}%</span>` : ''}
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">${product.name}</h3>
+                        <div class="product-price">
+                            <span class="current-price">$${product.price.toFixed(2)}</span>
+                            ${product.discount > 0 ? `<span class="original-price">$${(product.price / (1 - product.discount/100)).toFixed(2)}</span>` : ''}
+                        </div>
+                        <button class="add-to-cart">Añadir al carrito</button>
+                    </div>
+                `;
+                
+                container.appendChild(productCard);
+            });
+            
+            // Añadir event listeners a los botones de añadir al carrito
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', addToCart);
+            });
+        }
         
         // Event listeners
         document.addEventListener('DOMContentLoaded', () => {
@@ -1073,10 +1509,58 @@
                 updateCart();
             }
             
-            // Añadir productos al carrito
-            const addToCartButtons = document.querySelectorAll('.add-to-cart');
-            addToCartButtons.forEach(button => {
-                button.addEventListener('click', addToCart);
+            // Renderizar productos iniciales
+            renderProducts(products.all, 'product-grid');
+            
+            // Navegación por categorías
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const category = this.dataset.category;
+                    
+                    if(category === 'all') {
+                        homePage.style.display = 'block';
+                        categoryPages.style.display = 'none';
+                        renderProducts(products.all, 'product-grid');
+                    } else {
+                        homePage.style.display = 'none';
+                        categoryPages.style.display = 'block';
+                        
+                        // Ocultar todas las páginas de categoría
+                        document.querySelectorAll('.category-page').forEach(page => {
+                            page.style.display = 'none';
+                        });
+                        
+                        // Mostrar la categoría seleccionada
+                        document.getElementById(`${category}-page`).style.display = 'block';
+                        
+                        // Renderizar productos de la categoría
+                        renderProducts(products[category], `${category}-products`);
+                    }
+                    
+                    // Marcar como activo
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Tarjetas de categoría
+            categoryCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const category = this.dataset.category;
+                    const link = document.querySelector(`.nav-link[data-category="${category}"]`);
+                    link.click();
+                });
+            });
+            
+            // Volver al inicio
+            backToHomeLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    homePage.style.display = 'block';
+                    categoryPages.style.display = 'none';
+                    document.querySelector('.nav-link[data-category="all"]').click();
+                });
             });
             
             // Carrito
@@ -1089,6 +1573,11 @@
             btnBack.addEventListener('click', prevStep);
             confirmOrder.addEventListener('click', completeOrder);
             
+            // Métodos de entrega
+            deliveryMethods.forEach(method => {
+                method.addEventListener('click', selectDeliveryMethod);
+            });
+            
             // Métodos de pago
             const paymentMethods = document.querySelectorAll('.payment-method');
             paymentMethods.forEach(method => {
@@ -1097,6 +1586,9 @@
             
             // Ticket
             downloadTicket.addEventListener('click', generatePDF);
+            
+            // Formulario de comentarios
+            feedbackForm.addEventListener('submit', submitFeedback);
         });
         
         // Funciones del carrito
@@ -1274,13 +1766,22 @@
                 const name = document.getElementById('name').value;
                 const email = document.getElementById('email').value;
                 const phone = document.getElementById('phone').value;
-                const address = document.getElementById('address').value;
-                const city = document.getElementById('city').value;
-                const zip = document.getElementById('zip').value;
                 
-                if(!name || !email || !phone || !address || !city || !zip) {
+                if(!name || !email || !phone) {
                     alert('Por favor completa todos los campos obligatorios');
                     return;
+                }
+                
+                // Validar dirección si es envío a domicilio
+                if(selectedDeliveryMethod === 'delivery') {
+                    const address = document.getElementById('address').value;
+                    const city = document.getElementById('city').value;
+                    const zip = document.getElementById('zip').value;
+                    
+                    if(!address || !city || !zip) {
+                        alert('Por favor completa todos los campos de dirección');
+                        return;
+                    }
                 }
                 
                 document.getElementById('step-1').style.display = 'none';
@@ -1317,15 +1818,23 @@
                 btnNext.style.display = 'none';
                 currentStep = 3;
                 
-                // Mostrar información de pago y envío
+                // Mostrar información de entrega
+                const deliveryMethod = document.querySelector('.delivery-method.selected').textContent.trim();
+                document.getElementById('selected-delivery-method').textContent = deliveryMethod;
+                
+                if(selectedDeliveryMethod === 'delivery') {
+                    const name = document.getElementById('name').value;
+                    const address = document.getElementById('address').value;
+                    const city = document.getElementById('city').value;
+                    const zip = document.getElementById('zip').value;
+                    document.getElementById('delivery-address').textContent = `${name}, ${address}, ${city}, ${zip}`;
+                } else {
+                    document.getElementById('delivery-address').textContent = 'Recoger en tienda: Calle Moda 123, Colonia Centro, Ciudad de México';
+                }
+                
+                // Mostrar información de pago
                 const paymentMethod = document.querySelector('.payment-method.selected').textContent.trim();
                 document.getElementById('selected-payment-method').textContent = paymentMethod;
-                
-                const name = document.getElementById('name').value;
-                const address = document.getElementById('address').value;
-                const city = document.getElementById('city').value;
-                const zip = document.getElementById('zip').value;
-                document.getElementById('delivery-address').textContent = `${name}, ${address}, ${city}, ${zip}`;
             }
         }
         
@@ -1344,6 +1853,30 @@
                 document.querySelector(`.step[data-step="2"]`).classList.add('active');
                 btnNext.style.display = 'block';
                 currentStep = 2;
+            }
+        }
+        
+        function selectDeliveryMethod(e) {
+            const method = e.currentTarget;
+            
+            document.querySelectorAll('.delivery-method').forEach(m => {
+                m.classList.remove('selected');
+            });
+            
+            method.classList.add('selected');
+            selectedDeliveryMethod = method.dataset.method;
+            
+            // Mostrar/ocultar campos de dirección
+            if(selectedDeliveryMethod === 'delivery') {
+                deliveryAddressFields.style.display = 'block';
+                document.getElementById('address').required = true;
+                document.getElementById('city').required = true;
+                document.getElementById('zip').required = true;
+            } else {
+                deliveryAddressFields.style.display = 'none';
+                document.getElementById('address').required = false;
+                document.getElementById('city').required = false;
+                document.getElementById('zip').required = false;
             }
         }
         
@@ -1366,7 +1899,7 @@
         
         function updateOrderSummary() {
             const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-            const shipping = 5.00;
+            const shipping = selectedDeliveryMethod === 'delivery' ? 5.00 : 0;
             const total = subtotal + shipping;
             
             document.getElementById('order-subtotal').textContent = `$${subtotal.toFixed(2)}`;
@@ -1387,17 +1920,19 @@
             
             // Obtener información del cliente
             const name = document.getElementById('name').value;
+            const deliveryMethod = document.querySelector('.delivery-method.selected').textContent.trim();
             const paymentMethod = document.querySelector('.payment-method.selected').textContent.trim();
             
             // Calcular total
             const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-            const shipping = 5.00;
+            const shipping = selectedDeliveryMethod === 'delivery' ? 5.00 : 0;
             const total = subtotal + shipping;
             
             // Actualizar ticket
             document.getElementById('ticket-number').textContent = orderNumber;
             document.getElementById('ticket-date').textContent = date;
             document.getElementById('ticket-customer').textContent = name;
+            document.getElementById('ticket-delivery').textContent = deliveryMethod;
             document.getElementById('ticket-payment').textContent = paymentMethod;
             document.getElementById('ticket-total').textContent = total.toFixed(2);
             
@@ -1444,13 +1979,14 @@
             doc.text(`Número de pedido: ${document.getElementById('ticket-number').textContent}`, 14, 40);
             doc.text(`Fecha: ${document.getElementById('ticket-date').textContent}`, 14, 46);
             doc.text(`Cliente: ${document.getElementById('ticket-customer').textContent}`, 14, 52);
-            doc.text(`Método de pago: ${document.getElementById('ticket-payment').textContent}`, 14, 58);
+            doc.text(`Método de entrega: ${document.getElementById('ticket-delivery').textContent}`, 14, 58);
+            doc.text(`Método de pago: ${document.getElementById('ticket-payment').textContent}`, 14, 64);
             
             // Línea divisoria
-            doc.line(14, 64, 196, 64);
+            doc.line(14, 70, 196, 70);
             
             // Productos
-            let y = 72;
+            let y = 78;
             doc.setFontSize(12);
             doc.text('Productos', 14, y);
             y += 8;
@@ -1465,6 +2001,16 @@
             // Línea divisoria
             doc.line(14, y, 196, y);
             y += 8;
+            
+            // Subtotal
+            doc.text('Subtotal:', 160, y);
+            doc.text(`$${document.getElementById('order-subtotal').textContent}`, 180, y, { align: 'right' });
+            y += 6;
+            
+            // Envío
+            doc.text('Envío:', 160, y);
+            doc.text(`${document.getElementById('order-shipping').textContent}`, 180, y, { align: 'right' });
+            y += 6;
             
             // Total
             doc.setFontSize(12);
@@ -1486,6 +2032,40 @@
             setTimeout(() => {
                 ticketOverlay.style.display = 'none';
             }, 1000);
+        }
+        
+        // Enviar comentario
+        function submitFeedback(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('feedback-name').value;
+            const email = document.getElementById('feedback-email').value;
+            const message = document.getElementById('feedback-message').value;
+            
+            // Aquí normalmente enviarías el formulario a tu servidor/backend
+            // Para este ejemplo, simularemos el envío
+            
+            // Mostrar mensaje de éxito
+            alert(`Gracias por tu comentario, ${name}! Hemos recibido tu mensaje y nos pondremos en contacto contigo pronto.`);
+            
+            // Limpiar formulario
+            feedbackForm.reset();
+            
+            // En un caso real, aquí enviarías los datos a tu servidor
+            // Por ejemplo:
+            // fetch('tu-servidor.com/api/feedback', {
+            //   method: 'POST',
+            //   body: JSON.stringify({ name, email, message }),
+            //   headers: { 'Content-Type': 'application/json' }
+            // })
+            // .then(response => response.json())
+            // .then(data => {
+            //   alert('Gracias por tu comentario!');
+            //   feedbackForm.reset();
+            // })
+            // .catch(error => {
+            //   alert('Hubo un error al enviar tu mensaje. Por favor inténtalo de nuevo.');
+            // });
         }
     </script>
 </body>
