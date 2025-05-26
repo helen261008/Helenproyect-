@@ -6,67 +6,87 @@
     <title>Página Principal</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-image: url('images.jpeg'); /* Faltaba url() */
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80');
+            background-size: cover;
+            background-position: center;
             margin: 0;
             padding: 0;
+            min-height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            flex-direction: column;
         }
-        
+
         h1 {
-            color: #333;
-            margin-bottom: 30px;
+            color: #222;
+            margin-bottom: 40px;
+            font-size: 3rem; /* Más grande */
+            letter-spacing: 2px;
+            text-shadow: 0 2px 8px rgba(67,198,172,0.15);
+            background: rgba(255,255,255,0.7);
+            border-radius: 12px;
+            padding: 10px 30px;
         }
-        
+
         .button-container {
             display: flex;
-            gap: 20px;
+            gap: 30px;
         }
-        
+
         .btn {
-            padding: 15px 30px;
-            font-size: 18px;
+            padding: 22px 48px;
+            font-size: 1.4rem; /* Más grande */
             border: none;
-            border-radius: 5px;
+            border-radius: 30px;
             cursor: pointer;
             text-decoration: none;
-            color: white;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            color: #fff;
+            font-weight: 700;
+            background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+            box-shadow: 0 8px 24px rgba(24,90,157,0.15);
+            transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+            outline: none;
         }
-        
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-        }
-        
+
         .btn-pizza {
-            background-color: #ff5a5f;
+            background: linear-gradient(90deg, #ff9966 0%, #ff5e62 100%);
         }
-        
+
         .btn-ropa {
-            background-color: #5f9ea0;
+            background: linear-gradient(90deg, #36d1c4 0%, #5b86e5 100%);
         }
-        
-        .btn-pizza:hover {
-            background-color: #e04a50;
+
+        .btn:hover {
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: 0 16px 32px rgba(24,90,157,0.18);
+            filter: brightness(1.08);
         }
-        
-        .btn-ropa:hover {
-            background-color: #4d8b8d;
+
+        footer {
+            width: 100%;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            text-align: center;
+            padding: 18px 0 12px 0;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            position: fixed;
+            left: 0;
+            bottom: 0;
         }
     </style>
 </head>
 <body>
     <h1>Bienvenido a Nuestros Servicios</h1>
-    <div class="button-container">
-        <a href="pizz.html" class="btn btn-pizza">Pizzería</a>
-        <a href="ropa.html" class="btn btn-ropa">Ropa</a>
+<div class="button-container">
+    <a href="pizz.html" class="btn btn-pizza">🍕 Pizzería</a>
+    <a href="ropa.html" class="btn btn-ropa">👕 Ropa</a>
+</div>
     </div>
+    <footer>
+        &copy; 2025 Todos los derechos reservados
+    </footer>
 </body>
 </html>
