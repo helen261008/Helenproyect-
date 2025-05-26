@@ -1,410 +1,781 @@
-<meta charset="UTF-8">
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pedido de Pizza</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pizzería Bella Napoli</title>
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:600,700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <link rel="stylesheet" href="yoyo.css">
     <style>
         body {
-            background: linear-gradient(135deg, #ff8a00 0%, #e52e71 100%);
-            font-family: 'Montserrat', Arial, sans-serif;
+            background-color: #ffe4ec;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
             margin: 0;
             padding: 0;
-            color: #fff;
         }
-        .contenedor {
-            max-width: 420px;
-            margin: 40px auto;
-            background: rgba(0,0,0,0.85);
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #ffe4ec 0%, #e0c3fc 100%);
+            background-image: url('1366_2000.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.7;
+            z-index: -1;
+            filter: blur(2px);
+        }
+
+        .seccion {
+            display: none;
+            max-width: 650px;
+            margin: 50px auto;
+            background: linear-gradient(120deg, #fff1eb 0%, #ace0f9 100%);
+            padding: 32px 28px;
+            box-shadow: 0 8px 32px rgba(106,27,154,0.15), 0 1.5px 8px rgba(255, 64, 129, 0.08);
             border-radius: 18px;
-            padding: 32px 24px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+            border: 2px solid #e1bee7;
             position: relative;
         }
-        h1, h2 {
+
+        .activa {
+            display: block;
+            animation: fadeIn 0.7s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        h1, h2, h3 {
+            color: #ff4081;
+            text-shadow: 1px 2px 8px #e1bee7;
             text-align: center;
-            color: #ffe066;
-            margin-bottom: 18px;
+            margin-bottom: 22px;
             letter-spacing: 1px;
         }
-        label {
-            display: block;
-            margin: 16px 0 8px 0;
-            font-weight: 600;
-            color: #fff;
-            text-align: left;
-        }
-        input[type="text"], input[type="date"], input[type="time"], select, input[type="number"] {
-            width: 100%;
-            padding: 10px 12px;
-            border-radius: 8px;
-            border: none;
-            margin-bottom: 10px;
-            font-size: 1em;
-            background: #222;
-            color: #ffe066;
-        }
-        input[type="radio"], input[type="checkbox"] {
-            margin-right: 8px;
-            accent-color: #e52e71;
-        }
-        .pizzas, .extras {
+
+        form {
             display: flex;
             flex-direction: column;
-            gap: 8px;
         }
-        .boton {
-            width: 100%;
-            padding: 13px;
-            background: linear-gradient(90deg, #e52e71 0%, #ff8a00 100%);
-            border: none;
-            border-radius: 9px;
+
+        label {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #6A1B9A;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"], input[type="date"], input[type="number"], input[type="tel"], select, textarea {
+            padding: 12px;
+            border: 2px solid #ce93d8;
+            border-radius: 10px;
+            margin-bottom: 18px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            font-size: 16px;
+            background: #fff8fd;
+            box-shadow: 0 1px 4px #fce4ec;
+        }
+
+        input[type="text"]:focus, input[type="date"]:focus, input[type="number"]:focus, input[type="tel"]:focus, select:focus, textarea:focus {
+            border-color: #ff4081;
+            outline: none;
+            box-shadow: 0 0 8px #ff80ab;
+        }
+
+        button {
+            padding: 14px 0;
+            background: linear-gradient(90deg, #ff80ab 0%, #7c4dff 100%);
             color: #fff;
-            font-size: 1.1em;
-            font-weight: 700;
-            margin-top: 14px;
-            margin-bottom: 12px;
+            border: none;
+            border-radius: 10px;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.16);
-            transition: background 0.25s, transform 0.2s;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 12px;
+            box-shadow: 0 2px 8px #e1bee7;
+            transition: background 0.3s, transform 0.2s;
         }
-        .boton:hover {
-            background: linear-gradient(90deg, #ff8a00 0%, #e52e71 100%);
+
+        button:hover {
+            background: linear-gradient(90deg, #7c4dff 0%, #ff80ab 100%);
             transform: translateY(-2px) scale(1.03);
         }
-        .hidden { display: none !important; }
-        .activa { display: block !important; }
-        .seccion { display: none; }
-        .resumen, .ticket {
-            background: #fff3cd;
-            color: #444;
-            border-radius: 12px;
-            padding: 20px;
+
+        .checkbox-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
             margin: 18px 0;
-            font-size: 1em;
-            box-shadow: 0 1px 8px rgba(0,0,0,0.10);
+            padding: 18px;
+            background: linear-gradient(90deg, #fce4ec 0%, #e1bee7 100%);
+            border-radius: 12px;
+            border: 1.5px solid #ce93d8;
         }
-        .ticket strong { color: #e52e71; }
-        .acciones {
+
+        .checkbox-container div {
             display: flex;
-            gap: 10px;
-            margin-top: 10px;
-            justify-content: center;
+            align-items: center;
         }
-        @media (max-width: 600px) {
-            .contenedor { padding: 16px 5vw; }
-            h1 { font-size: 1.6em; }
+
+        .checkbox-container input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            accent-color: #ff4081;
         }
+
+        .checkbox-container label {
+            font-weight: normal;
+            color: #6A1B9A;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: color 0.3s;
+            font-size: 15px;
+        }
+
+        .checkbox-container label:hover {
+            color: #ff4081;
+        }
+
+        input[type="radio"] {
+            accent-color: #7c4dff;
+            margin-right: 8px;
+        }
+
+        #detallePedido, #ticketResumen {
+            background: linear-gradient(90deg, #fffde7 0%, #e1bee7 100%);
+            padding: 18px;
+            border-radius: 10px;
+            margin-top: 12px;
+            box-shadow: 0 1px 6px #f8bbd0;
+            border: 1.5px solid #ce93d8;
+        }
+
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+
+        ul li {
+            padding: 5px 0;
+            color: #6A1B9A;
+        }
+
+        .mensaje-ok {
+            color: #43a047;
+            font-weight: bold;
+        }
+
+        .mensaje-error {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+
+        #modalQuejas {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(156, 39, 176, 0.25);
+            z-index: 1000;
+        }
+
+        .modal-contenido {
+            background: linear-gradient(120deg, #fff1eb 0%, #ace0f9 100%);
+            margin: 8% auto;
+            padding: 28px 18px;
+            width: 95%;
+            max-width: 420px;
+            border-radius: 16px;
+            border: 2px solid #e1bee7;
+            box-shadow: 0 4px 24px #ce93d8;
+        }
+
+        #btnQuejas {
+            background: linear-gradient(135deg, #ff4081 0%, #7c4dff 100%);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 10px #e1bee7;
+            z-index: 999;
+            transition: background 0.3s, transform 0.2s;
+        }
+        #btnQuejas:hover {
+            background: linear-gradient(135deg, #7c4dff 0%, #ff4081 100%);
+            transform: scale(1.08);
+        }
+
+        /* Animación para el modal */
+        .modal-contenido {
+            animation: popIn 0.5s;
+        }
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.8);}
+            to { opacity: 1; transform: scale(1);}
+        }
+
+        /* Responsive */
+        @media (max-width: 700px) {
+            .seccion {
+                margin: 18px;
+                padding: 18px;
+            }
+            .modal-contenido {
+                width: 98%;
+                margin: 10% auto;
+            }
+        }
+        @media (max-width: 500px) {
+            .checkbox-container {
+                grid-template-columns: 1fr;
+            }
+            .seccion {
+                margin: 8px;
+                padding: 10px;
+            }
+        }
+    </style>
     </style>
 </head>
 <body>
-    <!-- Bienvenida -->
-    <div id="bienvenida" class="seccion activa contenedor">
-        <h1>🍕 Pizzería Bella Napoli</h1>
-        <p>Bienvenido, pide tu pizza favorita fácil y rápido.</p>
-        <button id="comenzar" class="boton">¡Comenzar pedido!</button>
+    <div id="bienvenida" class="seccion activa">
+        <h1>¡Bienvenido a Pizzería El Comunismo de Perú!</h1>
+        <p>Gracias por elegirnos para tus antojos</p>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 18px; margin-top: 28px;">
+            <button id="comenzar" style="font-size: 1.25rem; padding: 16px 38px; border-radius: 12px; min-width: 220px;">Comenzar pedido</button>
+            <a href="Index.html" style="font-size: 1.1rem; color: #7c4dff; text-decoration: none; font-weight: bold; margin-top: 6px;">Volver a inicio</a>
+        </div>
+        <br>
     </div>
 
-    <!-- Formulario de pedido -->
-    <div id="formulario-seccion" class="seccion contenedor">
-        <h2>Haz tu pedido</h2>
-        <label for="nombre">Tu nombre:</label>
-        <input type="text" id="nombre" placeholder="Ej: Juan Pérez">
+    <div id="formulario-seccion" class="seccion">
+        <h1>Pedidos de Pizza</h1>
+        <form id="formulario">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required>
+            
+            <label for="Fecha">Fecha:</label>
+            <input type="date" id="Fecha" name="Fecha" required>
 
-        <label for="fecha">Fecha:</label>
-        <input type="date" id="fecha">
-
-        <label for="hora">Hora:</label>
-        <input type="time" id="hora">
-
-        <label>Elige tu pizza:</label>
-        <div class="pizzas">
-            <select id="pizza1">
-                <option value="0">Selecciona una pizza...</option>
-                <option value="Margarita">Margarita ($120)</option>
-                <option value="Pepperoni">Pepperoni ($130)</option>
-                <option value="Hawaiana">Hawaiana ($135)</option>
-                <option value="Vegetariana">Vegetariana ($125)</option>
+            <label for="Pizza1">Pizza 1:</label>
+            <select id="Pizza1" name="Pizza1">
+                <option value="">-- Seleccionar --</option> 
+                <option value="10">Mexicana ($10)</option>
+                <option value="12">Pepperoni ($12)</option>
+                <option value="11">Hawaiana ($11)</option>
             </select>
-            <label for="cantidadPizza1">Cantidad:</label>
-            <input type="number" id="cantidadPizza1" value="1" min="1" max="10">
-        </div>
 
-        <label>Extras:</label>
-        <div class="extras">
-            <label><input type="checkbox" class="extra" value="Queso extra" data-precio="20">Queso extra ($20)</label>
-            <label><input type="checkbox" class="extra" value="Bebida" data-precio="30">Bebida ($30)</label>
-            <label><input type="checkbox" class="extra" value="Pan de ajo" data-precio="25">Pan de ajo ($25)</label>
-        </div>
+            <label for="Pizza2">Pizza 2:</label>
+            <select id="Pizza2" name="Pizza2">
+                <option value="">-- Seleccionar --</option> 
+                <option value="10">Mexicana ($10)</option>
+                <option value="12">Pepperoni ($12)</option>
+                <option value="11">Hawaiana ($11)</option>
+            </select>
 
-        <button id="calcular" class="boton">Ver resumen</button>
+            <label for="Pizza3">Pizza 3:</label>
+            <select id="Pizza3" name="Pizza3">
+                <option value="">-- Seleccionar --</option> 
+                <option value="10">Mexicana ($10)</option>
+                <option value="12">Pepperoni ($12)</option>
+                <option value="11">Hawaiana ($11)</option>
+            </select>
+            
+            <h3>Complementos:</h3>
+            <div class="checkbox-container">
+                <div>
+                    <input type="checkbox" id="queso1" value="2">
+                    <label for="queso1">Queso extra (+$2)</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="orilla" value="3">
+                    <label for="orilla">Orilla rellena (+$3)</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="refresco" value="1.5">
+                    <label for="refresco">Refresco (+$1.50)</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="papas" value="2.5">
+                    <label for="papas">Papas fritas (+$2.50)</label>
+                </div>
+            </div>
+
+            <button type="button" id="calcular">Calcular Total</button>
+        </form>
     </div>
 
-    <!-- Resumen del pedido -->
-    <div id="detalle-seccion" class="seccion contenedor">
-        <h2>Resumen de tu pedido</h2>
-        <div class="resumen" id="resumenPedido"></div>
-        <div class="acciones">
-            <button id="continuarPago" class="boton">Continuar a pago</button>
-            <button id="regresarPedido" class="boton" style="background:#444;">Modificar pedido</button>
+    <div id="detalle-seccion" class="seccion">
+        <h2>Detalle del Pedido</h2>
+        <p id="detallePedido"></p>
+        
+        <h3 style="margin-top: 28px; margin-bottom: 12px; color: #7c4dff;">Tipo de Servicio:</h3>
+        <div style="display: flex; gap: 32px; justify-content: center; margin-bottom: 18px;">
+            <div style="display: flex; align-items: center;">
+            <input type="radio" name="tipoServicio" value="Entrega a domicilio" id="entregaDomicilio" required style="accent-color: #7c4dff; width: 20px; height: 20px;">
+            <label for="entregaDomicilio" style="margin-left: 8px; font-size: 1.08rem; color: #6A1B9A; cursor: pointer;">Entrega a Domicilio</label>
+            </div>
+            <div style="display: flex; align-items: center;">
+            <input type="radio" name="tipoServicio" value="Consumo en local" id="consumoLocal" required style="accent-color: #7c4dff; width: 20px; height: 20px;">
+            <label for="consumoLocal" style="margin-left: 8px; font-size: 1.08rem; color: #6A1B9A; cursor: pointer;">Consumo en local</label>
+            </div>
         </div>
+
+        <button type="button" id="continuarServicio">Continuar</button>
     </div>
 
-    <!-- Pago -->
-    <div id="pago-seccion" class="seccion contenedor">
-        <h2>Elige el método de pago</h2>
-        <label><input type="radio" name="metodoPago" value="Efectivo">Efectivo</label>
-        <label><input type="radio" name="metodoPago" value="Tarjeta">Tarjeta</label>
-
-        <div id="pago-efectivo" class="hidden">
-            <label for="cantidadRecibida">¿Con cuánto pagas?</label>
-            <input type="number" id="cantidadRecibida" min="0" step="0.01" placeholder="Ej: 200">
-            <button id="pagarEfectivo" class="boton">Pagar</button>
-            <div id="cambioDiv" class="hidden">Cambio: $<span id="cambio">0.00</span></div>
+    <div id="pago-seccion" class="seccion">
+        <h2 style="color: #7c4dff; text-align: center; margin-bottom: 20px; text-shadow: 1px 2px 8px #e1bee7;">Método de Pago</h2>
+        <div style="background: linear-gradient(90deg, #fce4ec 0%, #e1bee7 100%); padding: 18px; border-radius: 12px; border: 1.5px solid #ce93d8; margin-bottom: 18px; text-align: center;">
+            <span style="font-size: 1.18rem; color: #6A1B9A; font-weight: bold;">Total a pagar: </span>
+            <span style="font-size: 1.25rem; color: #ff4081; font-weight: bold;">$<span id="totalPagar">0.00</span></span>
         </div>
-        <div id="pago-tarjeta" class="hidden">
-            <label for="numeroTarjeta">Número de tarjeta:</label>
-            <input type="text" id="numeroTarjeta" placeholder="**** **** **** 1234" maxlength="19">
+        <div style="display: flex; justify-content: center; gap: 36px; margin-bottom: 22px;">
+            <div style="display: flex; align-items: center;">
+                <input type="radio" name="metodoPago" value="Efectivo" id="pagoEfectivo" required style="accent-color: #7c4dff; width: 22px; height: 22px;">
+                <label for="pagoEfectivo" style="margin-left: 10px; font-size: 1.08rem; color: #6A1B9A; cursor: pointer;">Pago en efectivo</label>
+            </div>
+            <div style="display: flex; align-items: center;">
+                <input type="radio" name="metodoPago" value="Tarjeta" id="pagoTarjeta" required style="accent-color: #7c4dff; width: 22px; height: 22px;">
+                <label for="pagoTarjeta" style="margin-left: 10px; font-size: 1.08rem; color: #6A1B9A; cursor: pointer;">Pago con tarjeta</label>
+            </div>
+        </div>
+        <button type="button" id="continuarPago" style="width: 100%; font-size: 1.15rem; padding: 14px 0; border-radius: 10px;">Continuar</button>
+    </div>
+
+    <div id="domicilio-seccion" class="seccion">
+        <h1>Datos para Entrega a Domicilio</h1>
+        <form id="domicilioForm">
+            <label for="direccion">Dirección:</label>
+            <input type="text" id="direccion" name="direccion" required>
+
+            <label for="telefono">Teléfono:</label>
+            <input type="tel" id="telefono" name="telefono" required pattern="[0-9]{10}" title="Ingrese un número de teléfono válido (10 dígitos)">
+
+            <button type="button" id="continuarDomicilio">Continuar</button>
+        </form>
+    </div>
+
+    <div id="tarjeta-seccion" class="seccion">
+        <h1>Pago con Tarjeta</h1>
+        <form>
+            <label for="numeroTarjeta">Número de Tarjeta:</label>
+            <input type="text" id="numeroTarjeta" required pattern="[0-9]{16}" title="Ingrese 16 dígitos de la tarjeta">
+
+            <label for="fechaExp">Fecha de Expiración:</label>
+            <input type="text" id="fechaExp" placeholder="MM/AA" required pattern="(0[1-9]|1[0-2])\/[0-9]{2}" title="Formato MM/AA">
+
             <label for="cvv">CVV:</label>
-            <input type="text" id="cvv" maxlength="4" placeholder="123">
-            <label for="vencimiento">Vencimiento:</label>
-            <input type="text" id="vencimiento" maxlength="5" placeholder="MM/AA">
-            <button id="pagarTarjeta" class="boton">Pagar</button>
-        </div>
-        <div class="acciones">
-            <button id="regresarResumen" class="boton" style="background:#444;">Volver al resumen</button>
-        </div>
+            <input type="text" id="cvv" required pattern="[0-9]{3,4}" title="3 o 4 dígitos del CVV">
+
+            <button type="button" id="finalizarTarjeta">Finalizar Pago</button>
+        </form>
     </div>
 
-    <!-- Ticket final -->
-    <div id="ticket-seccion" class="seccion contenedor">
-        <h2>¡Gracias por tu compra!</h2>
-        <div class="ticket" id="ticketPedido"></div>
-        <button id="descargarTicket" class="boton">Descargar ticket PDF</button>
-        <button id="terminarCompra" class="boton" style="background:#444;">Nueva compra</button>
+    <div id="efectivo-seccion" class="seccion">
+        <h1>Pago en Efectivo</h1>
+        <p>Total a pagar: $<span id="totalEfectivo">0.00</span></p>
+        
+        <label for="montoPago">Monto con el que pagas:</label>
+        <input type="number" id="montoPago" required min="0" step="0.01">
+        
+        <p id="mensajeCambio"></p>
+        
+        <button type="button" id="finalizarEfectivo">Finalizar Pedido</button>
     </div>
 
-    <!-- jsPDF CDN para generación de PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <div id="ticket-seccion" class="seccion">
+        <h1>¡Gracias por tu Pedido!</h1>
+        <h3>Resumen del Pedido</h3>
+        <div id="ticketResumen"></div>
+        <button id="volver-inicio">Volver al Inicio</button>
+        <button id="imprimir-ticket">Imprimir Ticket</button>
+    </div>
+    <!-- Botón flotante de quejas -->
+    <button id="btnQuejas" style="position: fixed; bottom: 28px; right: 28px; padding: 0; width: 68px; height: 68px; background: linear-gradient(135deg, #ff4081 0%, #7c4dff 100%); color: #fff; border: none; border-radius: 50%; cursor: pointer; box-shadow: 0 4px 18px #e1bee7, 0 2px 10px rgba(0,0,0,0.18); z-index: 999; display: flex; align-items: center; justify-content: center; transition: transform 0.2s, box-shadow 0.2s;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            <circle cx="19" cy="5" r="2.5" fill="#fff" stroke="#ff4081" stroke-width="1.5"/>
+        </svg>
+        <span style="position: absolute; top: -18px; right: 0; background: #ff4081; color: #fff; font-size: 0.85rem; font-weight: bold; padding: 2px 10px 2px 10px; border-radius: 12px 12px 12px 0; box-shadow: 0 2px 8px #e1bee7;">¿Queja?</span>
+    </button>
+
+    <!-- Modal de Quejas -->
+    <div id="modalQuejas">
+        <div class="modal-contenido" style="border: 2.5px solid #ff4081; box-shadow: 0 8px 32px #ff80ab;">
+            <h2 style="color: #ff4081; text-align: center; margin-bottom: 18px; text-shadow: 1px 2px 8px #e1bee7;">Quejas, Denuncias y Comentarios</h2>
+            <form id="formQuejas" style="display: flex; flex-direction: column; gap: 14px;">
+                <label for="nombreQueja" style="color: #7c4dff;">Nombre:</label>
+                <input type="text" id="nombreQueja" name="nombreQueja" required style="border: 2px solid #ff80ab; border-radius: 8px; padding: 10px;">
+
+                <label for="emailQueja" style="color: #7c4dff;">Correo electrónico:</label>
+                <input type="email" id="emailQueja" name="emailQueja" required style="border: 2px solid #ff80ab; border-radius: 8px; padding: 10px;">
+
+                <label for="comentarioQueja" style="color: #7c4dff;">Comentario:</label>
+                <textarea id="comentarioQueja" name="comentarioQueja" required style="border: 2px solid #ff80ab; border-radius: 8px; padding: 10px; min-height: 70px; background: #fff8fd;"></textarea>
+
+                <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px;">
+                    <button type="submit" style="background: linear-gradient(90deg, #ff80ab 0%, #7c4dff 100%); color: #fff; border: none; border-radius: 8px; padding: 10px 22px; font-weight: bold; font-size: 1.05rem; box-shadow: 0 2px 8px #e1bee7; transition: background 0.3s;">Enviar</button>
+                    <button type="button" id="cerrarModal" style="background: #fff; color: #ff4081; border: 2px solid #ff4081; border-radius: 8px; padding: 10px 22px; font-weight: bold; font-size: 1.05rem; box-shadow: 0 2px 8px #e1bee7; transition: background 0.3s;">Cerrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+ <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Configuración de jsPDF
-            const { jsPDF } = window.jspdf || {};
+        let totalGlobal = 0;
+        let nombreGlobal = "";
+        let fechaGlobal = "";
+        let complementosDetalleGlobal = [];
+        let pizza1Global = {nombre: "", precio: 0};
+        let pizza2Global = {nombre: "", precio: 0};
+        let pizza3Global = {nombre: "", precio: 0};
+        let tipoServicioGlobal = "";
+        let metodoPagoGlobal = "";
+        let direccionGlobal = "";
+        let telefonoGlobal = "";
 
-            // Variables globales
-            const pedido = {
-                nombre: '',
-                fecha: '',
-                hora: '',
-                pizzas: [],
-                extras: [],
-                total: 0,
-                metodoPago: '',
-                cambio: 0
-            };
-            
-            const preciosPizza = {
-                "Margarita": 120,
-                "Pepperoni": 130,
-                "Hawaiana": 135,
-                "Vegetariana": 125
-            };
+        // Comenzar pedido
+      document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("comenzar").addEventListener("click", function() {
+        document.getElementById("bienvenida").classList.remove("activa");
+        document.getElementById("formulario-seccion").classList.add("activa");
+    });
+});
+        // Calcular pedido
+        document.getElementById("calcular").addEventListener("click", function() {
+            const nombre = document.getElementById("nombre").value;
+            const fecha = document.getElementById("Fecha").value;
 
-            // Utilidades
-            const getElement = id => document.getElementById(id);
-            
-            const validarElemento = id => {
-                const el = getElement(id);
-                if (!el) console.error(`No existe el elemento ${id}`);
-                return el;
-            };
+            if (!nombre || !fecha) {
+                alert("Por favor complete todos los campos obligatorios");
+                return;
+            }
 
-            // Navegación entre secciones
-            const cambiarSeccion = (ocultar, mostrar) => {
-                validarElemento(ocultar)?.classList.remove("activa");
-                validarElemento(mostrar)?.classList.add("activa");
-                window.scrollTo(0,0);
+            const pizza1Select = document.getElementById("Pizza1");
+            pizza1Global = {
+                nombre: pizza1Select.options[pizza1Select.selectedIndex].text.split(" ")[0],
+                precio: parseFloat(pizza1Select.value) || 0
             };
 
-            // Event listeners
-            validarElemento("comenzar")?.addEventListener("click", ()=>cambiarSeccion("bienvenida","formulario-seccion"));
-            
-            validarElemento("calcular")?.addEventListener("click", function() {
-                if (!validarFormulario()) return;
-                calcularPedido();
-                mostrarResumen();
-                cambiarSeccion("formulario-seccion", "detalle-seccion");
-            });
+            const pizza2Select = document.getElementById("Pizza2");
+            pizza2Global = {
+                nombre: pizza2Select.options[pizza2Select.selectedIndex].text.split(" ")[0],
+                precio: parseFloat(pizza2Select.value) || 0
+            };
 
-            validarElemento("regresarPedido")?.addEventListener("click", ()=>cambiarSeccion("detalle-seccion","formulario-seccion"));
-            validarElemento("continuarPago")?.addEventListener("click", ()=>cambiarSeccion("detalle-seccion","pago-seccion"));
-            validarElemento("regresarResumen")?.addEventListener("click", ()=>cambiarSeccion("pago-seccion","detalle-seccion"));
+            const pizza3Select = document.getElementById("Pizza3");
+            pizza3Global = {
+                nombre: pizza3Select.options[pizza3Select.selectedIndex].text.split(" ")[0],
+                precio: parseFloat(pizza3Select.value) || 0
+            };
 
-            // Métodos de pago
-            document.querySelectorAll('input[name="metodoPago"]').forEach(radio=>{
-                radio.addEventListener("change", function() {
-                    getElement("pago-efectivo").classList.toggle("hidden", this.value !== "Efectivo");
-                    getElement("pago-tarjeta").classList.toggle("hidden", this.value !== "Tarjeta");
-                    getElement("cambioDiv").classList.add("hidden");
-                });
-            });
-
-            // Pagar en efectivo
-            validarElemento("pagarEfectivo")?.addEventListener("click", function() {
-                const recibido = parseFloat(getElement("cantidadRecibida").value || 0);
-                if (isNaN(recibido) || recibido < pedido.total) {
-                    alert(`El dinero recibido ($${recibido.toFixed(2)}) es menor al total ($${pedido.total.toFixed(2)}).`);
-                    return;
-                }
-
-                pedido.cambio = recibido - pedido.total;
-                pedido.metodoPago = "Efectivo";
-                getElement("cambio").textContent = pedido.cambio.toFixed(2);
-                getElement("cambioDiv").classList.remove("hidden");
-                mostrarTicket();
-            });
-
-            // Pagar con tarjeta
-            validarElemento("pagarTarjeta")?.addEventListener("click", function() {
-                if (!validarTarjeta()) return;
-                pedido.metodoPago = "Tarjeta";
-                pedido.cambio = 0;
-                mostrarTicket();
-            });
-
-            // Descargar ticket PDF
-            validarElemento("descargarTicket")?.addEventListener("click", function() {
-                generarPDF();
-            });
-
-            // Terminar compra
-            validarElemento("terminarCompra")?.addEventListener("click", function() {
-                reiniciarPedido();
-            });
-
-            // Funciones auxiliares
-            function validarFormulario() {
-                const nombre = getElement("nombre").value.trim();
-                const fecha = getElement("fecha").value;
-                const hora = getElement("hora").value;
-                const pizza1 = getElement("pizza1").value;
-                const cantidad = parseInt(getElement("cantidadPizza1").value) || 0;
-                
-                if (!nombre) return alert("Por favor, ingresa tu nombre."), false;
-                if (!fecha) return alert("Por favor, selecciona una fecha."), false;
-                if (!hora) return alert("Por favor, selecciona una hora."), false;
-                if (!pizza1 || pizza1 === "0" || cantidad < 1) return alert("Por favor, selecciona al menos una pizza."), false;
-                
-                pedido.nombre = nombre;
-                pedido.fecha = fecha;
-                pedido.hora = hora;
-                return true;
+            // Validar que al menos una pizza fue seleccionada
+            if (pizza1Global.precio === 0 && pizza2Global.precio === 0 && pizza3Global.precio === 0) {
+                alert("Por favor seleccione al menos una pizza");
+                return;
             }
 
-            function calcularPedido() {
-                const pizza1 = getElement("pizza1").value;
-                const cantidad = parseInt(getElement("cantidadPizza1").value) || 1;
-                pedido.pizzas = pizza1 !== "0" ? [{ 
-                    tipo: pizza1, 
-                    cantidad: cantidad, 
-                    precio: preciosPizza[pizza1] 
-                }] : [];
-                
-                // Extras
-                pedido.extras = [];
-                document.querySelectorAll('input.extra:checked').forEach(chk=>{
-                    pedido.extras.push({
-                        nombre: chk.value,
-                        precio: parseFloat(chk.getAttribute("data-precio"))
-                    });
-                });
-                
-                // Total
-                let total = 0;
-                pedido.pizzas.forEach(p => total += p.precio * p.cantidad);
-                pedido.extras.forEach(e => total += e.precio);
-                pedido.total = total;
+            const complementos = document.querySelectorAll('.checkbox-container input[type="checkbox"]:checked');
+            let complementosTotal = 0;
+            let complementosDetalle = [];
+
+            complementos.forEach((complemento) => {
+                complementosTotal += parseFloat(complemento.value);
+                complementosDetalle.push(complemento.nextElementSibling.textContent);
+            });
+
+            const total = pizza1Global.precio + pizza2Global.precio + pizza3Global.precio + complementosTotal;
+
+            totalGlobal = total;
+            nombreGlobal = nombre;
+            fechaGlobal = fecha;
+            complementosDetalleGlobal = complementosDetalle;
+
+            document.getElementById("detalle-seccion").classList.add("activa");
+            document.getElementById("formulario-seccion").classList.remove("activa");
+
+            let detalleHTML = `
+                <strong>Nombre:</strong> ${nombre}<br>
+                <strong>Fecha:</strong> ${fecha}<br>
+                <strong>Productos:</strong> 
+                <ul>
+            `;
+
+            if (pizza1Global.precio > 0) {
+                detalleHTML += `<li>Pizza ${pizza1Global.nombre} ($${pizza1Global.precio.toFixed(2)})</li>`;
+            }
+            if (pizza2Global.precio > 0) {
+                detalleHTML += `<li>Pizza ${pizza2Global.nombre} ($${pizza2Global.precio.toFixed(2)})</li>`;
+            }
+            if (pizza3Global.precio > 0) {
+                detalleHTML += `<li>Pizza ${pizza3Global.nombre} ($${pizza3Global.precio.toFixed(2)})</li>`;
             }
 
-            function mostrarResumen() {
-                const res = [];
-                res.push(`<strong>Nombre:</strong> ${pedido.nombre}`);
-                res.push(`<strong>Fecha:</strong> ${pedido.fecha}`);
-                res.push(`<strong>Hora:</strong> ${pedido.hora}`);
-                pedido.pizzas.forEach(p => res.push(`<strong>Pizza:</strong> ${p.tipo} x${p.cantidad} ($${p.precio} c/u)`));
-                if (pedido.extras.length)
-                    res.push(`<strong>Extras:</strong> ${pedido.extras.map(e=>`${e.nombre} ($${e.precio})`).join(", ")}`);
-                res.push(`<strong>Total:</strong> $${pedido.total.toFixed(2)}`);
-                getElement("resumenPedido").innerHTML = res.join("<br>");
+            detalleHTML += `
+                </ul>
+                <strong>Complementos:</strong> ${complementosDetalle.join(", ") || 'Ninguno'}<br>
+                <strong>Total:</strong> $${total.toFixed(2)}
+            `;
+
+            document.getElementById("detallePedido").innerHTML = detalleHTML;
+        });
+
+        // Continuar selección de servicio
+        document.getElementById("continuarServicio").addEventListener("click", function() {
+            const servicioSeleccionado = document.querySelector('input[name="tipoServicio"]:checked');
+
+            if (!servicioSeleccionado) {
+                alert("Por favor seleccione un tipo de servicio");
+                return;
             }
 
-            function validarTarjeta() {
-                const num = getElement("numeroTarjeta").value.trim().replace(/\s/g,'');
-                const cvv = getElement("cvv").value.trim();
-                const venc = getElement("vencimiento").value.trim();
-                if (!/^\d{16}$/.test(num)) return alert("Número de tarjeta inválido."), false;
-                if (!/^\d{3,4}$/.test(cvv)) return alert("CVV inválido."), false;
-                if (!/^\d{2}\/\d{2}$/.test(venc)) return alert("Vencimiento inválido. Ej: 12/25"), false;
-                return true;
-            }
+            tipoServicioGlobal = servicioSeleccionado.value;
 
-            function mostrarTicket() {
-                let ticket = `<strong>Cliente:</strong> ${pedido.nombre}<br>`;
-                ticket += `<strong>Fecha:</strong> ${pedido.fecha} &nbsp;&nbsp; <strong>Hora:</strong> ${pedido.hora}<br>`;
-                ticket += `<strong>Pedido:</strong><br>`;
-                pedido.pizzas.forEach(p => {
-                    ticket += `- ${p.tipo} x${p.cantidad} ($${p.precio} c/u)<br>`;
-                });
-                if (pedido.extras.length) {
-                    ticket += `- Extras: ${pedido.extras.map(e=>`${e.nombre} ($${e.precio})`).join(", ")}<br>`;
-                }
-                ticket += `<strong>Total:</strong> $${pedido.total.toFixed(2)}<br>`;
-                ticket += `<strong>Método de pago:</strong> ${pedido.metodoPago}<br>`;
-                if (pedido.metodoPago==="Efectivo") {
-                    ticket += `<strong>Cambio:</strong> $${pedido.cambio.toFixed(2)}<br>`;
-                }
-                getElement("ticketPedido").innerHTML = ticket;
-                cambiarSeccion("pago-seccion","ticket-seccion");
-            }
+            document.getElementById("detalle-seccion").classList.remove("activa");
 
-            function generarPDF() {
-                if (!jsPDF) return alert("No se pudo cargar jsPDF.");
-                const doc = new jsPDF();
-                let y = 20;
-                doc.setFontSize(20);
-                doc.text("Pizzería Bella Napoli", 105, y, {align:"center"});
-                y += 10;
-                doc.setFontSize(14);
-                doc.text(`Cliente: ${pedido.nombre}`, 14, y); y += 9;
-                doc.text(`Fecha: ${pedido.fecha}    Hora: ${pedido.hora}`, 14, y); y += 9;
-                doc.text("Pedido:", 14, y); y += 8;
-                pedido.pizzas.forEach(p=>{
-                    doc.text(`- ${p.tipo} x${p.cantidad} ($${p.precio} c/u)`, 18, y); y+=8;
-                });
-                if (pedido.extras.length) {
-                    doc.text(`- Extras: ${pedido.extras.map(e=>`${e.nombre} ($${e.precio})`).join(", ")}`, 18, y); y+=8;
-                }
-                doc.text(`TOTAL: $${pedido.total.toFixed(2)}`, 14, y); y+=10;
-                doc.text(`Pago: ${pedido.metodoPago}`, 14, y); y+=8;
-                if (pedido.metodoPago==="Efectivo") doc.text(`Cambio: $${pedido.cambio.toFixed(2)}`, 14, y);
-                doc.save("ticket_pizza.pdf");
-            }
-
-            function reiniciarPedido() {
-                Object.keys(pedido).forEach(key=>{
-                    if (Array.isArray(pedido[key])) pedido[key]=[];
-                    else if (typeof pedido[key]==="number") pedido[key]=0;
-                    else pedido[key]='';
-                });
-                
-                getElement("formulario-seccion").reset();
-                document.querySelectorAll('input[type=checkbox], input[type=radio]').forEach(i=>i.checked=false);
-                getElement("pizza1").value = "0";
-                getElement("cantidadPizza1").value = "1";
-                getElement("numeroTarjeta").value = "";
-                getElement("cvv").value = "";
-                getElement("vencimiento").value = "";
-                getElement("cantidadRecibida").value = "";
-                getElement("cambioDiv").classList.add("hidden");
-                cambiarSeccion("ticket-seccion", "bienvenida");
+            if (tipoServicioGlobal === "Entrega a domicilio") {
+                document.getElementById("domicilio-seccion").classList.add("activa");
+            } else {
+                document.getElementById("pago-seccion").classList.add("activa");
+                document.getElementById("totalPagar").textContent = totalGlobal.toFixed(2);
             }
         });
+
+        // Continuar domicilio
+        document.getElementById("continuarDomicilio").addEventListener("click", function() {
+            const direccion = document.getElementById("direccion").value;
+            const telefono = document.getElementById("telefono").value;
+
+            if (!direccion || !telefono) {
+                alert("Por favor complete todos los datos de envío");
+                return;
+            }
+
+            direccionGlobal = direccion;
+            telefonoGlobal = telefono;
+
+            document.getElementById("domicilio-seccion").classList.remove("activa");
+            document.getElementById("pago-seccion").classList.add("activa");
+            document.getElementById("totalPagar").textContent = totalGlobal.toFixed(2);
+        });
+
+        // Continuar pago
+        document.getElementById("continuarPago").addEventListener("click", function() {
+            const metodoPago = document.querySelector('input[name="metodoPago"]:checked');
+
+            if (!metodoPago) {
+                alert("Por favor seleccione un método de pago");
+                return;
+            }
+
+            metodoPagoGlobal = metodoPago.value;
+
+            document.getElementById("pago-seccion").classList.remove("activa");
+
+            if (metodoPagoGlobal === "Efectivo") {
+                document.getElementById("efectivo-seccion").classList.add("activa");
+                document.getElementById("totalEfectivo").textContent = totalGlobal.toFixed(2);
+            } else if (metodoPagoGlobal === "Tarjeta") {
+                document.getElementById("tarjeta-seccion").classList.add("activa");
+            }
+        });
+
+       // Finalizar efectivo
+document.getElementById("finalizarEfectivo").addEventListener("click", function() {
+    const montoPago = parseFloat(document.getElementById("montoPago").value);
+    const mensajeCambio = document.getElementById("mensajeCambio");
+
+    if (isNaN(montoPago)) {  // Aquí estaba el error: faltaba cerrar el paréntesis
+        mensajeCambio.innerHTML = '<span class="mensaje-error">Por favor ingrese una cantidad válida</span>';
+        return;
+    }
+
+    if (montoPago < totalGlobal) {
+        mensajeCambio.innerHTML = '<span class="mensaje-error">El monto ingresado es insuficiente</span>';
+        return;
+    }
+
+    const cambio = montoPago - totalGlobal;
+    mensajeCambio.innerHTML = `<span class="mensaje-ok">Cambio: $${cambio.toFixed(2)}</span>`;
+
+    document.getElementById("efectivo-seccion").classList.remove("activa");
+    document.getElementById("ticket-seccion").classList.add("activa");
+
+    mostrarTicket("Efectivo", montoPago, cambio);
+});
+        // Finalizar tarjeta
+        document.getElementById("finalizarTarjeta").addEventListener("click", function() {
+            const numeroTarjeta = document.getElementById("numeroTarjeta").value;
+            const fechaExp = document.getElementById("fechaExp").value;
+            const cvv = document.getElementById("cvv").value;
+
+            if (!numeroTarjeta || !fechaExp || !cvv) {
+                alert("Por favor complete todos los datos de la tarjeta");
+                return;
+            }
+
+            // Validación básica de tarjeta
+            if (!/^\d{16}$/.test(numeroTarjeta)) {
+                alert("Número de tarjeta inválido. Debe tener 16 dígitos");
+                return;
+            }
+
+            if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(fechaExp)) {
+                alert("Formato de fecha inválido. Use MM/AA");
+                return;
+            }
+
+            if (!/^\d{3,4}$/.test(cvv)) {
+                alert("CVV inválido. Debe tener 3 o 4 dígitos");
+                return;
+            }
+
+            document.getElementById("tarjeta-seccion").classList.remove("activa");
+            document.getElementById("ticket-seccion").classList.add("activa");
+
+            mostrarTicket("Tarjeta", totalGlobal, 0);
+        });
+
+        // Mostrar ticket completo
+        function mostrarTicket(metodoPago, montoPagado, cambio) {
+            let ticketHTML = `
+                <h3>Pizzería El Comunismo de Perú</h3>
+                <p>Fecha: ${new Date().toLocaleString()}</p>
+                <hr>
+                <strong>Cliente:</strong> ${nombreGlobal}<br>
+                <strong>Fecha del pedido:</strong> ${fechaGlobal}<br>
+                <strong>Tipo de servicio:</strong> ${tipoServicioGlobal}<br>
+            `;
+
+            if (tipoServicioGlobal === "Entrega a domicilio") {
+                ticketHTML += `
+                    <strong>Dirección:</strong> ${direccionGlobal}<br>
+                    <strong>Teléfono:</strong> ${telefonoGlobal}<br>
+                `;
+            }
+
+            ticketHTML += `
+                <hr>
+                <h4>Detalle del Pedido:</h4>
+                <ul>
+            `;
+
+            if (pizza1Global.precio > 0) {
+                ticketHTML += `<li>Pizza ${pizza1Global.nombre} - $${pizza1Global.precio.toFixed(2)}</li>`;
+            }
+            if (pizza2Global.precio > 0) {
+                ticketHTML += `<li>Pizza ${pizza2Global.nombre} - $${pizza2Global.precio.toFixed(2)}</li>`;
+            }
+            if (pizza3Global.precio > 0) {
+                ticketHTML += `<li>Pizza ${pizza3Global.nombre} - $${pizza3Global.precio.toFixed(2)}</li>`;
+            }
+
+            if (complementosDetalleGlobal.length > 0) {
+                ticketHTML += `<li>Complementos: ${complementosDetalleGlobal.join(", ")}</li>`;
+            }
+
+            ticketHTML += `
+                </ul>
+                <hr>
+                <strong>Subtotal:</strong> $${(pizza1Global.precio + pizza2Global.precio + pizza3Global.precio).toFixed(2)}<br>
+                <strong>Complementos:</strong> $${(totalGlobal - (pizza1Global.precio + pizza2Global.precio + pizza3Global.precio)).toFixed(2)}<br>
+                <strong>Total:</strong> $${totalGlobal.toFixed(2)}<br>
+                <strong>Método de Pago:</strong> ${metodoPago}<br>
+            `;
+
+            if (metodoPago === "Efectivo") {
+                ticketHTML += `
+                    <strong>Monto recibido:</strong> $${montoPagado.toFixed(2)}<br>
+                    <strong>Cambio:</strong> $${cambio.toFixed(2)}<br>
+                `;
+            }
+
+            ticketHTML += `
+                <hr>
+                <p>¡Gracias por su compra!</p>
+            `;
+
+            document.getElementById("ticketResumen").innerHTML = ticketHTML;
+        }
+
+        // Funcionalidad para volver al inicio
+        document.getElementById("volver-inicio").addEventListener("click", function() {
+            location.reload();
+        });
+
+        // Funcionalidad para imprimir ticket
+        document.getElementById("imprimir-ticket").addEventListener("click", function() {
+            const contenido = document.getElementById("ticketResumen").innerHTML;
+            const ventana = window.open('', '', 'width=600,height=600');
+            ventana.document.write('<html><head><title>Ticket de Compra</title></head><body>');
+            ventana.document.write(contenido);
+            ventana.document.write('</body></html>');
+            ventana.document.close();
+            ventana.print();
+        });
+
+      
+        (function() {
+            emailjs.init('I7oEhEpXP4jX3imk-'); 
+        })();
+        
+        
+        document.getElementById("btnQuejas").addEventListener("click", function() {
+            document.getElementById("modalQuejas").style.display = "flex";
+        });
+
+        document.getElementById("cerrarModal").addEventListener("click", function() {
+            document.getElementById("modalQuejas").style.display = "none";
+            document.getElementById("formQuejas").reset();
+        });
+
+        document.getElementById("formQuejas").addEventListener("submit", function(e) {
+    e.preventDefault();
+    
+    const nombre = document.getElementById("nombreQueja").value;
+    const email = document.getElementById("emailQueja").value;
+    const comentario = document.getElementById("comentarioQueja").value;
+    
+    // Formatear fecha
+    const ahora = new Date();
+    const fechaFormateada = ahora.toLocaleDateString('es-PE', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    
+    emailjs.send('service_38oqoc8', 'template_si5y8mg', {
+        from_name: nombre,
+        from_email: email,
+        message: comentario,
+        date: fechaFormateada
+    })
+    .then(function(response) {
+        alert("Gracias por tus comentarios. Haremos lo posible por mejorar.");
+        document.getElementById("modalQuejas").style.display = "none";
+        document.getElementById("formQuejas").reset();
+    }, function(error) {
+        console.error('Error al enviar:', error);
+        alert("Ocurrió un error al enviar tu mensaje. Por favor intenta nuevamente.");
+    });
+});
     </script>
+    
+</body>
+</html>
