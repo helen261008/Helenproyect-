@@ -751,3 +751,1197 @@
             font-size: 24px;
             cursor: pointer;
             color: var(--gray-dark);
+            transition: color 0.3s;
+        }
+        
+        .cart-close:hover {
+            color: var(--primary-color);
+        }
+        
+        .cart-items {
+            padding: 20px;
+        }
+        
+        .cart-item {
+            display: flex;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--gray-medium);
+        }
+        
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+            margin-right: 15px;
+        }
+        
+        .cart-item-details {
+            flex: 1;
+        }
+        
+        .cart-item-name {
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .cart-item-options {
+            font-size: 14px;
+            color: var(--gray-dark);
+            margin-bottom: 10px;
+        }
+        
+        .cart-item-price {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .cart-item-remove {
+            color: var(--danger-color);
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 5px;
+            display: inline-block;
+        }
+        
+        .cart-summary {
+            padding: 20px;
+            border-top: 1px solid var(--gray-medium);
+        }
+        
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .cart-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray-dark);
+        }
+        
+        .cart-empty-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: var(--gray-medium);
+        }
+        
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+        }
+        
+        .overlay.active {
+            display: block;
+        }
+        
+        /* Track Order Button */
+        .track-order-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+        
+        .track-order-btn:hover {
+            transform: scale(1.1);
+            background-color: #c1122c;
+        }
+        
+        .track-order-icon {
+            font-size: 24px;
+        }
+        
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-container">
+            <a href="#" class="logo">
+                <img src="https://via.placeholder.com/40x40" alt="Pizzería Online Logo">
+                Pizzería Online
+            </a>
+            <ul class="nav-links">
+                <li><a href="#">Inicio</a></li>
+                <li><a href="#">Menú</a></li>
+                <li><a href="#">Ofertas</a></li>
+                <li><a href="#">Contacto</a></li>
+                <li>
+                    <div class="cart-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>Las mejores pizzas a tu puerta</h1>
+            <p>Ordena en línea y recibe en 30 minutos o menos, o la pizza es gratis</p>
+            <a href="#" class="btn" id="start-order-btn">Ordenar Ahora</a>
+            <a href="#" class="btn btn-outline">Ver Menú</a>
+        </div>
+    </section>
+
+    <!-- Order Steps -->
+    <div class="container">
+        <div class="order-steps">
+            <div class="step active" data-step="1">
+                <div class="step-number">1</div>
+                <div class="step-title">Elige tu pizza</div>
+            </div>
+            <div class="step" data-step="2">
+                <div class="step-number">2</div>
+                <div class="step-title">Personaliza</div>
+            </div>
+            <div class="step" data-step="3">
+                <div class="step-number">3</div>
+                <div class="step-title">Datos de entrega</div>
+            </div>
+            <div class="step" data-step="4">
+                <div class="step-number">4</div>
+                <div class="step-title">Pago</div>
+            </div>
+            <div class="step" data-step="5">
+                <div class="step-number">5</div>
+                <div class="step-title">Confirmación</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Sections -->
+    <div class="container">
+        <!-- Pizza Selection Section -->
+        <section id="pizza-selection" class="order-section active">
+            <h2 class="section-title">Elige tus pizzas favoritas</h2>
+            <div class="pizza-grid">
+                <!-- Pizza 1 -->
+                <div class="pizza-card" data-pizza-id="1" data-pizza-name="Pepperoni" data-pizza-price="12.99">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Pepperoni</h3>
+                        <p class="pizza-description">Deliciosa pizza con pepperoni y queso mozzarella</p>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$12.99</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pizza 2 -->
+                <div class="pizza-card" data-pizza-id="2" data-pizza-name="Hawaiana" data-pizza-price="13.99">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Hawaiana</h3>
+                        <p class="pizza-description">Jamón, piña y queso mozzarella</p>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$13.99</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pizza 3 -->
+                <div class="pizza-card" data-pizza-id="3" data-pizza-name="Mexicana" data-pizza-price="14.99">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Mexicana</h3>
+                        <p class="pizza-description">Carne molida, jalapeños, pimientos y queso</p>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$14.99</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pizza 4 -->
+                <div class="pizza-card" data-pizza-id="4" data-pizza-name="Vegetariana" data-pizza-price="12.99">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1571066811602-716837d681de?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Vegetariana</h3>
+                        <p class="pizza-description">Champiñones, pimientos, cebolla y aceitunas</p>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$12.99</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pizza 5 -->
+                <div class="pizza-card" data-pizza-id="5" data-pizza-name="Cuatro Quesos" data-pizza-price="15.99">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1565299507177-b0ac66763828?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Cuatro Quesos</h3>
+                        <p class="pizza-description">Mozzarella, gorgonzola, parmesano y fontina</p>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$15.99</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pizza 6 -->
+                <div class="pizza-card" data-pizza-id="6" data-pizza-name="Barbacoa" data-pizza-price="16.99">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Barbacoa</h3>
+                        <p class="pizza-description">Carne de res, salsa barbacoa y cebolla caramelizada</p>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$16.99</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center" style="margin-top: 30px;">
+                <button class="btn" id="continue-to-customize">Continuar</button>
+            </div>
+        </section>
+
+        <!-- Customize Pizza Section -->
+        <section id="customize-pizza" class="order-section">
+            <h2 class="section-title">Personaliza tu pizza</h2>
+            
+            <div class="order-summary">
+                <h3 class="summary-title">Tu pedido</h3>
+                <div id="order-summary-items">
+                    <!-- Aquí se agregarán los items dinámicamente -->
+                </div>
+                <div class="summary-total">
+                    <span>Total:</span>
+                    <span id="order-summary-total">$0.00</span>
+                </div>
+            </div>
+            
+            <div id="customize-options">
+                <!-- Aquí se mostrarán las opciones de personalización -->
+                <h3>Selecciona tamaño y masa</h3>
+                <div class="size-options">
+                    <div class="size-option">
+                        <input type="radio" id="size-small" name="size" class="size-radio" value="small" data-price="0" checked>
+                        <label for="size-small" class="size-label">
+                            <span class="size-name">Pequeña</span>
+                            <span class="size-price">25cm</span>
+                        </label>
+                    </div>
+                    <div class="size-option">
+                        <input type="radio" id="size-medium" name="size" class="size-radio" value="medium" data-price="3">
+                        <label for="size-medium" class="size-label">
+                            <span class="size-name">Mediana</span>
+                            <span class="size-price">30cm (+$3.00)</span>
+                        </label>
+                    </div>
+                    <div class="size-option">
+                        <input type="radio" id="size-large" name="size" class="size-radio" value="large" data-price="5">
+                        <label for="size-large" class="size-label">
+                            <span class="size-name">Grande</span>
+                            <span class="size-price">35cm (+$5.00)</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="crust-options" style="margin-top: 20px;">
+                    <div class="crust-option">
+                        <input type="radio" id="crust-thin" name="crust" class="crust-radio" value="thin" data-price="0" checked>
+                        <label for="crust-thin" class="crust-label">
+                            <span class="crust-name">Delgada</span>
+                            <span class="crust-price">Masa tradicional</span>
+                        </label>
+                    </div>
+                    <div class="crust-option">
+                        <input type="radio" id="crust-thick" name="crust" class="crust-radio" value="thick" data-price="2">
+                        <label for="crust-thick" class="crust-label">
+                            <span class="crust-name">Gruesa</span>
+                            <span class="crust-price">Masa esponjosa (+$2.00)</span>
+                        </label>
+                    </div>
+                    <div class="crust-option">
+                        <input type="radio" id="crust-cheese" name="crust" class="crust-radio" value="cheese" data-price="3">
+                        <label for="crust-cheese" class="crust-label">
+                            <span class="crust-name">Queso</span>
+                            <span class="crust-price">Borde de queso (+$3.00)</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="toppings-section" style="margin-top: 30px;">
+                    <h3 class="toppings-title">Ingredientes extra ($1.50 c/u)</h3>
+                    <div class="toppings-grid">
+                        <div class="topping-item">
+                            <input type="checkbox" id="topping-pepperoni" class="topping-checkbox" value="Pepperoni" data-price="1.5">
+                            <label for="topping-pepperoni">Pepperoni</label>
+                        </div>
+                        <div class="topping-item">
+                            <input type="checkbox" id="topping-jamon" class="topping-checkbox" value="Jamón" data-price="1.5">
+                            <label for="topping-jamon">Jamón</label>
+                        </div>
+                        <div class="topping-item">
+                            <input type="checkbox" id="topping-champinones" class="topping-checkbox" value="Champiñones" data-price="1.5">
+                            <label for="topping-champinones">Champiñones</label>
+                        </div>
+                        <div class="topping-item">
+                            <input type="checkbox" id="topping-pina" class="topping-checkbox" value="Piña" data-price="1.5">
+                            <label for="topping-pina">Piña</label>
+                        </div>
+                        <div class="topping-item">
+                            <input type="checkbox" id="topping-cebolla" class="topping-checkbox" value="Cebolla" data-price="1.5">
+                            <label for="topping-cebolla">Cebolla</label>
+                        </div>
+                        <div class="topping-item">
+                            <input type="checkbox" id="topping-pimientos" class="topping-checkbox" value="Pimientos" data-price="1.5">
+                            <label for="topping-pimientos">Pimientos</label>
+                        </div>
+                        <div class="topping-item">
+                            <input type="checkbox" id="topping-aceitunas" class="topping-checkbox" value="Aceitunas" data-price="1.5">
+                            <label for="topping-aceitunas">Aceitunas</label>
+                        </div>
+                        <div class="topping-item">
+                            <input type="checkbox" id="topping-extraqueso" class="topping-checkbox" value="Extra Queso" data-price="1.5">
+                            <label for="topping-extraqueso">Extra Queso</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px; display: flex; justify-content: space-between;">
+                    <button class="btn" id="back-to-selection" style="background-color: var(--gray-dark);">Volver</button>
+                    <button class="btn" id="continue-to-delivery">Continuar</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Delivery Section -->
+        <section id="delivery-section" class="order-section">
+            <h2 class="section-title">Datos de entrega</h2>
+            
+            <div class="order-summary">
+                <h3 class="summary-title">Tu pedido</h3>
+                <div id="delivery-summary-items">
+                    <!-- Aquí se agregarán los items dinámicamente -->
+                </div>
+                <div class="summary-total">
+                    <span>Total:</span>
+                    <span id="delivery-summary-total">$0.00</span>
+                </div>
+            </div>
+            
+            <form id="delivery-form">
+                <div class="form-group">
+                    <label for="delivery-name" class="form-label">Nombre completo</label>
+                    <input type="text" id="delivery-name" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="delivery-phone" class="form-label">Teléfono</label>
+                    <input type="tel" id="delivery-phone" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="delivery-address" class="form-label">Dirección</label>
+                    <input type="text" id="delivery-address" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="delivery-instructions" class="form-label">Instrucciones especiales</label>
+                    <textarea id="delivery-instructions" class="form-control" rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="delivery-time" class="form-label">Hora de entrega</label>
+                    <select id="delivery-time" class="form-control" required>
+                        <option value="">Seleccione una hora</option>
+                        <option value="asap">Lo más pronto posible</option>
+                        <option value="30">En 30 minutos</option>
+                        <option value="60">En 1 hora</option>
+                        <option value="90">En 1 hora y media</option>
+                        <option value="120">En 2 horas</option>
+                        <option value="specific">Hora específica</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="specific-time-group" style="display: none;">
+                    <label for="specific-time" class="form-label">Seleccione hora específica</label>
+                    <input type="time" id="specific-time" class="form-control">
+                </div>
+                
+                <div style="margin-top: 30px; display: flex; justify-content: space-between;">
+                    <button type="button" class="btn" id="back-to-customize" style="background-color: var(--gray-dark);">Volver</button>
+                    <button type="button" class="btn" id="continue-to-payment">Continuar</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Payment Section -->
+        <section id="payment-section" class="order-section">
+            <h2 class="section-title">Método de pago</h2>
+            
+            <div class="order-summary">
+                <h3 class="summary-title">Tu pedido</h3>
+                <div id="payment-summary-items">
+                    <!-- Aquí se agregarán los items dinámicamente -->
+                </div>
+                <div class="summary-total">
+                    <span>Total:</span>
+                    <span id="payment-summary-total">$0.00</span>
+                </div>
+            </div>
+            
+            <div class="payment-methods">
+                <div class="payment-method">
+                    <input type="radio" id="payment-cash" name="payment" class="payment-radio" value="cash" checked>
+                    <label for="payment-cash" class="payment-label">
+                        <i class="fas fa-money-bill-wave payment-icon"></i>
+                        Efectivo
+                    </label>
+                    <div class="cash-payment">
+                        <p>Paga en efectivo cuando recibas tu pedido.</p>
+                        <p>Por favor ten el cambio exacto o cercano.</p>
+                    </div>
+                </div>
+                
+                <div class="payment-method">
+                    <input type="radio" id="payment-card" name="payment" class="payment-radio" value="card">
+                    <label for="payment-card" class="payment-label">
+                        <i class="fas fa-credit-card payment-icon"></i>
+                        Tarjeta
+                    </label>
+                    <div class="card-form">
+                        <div class="form-group">
+                            <label for="card-number" class="form-label">Número de tarjeta</label>
+                            <input type="text" id="card-number" class="form-control" placeholder="1234 5678 9012 3456">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="card-name" class="form-label">Nombre en la tarjeta</label>
+                            <input type="text" id="card-name" class="form-control">
+                        </div>
+                        
+                        <div style="display: flex; gap: 15px;">
+                            <div class="form-group" style="flex: 1;">
+                                <label for="card-expiry" class="form-label">Fecha de expiración</label>
+                                <input type="text" id="card-expiry" class="form-control" placeholder="MM/AA">
+                            </div>
+                            
+                            <div class="form-group" style="flex: 1;">
+                                <label for="card-cvv" class="form-label">CVV</label>
+                                <input type="text" id="card-cvv" class="form-control" placeholder="123">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="payment-method">
+                    <input type="radio" id="payment-paypal" name="payment" class="payment-radio" value="paypal">
+                    <label for="payment-paypal" class="payment-label">
+                        <i class="fab fa-paypal payment-icon"></i>
+                        PayPal
+                    </label>
+                    <div class="card-form">
+                        <p>Serás redirigido a PayPal para completar tu pago.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px; display: flex; justify-content: space-between;">
+                <button type="button" class="btn" id="back-to-delivery" style="background-color: var(--gray-dark);">Volver</button>
+                <button type="button" class="btn" id="complete-order">Completar Pedido</button>
+            </div>
+        </section>
+
+        <!-- Confirmation Section -->
+        <section id="confirmation-section" class="order-section">
+            <div class="confirmation-message">
+                <div class="confirmation-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2 class="confirmation-title">¡Pedido Confirmado!</h2>
+                <p class="confirmation-text">Tu pedido ha sido recibido y está siendo preparado.</p>
+                
+                <div class="order-details">
+                    <h3>Detalles del pedido</h3>
+                    <div id="confirmation-details">
+                        <!-- Aquí se mostrarán los detalles del pedido -->
+                    </div>
+                </div>
+                
+                <p style="margin-bottom: 20px;">Hemos enviado un correo electrónico con los detalles de tu pedido.</p>
+                
+                <div style="display: flex; gap: 15px; justify-content: center;">
+                    <a href="#" class="btn" id="track-order-btn">Seguir Pedido</a>
+                    <a href="#" class="btn btn-outline" id="new-order-btn">Hacer Otro Pedido</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-column">
+                <h3>Pizzería Online</h3>
+                <p>Las mejores pizzas entregadas a tu puerta en 30 minutos o menos.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Enlaces</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Inicio</a></li>
+                    <li><a href="#">Menú</a></li>
+                    <li><a href="#">Ofertas</a></li>
+                    <li><a href="#">Sobre Nosotros</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Contacto</h3>
+                <ul class="footer-links">
+                    <li><i class="fas fa-map-marker-alt"></i> Av. Principal 123, Lima</li>
+                    <li><i class="fas fa-phone"></i> (01) 123-4567</li>
+                    <li><i class="fas fa-envelope"></i> info@pizzeriaonline.com</li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Horario</h3>
+                <ul class="footer-links">
+                    <li>Lunes - Viernes: 11am - 11pm</li>
+                    <li>Sábado - Domingo: 12pm - 12am</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="container copyright">
+            <p>&copy; 2023 Pizzería Online. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar">
+        <div class="cart-header">
+            <h3 class="cart-title">Tu Carrito</h3>
+            <span class="cart-close">&times;</span>
+        </div>
+        
+        <div class="cart-items">
+            <!-- Aquí se mostrarán los items del carrito -->
+            <div class="cart-empty">
+                <div class="cart-empty-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <p>Tu carrito está vacío</p>
+            </div>
+        </div>
+        
+        <div class="cart-summary">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cart-total-amount">$0.00</span>
+            </div>
+            <button class="btn" id="checkout-btn" disabled>Pagar Ahora</button>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay"></div>
+
+    <!-- Track Order Button -->
+    <div class="track-order-btn">
+        <i class="fas fa-map-marker-alt track-order-icon"></i>
+    </div>
+
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    
+    <script>
+        // Inicializar EmailJS
+        (function() {
+            emailjs.init('I7oEhEpXP4jX3imk-');
+        })();
+
+        // Variables globales
+        let cart = [];
+        let currentPizza = null;
+        let orderDetails = {};
+        let currentStep = 1;
+
+        // DOM Elements
+        const startOrderBtn = document.getElementById('start-order-btn');
+        const continueToCustomizeBtn = document.getElementById('continue-to-customize');
+        const continueToDeliveryBtn = document.getElementById('continue-to-delivery');
+        const continueToPaymentBtn = document.getElementById('continue-to-payment');
+        const completeOrderBtn = document.getElementById('complete-order');
+        const backToSelectionBtn = document.getElementById('back-to-selection');
+        const backToCustomizeBtn = document.getElementById('back-to-customize');
+        const backToDeliveryBtn = document.getElementById('back-to-delivery');
+        const cartIcon = document.querySelector('.cart-icon');
+        const cartCount = document.querySelector('.cart-count');
+        const cartSidebar = document.querySelector('.cart-sidebar');
+        const cartClose = document.querySelector('.cart-close');
+        const overlay = document.querySelector('.overlay');
+        const checkoutBtn = document.getElementById('checkout-btn');
+        const cartItemsContainer = document.querySelector('.cart-items');
+        const cartTotalAmount = document.getElementById('cart-total-amount');
+        const orderSummaryItems = document.getElementById('order-summary-items');
+        const orderSummaryTotal = document.getElementById('order-summary-total');
+        const deliverySummaryItems = document.getElementById('delivery-summary-items');
+        const deliverySummaryTotal = document.getElementById('delivery-summary-total');
+        const paymentSummaryItems = document.getElementById('payment-summary-items');
+        const paymentSummaryTotal = document.getElementById('payment-summary-total');
+        const confirmationDetails = document.getElementById('confirmation-details');
+        const deliveryTimeSelect = document.getElementById('delivery-time');
+        const specificTimeGroup = document.getElementById('specific-time-group');
+        const trackOrderBtn = document.querySelector('.track-order-btn');
+        const newOrderBtn = document.getElementById('new-order-btn');
+        const trackOrderBtnConfirmation = document.getElementById('track-order-btn');
+        const steps = document.querySelectorAll('.step');
+        const orderSections = document.querySelectorAll('.order-section');
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar pasos
+            updateSteps();
+            
+            // Mostrar sección activa
+            showActiveSection();
+        });
+
+        // Botón para comenzar pedido
+        startOrderBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            goToStep(1);
+        });
+
+        // Botón para continuar a personalización
+        continueToCustomizeBtn.addEventListener('click', function() {
+            if (cart.length === 0) {
+                alert('Por favor agrega al menos una pizza a tu pedido');
+                return;
+            }
+            goToStep(2);
+        });
+
+        // Botón para continuar a entrega
+        continueToDeliveryBtn.addEventListener('click', function() {
+            goToStep(3);
+        });
+
+        // Botón para continuar a pago
+        continueToPaymentBtn.addEventListener('click', function() {
+            // Validar formulario de entrega
+            const name = document.getElementById('delivery-name').value;
+            const phone = document.getElementById('delivery-phone').value;
+            const address = document.getElementById('delivery-address').value;
+            
+            if (!name || !phone || !address) {
+                alert('Por favor completa todos los campos obligatorios');
+                return;
+            }
+            
+            // Guardar detalles de entrega
+            orderDetails.delivery = {
+                name,
+                phone,
+                address,
+                instructions: document.getElementById('delivery-instructions').value,
+                time: document.getElementById('delivery-time').value,
+                specificTime: document.getElementById('specific-time').value
+            };
+            
+            goToStep(4);
+        });
+
+        // Botón para completar pedido
+        completeOrderBtn.addEventListener('click', function() {
+            // Validar método de pago
+            const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+            
+            if (paymentMethod === 'card') {
+                const cardNumber = document.getElementById('card-number').value;
+                const cardName = document.getElementById('card-name').value;
+                const cardExpiry = document.getElementById('card-expiry').value;
+                const cardCvv = document.getElementById('card-cvv').value;
+                
+                if (!cardNumber || !cardName || !cardExpiry || !cardCvv) {
+                    alert('Por favor completa todos los datos de la tarjeta');
+                    return;
+                }
+                
+                // Validar formato de tarjeta (simplificado)
+                if (!/^\d{16}$/.test(cardNumber.replace(/\s/g, ''))) {
+                    alert('Número de tarjeta inválido. Debe tener 16 dígitos');
+                    return;
+                }
+                
+                if (!/^\d{3,4}$/.test(cardCvv)) {
+                    alert('CVV inválido. Debe tener 3 o 4 dígitos');
+                    return;
+                }
+            }
+            
+            // Guardar método de pago
+            orderDetails.payment = {
+                method: paymentMethod,
+                details: paymentMethod === 'card' ? {
+                    cardNumber: document.getElementById('card-number').value,
+                    cardName: document.getElementById('card-name').value,
+                    cardExpiry: document.getElementById('card-expiry').value,
+                    cardCvv: document.getElementById('card-cvv').value
+                } : null
+            };
+            
+            // Mostrar loading
+            completeOrderBtn.innerHTML = '<div class="spinner"></div> Procesando...';
+            completeOrderBtn.disabled = true;
+            
+            // Simular envío del pedido
+            setTimeout(function() {
+                // Guardar pedido completo
+                orderDetails.items = cart;
+                orderDetails.total = calculateTotal();
+                orderDetails.orderNumber = generateOrderNumber();
+                orderDetails.orderDate = new Date().toLocaleString();
+                
+                // Enviar confirmación por correo
+                sendConfirmationEmail();
+                
+                // Ir a confirmación
+                goToStep(5);
+                
+                // Mostrar detalles en confirmación
+                showConfirmationDetails();
+                
+                // Limpiar carrito
+                cart = [];
+                updateCart();
+                
+                // Resetear botón
+                completeOrderBtn.innerHTML = 'Completar Pedido';
+                completeOrderBtn.disabled = false;
+            }, 2000);
+        });
+
+        // Botones para volver
+        backToSelectionBtn.addEventListener('click', function() {
+            goToStep(1);
+        });
+
+        backToCustomizeBtn.addEventListener('click', function() {
+            goToStep(2);
+        });
+
+        backToDeliveryBtn.addEventListener('click', function() {
+            goToStep(3);
+        });
+
+        // Carrito
+        cartIcon.addEventListener('click', function() {
+            cartSidebar.classList.add('active');
+            overlay.classList.add('active');
+        });
+
+        cartClose.addEventListener('click', function() {
+            cartSidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        overlay.addEventListener('click', function() {
+            cartSidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // Checkout desde carrito
+        checkoutBtn.addEventListener('click', function() {
+            cartSidebar.classList.remove('active');
+            overlay.classList.remove('active');
+            goToStep(3);
+        });
+
+        // Selección de hora de entrega
+        deliveryTimeSelect.addEventListener('change', function() {
+            if (this.value === 'specific') {
+                specificTimeGroup.style.display = 'block';
+            } else {
+                specificTimeGroup.style.display = 'none';
+            }
+        });
+
+        // Botón de seguimiento de pedido
+        trackOrderBtn.addEventListener('click', function() {
+            alert('Función de seguimiento de pedido en desarrollo');
+        });
+
+        trackOrderBtnConfirmation.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert(`Tu pedido #${orderDetails.orderNumber} está en camino. Tiempo estimado: 30 minutos`);
+        });
+
+        // Nuevo pedido
+        newOrderBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            location.reload();
+        });
+
+        // Agregar pizzas al carrito
+        document.querySelectorAll('.btn-add').forEach(button => {
+            button.addEventListener('click', function() {
+                const pizzaCard = this.closest('.pizza-card');
+                const pizzaId = pizzaCard.getAttribute('data-pizza-id');
+                const pizzaName = pizzaCard.getAttribute('data-pizza-name');
+                const pizzaPrice = parseFloat(pizzaCard.getAttribute('data-pizza-price'));
+                
+                // Agregar pizza al carrito
+                addToCart(pizzaId, pizzaName, pizzaPrice);
+                
+                // Resaltar tarjeta
+                pizzaCard.classList.add('selected');
+                setTimeout(() => {
+                    pizzaCard.classList.remove('selected');
+                }, 1000);
+            });
+        });
+
+        // Funciones
+        function goToStep(step) {
+            currentStep = step;
+            updateSteps();
+            showActiveSection();
+            updateOrderSummaries();
+            
+            // Scroll to top
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        function updateSteps() {
+            steps.forEach(step => {
+                const stepNumber = parseInt(step.getAttribute('data-step'));
+                
+                if (stepNumber < currentStep) {
+                    step.classList.add('completed');
+                    step.classList.remove('active');
+                } else if (stepNumber === currentStep) {
+                    step.classList.add('active');
+                    step.classList.remove('completed');
+                } else {
+                    step.classList.remove('active', 'completed');
+                }
+            });
+        }
+
+        function showActiveSection() {
+            orderSections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            switch(currentStep) {
+                case 1:
+                    document.getElementById('pizza-selection').classList.add('active');
+                    break;
+                case 2:
+                    document.getElementById('customize-pizza').classList.add('active');
+                    break;
+                case 3:
+                    document.getElementById('delivery-section').classList.add('active');
+                    break;
+                case 4:
+                    document.getElementById('payment-section').classList.add('active');
+                    break;
+                case 5:
+                    document.getElementById('confirmation-section').classList.add('active');
+                    break;
+            }
+        }
+
+        function addToCart(id, name, basePrice) {
+            // Crear nueva pizza
+            const pizza = {
+                id: Date.now().toString(), // ID único
+                pizzaId: id,
+                name,
+                basePrice,
+                size: 'small',
+                sizePrice: 0,
+                crust: 'thin',
+                crustPrice: 0,
+                toppings: [],
+                toppingsPrice: 0,
+                quantity: 1
+            };
+            
+            // Agregar al carrito
+            cart.push(pizza);
+            updateCart();
+        }
+
+        function updateCart() {
+            // Actualizar contador
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            cartCount.textContent = totalItems;
+            
+            // Actualizar sidebar del carrito
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `
+                    <div class="cart-empty">
+                        <div class="cart-empty-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <p>Tu carrito está vacío</p>
+                    </div>
+                `;
+                checkoutBtn.disabled = true;
+            } else {
+                let itemsHTML = '';
+                let total = 0;
+                
+                cart.forEach(item => {
+                    const itemTotal = (item.basePrice + item.sizePrice + item.crustPrice + item.toppingsPrice) * item.quantity;
+                    total += itemTotal;
+                    
+                    itemsHTML += `
+                        <div class="cart-item" data-id="${item.id}">
+                            <div class="cart-item-image" style="background-image: url('https://via.placeholder.com/80x80');"></div>
+                            <div class="cart-item-details">
+                                <div class="cart-item-name">${item.name}</div>
+                                <div class="cart-item-options">
+                                    Tamaño: ${getSizeName(item.size)}, Masa: ${getCrustName(item.crust)}
+                                    ${item.toppings.length > 0 ? `<br>Extra: ${item.toppings.join(', ')}` : ''}
+                                </div>
+                                <div class="cart-item-price">$${itemTotal.toFixed(2)}</div>
+                                <div class="cart-item-remove">Eliminar</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                cartItemsContainer.innerHTML = itemsHTML;
+                cartTotalAmount.textContent = `$${total.toFixed(2)}`;
+                checkoutBtn.disabled = false;
+                
+                // Agregar eventos a los botones de eliminar
+                document.querySelectorAll('.cart-item-remove').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const itemId = this.closest('.cart-item').getAttribute('data-id');
+                        removeFromCart(itemId);
+                    });
+                });
+            }
+            
+            // Actualizar resúmenes de pedido
+            updateOrderSummaries();
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCart();
+        }
+
+        function calculateTotal() {
+            return cart.reduce((total, item) => {
+                return total + (item.basePrice + item.sizePrice + item.crustPrice + item.toppingsPrice) * item.quantity;
+            }, 0);
+        }
+
+        function updateOrderSummaries() {
+            // Resumen en personalización
+            let summaryHTML = '';
+            let total = 0;
+            
+            cart.forEach(item => {
+                const itemTotal = (item.basePrice + item.sizePrice + item.crustPrice + item.toppingsPrice) * item.quantity;
+                total += itemTotal;
+                
+                summaryHTML += `
+                    <div class="summary-item">
+                        <span>${item.quantity}x ${item.name}</span>
+                        <span>$${itemTotal.toFixed(2)}</span>
+                    </div>
+                `;
+            });
+            
+            orderSummaryItems.innerHTML = summaryHTML;
+            orderSummaryTotal.textContent = `$${total.toFixed(2)}`;
+            
+            // Resumen en entrega
+            deliverySummaryItems.innerHTML = summaryHTML;
+            deliverySummaryTotal.textContent = `$${total.toFixed(2)}`;
+            
+            // Resumen en pago
+            paymentSummaryItems.innerHTML = summaryHTML;
+            paymentSummaryTotal.textContent = `$${total.toFixed(2)}`;
+        }
+
+        function showConfirmationDetails() {
+            let detailsHTML = `
+                <p><strong>Número de pedido:</strong> ${orderDetails.orderNumber}</p>
+                <p><strong>Fecha:</strong> ${orderDetails.orderDate}</p>
+                <p><strong>Cliente:</strong> ${orderDetails.delivery.name}</p>
+                <p><strong>Dirección:</strong> ${orderDetails.delivery.address}</p>
+                <p><strong>Teléfono:</strong> ${orderDetails.delivery.phone}</p>
+                <p><strong>Hora de entrega:</strong> ${getDeliveryTimeText()}</p>
+                
+                <h4 style="margin-top: 20px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Detalles del pedido:</h4>
+                <ul style="margin-left: 20px; margin-bottom: 20px;">
+            `;
+            
+            orderDetails.items.forEach(item => {
+                detailsHTML += `
+                    <li>
+                        ${item.quantity}x ${item.name} (${getSizeName(item.size)}, ${getCrustName(item.crust)})
+                        ${item.toppings.length > 0 ? `<br>Extra: ${item.toppings.join(', ')}` : ''}
+                        <br><strong>$${(item.basePrice + item.sizePrice + item.crustPrice + item.toppingsPrice).toFixed(2)}</strong>
+                    </li>
+                `;
+            });
+            
+            detailsHTML += `
+                </ul>
+                <p><strong>Método de pago:</strong> ${getPaymentMethodText()}</p>
+                <p style="font-size: 20px; font-weight: bold; margin-top: 15px;">
+                    <strong>Total:</strong> $${orderDetails.total.toFixed(2)}
+                </p>
+            `;
+            
+            if (orderDetails.delivery.instructions) {
+                detailsHTML += `
+                    <p style="margin-top: 15px;"><strong>Instrucciones especiales:</strong> ${orderDetails.delivery.instructions}</p>
+                `;
+            }
+            
+            confirmationDetails.innerHTML = detailsHTML;
+        }
+
+        function getSizeName(size) {
+            switch(size) {
+                case 'small': return 'Pequeña';
+                case 'medium': return 'Mediana';
+                case 'large': return 'Grande';
+                default: return size;
+            }
+        }
+
+        function getCrustName(crust) {
+            switch(crust) {
+                case 'thin': return 'Delgada';
+                case 'thick': return 'Gruesa';
+                case 'cheese': return 'Queso';
+                default: return crust;
+            }
+        }
+
+        function getDeliveryTimeText() {
+            switch(orderDetails.delivery.time) {
+                case 'asap': return 'Lo más pronto posible';
+                case '30': return 'En 30 minutos';
+                case '60': return 'En 1 hora';
+                case '90': return 'En 1 hora y media';
+                case '120': return 'En 2 horas';
+                case 'specific': return orderDetails.delivery.specificTime || 'Hora específica';
+                default: return orderDetails.delivery.time;
+            }
+        }
+
+        function getPaymentMethodText() {
+            switch(orderDetails.payment.method) {
+                case 'cash': return 'Efectivo';
+                case 'card': return 'Tarjeta de crédito/débito';
+                case 'paypal': return 'PayPal';
+                default: return orderDetails.payment.method;
+            }
+        }
+
+        function generateOrderNumber() {
+            return 'ORD-' + Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+        }
+
+        function sendConfirmationEmail() {
+            const templateParams = {
+                customer_name: orderDetails.delivery.name,
+                order_number: orderDetails.orderNumber,
+                order_date: orderDetails.orderDate,
+                delivery_address: orderDetails.delivery.address,
+                delivery_time: getDeliveryTimeText(),
+                payment_method: getPaymentMethodText(),
+                order_total: orderDetails.total.toFixed(2),
+                order_details: getOrderDetailsForEmail(),
+                customer_email: 'customer@example.com' // En una aplicación real, esto vendría del formulario
+            };
+
+            emailjs.send('service_38oqoc8', 'template_si5y8mg', templateParams)
+                .then(function(response) {
+                    console.log('Correo enviado', response.status, response.text);
+                }, function(error) {
+                    console.error('Error al enviar correo', error);
+                });
+        }
+
+        function getOrderDetailsForEmail() {
+            let details = '';
+            
+            orderDetails.items.forEach(item => {
+                details += `
+                    ${item.quantity}x ${item.name} (${getSizeName(item.size)}, ${getCrustName(item.crust)})
+                    ${item.toppings.length > 0 ? `\nExtra: ${item.toppings.join(', ')}` : ''}
+                    - $${(item.basePrice + item.sizePrice + item.crustPrice + item.toppingsPrice).toFixed(2)}\n\n
+                `;
+            });
+            
+            return details;
+        }
+    </script>
+</body>
+</html>
