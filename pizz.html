@@ -1,781 +1,753 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Pedido de Pizza</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizzería Online - Pedidos a Domicilio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-    <link rel="stylesheet" href="yoyo.css">
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <style>
-        body {
-            background-color: #ffe4ec;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #333;
+        :root {
+            --primary-color: #e31837;
+            --secondary-color: #005fae;
+            --accent-color: #ffc72c;
+            --light-color: #ffffff;
+            --dark-color: #333333;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --gray-light: #f8f9fa;
+            --gray-medium: #e9ecef;
+            --gray-dark: #6c757d;
+        }
+        
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
-
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: linear-gradient(135deg, #ffe4ec 0%, #e0c3fc 100%);
-            background-image: url('1366_2000.jpg');
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
-            opacity: 0.7;
-            z-index: -1;
-            filter: blur(2px);
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--gray-light);
+            color: var(--dark-color);
+            line-height: 1.6;
         }
-
-        .seccion {
-            display: none;
-            max-width: 650px;
-            margin: 50px auto;
-            background: linear-gradient(120deg, #fff1eb 0%, #ace0f9 100%);
-            padding: 32px 28px;
-            box-shadow: 0 8px 32px rgba(106,27,154,0.15), 0 1.5px 8px rgba(255, 64, 129, 0.08);
-            border-radius: 18px;
-            border: 2px solid #e1bee7;
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header */
+        .header {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--light-color);
+        }
+        
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 20px;
+        }
+        
+        .nav-links a {
+            color: var(--light-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+        
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--accent-color);
+            color: var(--dark-color);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            color: var(--light-color);
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background-color: #c1122c;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--light-color);
+            margin-left: 15px;
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Order Steps */
+        .order-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            padding: 0 20px;
+        }
+        
+        .step {
+            text-align: center;
+            flex: 1;
             position: relative;
         }
-
-        .activa {
-            display: block;
-            animation: fadeIn 0.7s;
+        
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 60%;
+            width: 80%;
+            height: 2px;
+            background-color: var(--gray-medium);
+            z-index: 1;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px);}
-            to { opacity: 1; transform: translateY(0);}
-        }
-
-        h1, h2, h3 {
-            color: #ff4081;
-            text-shadow: 1px 2px 8px #e1bee7;
-            text-align: center;
-            margin-bottom: 22px;
-            letter-spacing: 1px;
-        }
-
-        form {
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background-color: var(--gray-medium);
+            color: var(--gray-dark);
+            border-radius: 50%;
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: 700;
+            position: relative;
+            z-index: 2;
         }
-
-        label {
-            font-weight: bold;
-            margin-bottom: 6px;
-            color: #6A1B9A;
-            letter-spacing: 0.5px;
+        
+        .step.active .step-number {
+            background-color: var(--primary-color);
+            color: var(--light-color);
         }
-
-        input[type="text"], input[type="date"], input[type="number"], input[type="tel"], select, textarea {
-            padding: 12px;
-            border: 2px solid #ce93d8;
+        
+        .step-title {
+            font-weight: 500;
+            color: var(--gray-dark);
+        }
+        
+        .step.active .step-title {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+        
+        /* Order Sections */
+        .order-section {
+            display: none;
+            background-color: var(--light-color);
             border-radius: 10px;
-            margin-bottom: 18px;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            font-size: 16px;
-            background: #fff8fd;
-            box-shadow: 0 1px 4px #fce4ec;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            margin-bottom: 40px;
         }
-
-        input[type="text"]:focus, input[type="date"]:focus, input[type="number"]:focus, input[type="tel"]:focus, select:focus, textarea:focus {
-            border-color: #ff4081;
-            outline: none;
-            box-shadow: 0 0 8px #ff80ab;
+        
+        .order-section.active {
+            display: block;
+            animation: fadeIn 0.5s;
         }
-
-        button {
-            padding: 14px 0;
-            background: linear-gradient(90deg, #ff80ab 0%, #7c4dff 100%);
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: bold;
-            margin-top: 12px;
-            box-shadow: 0 2px 8px #e1bee7;
-            transition: background 0.3s, transform 0.2s;
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        button:hover {
-            background: linear-gradient(90deg, #7c4dff 0%, #ff80ab 100%);
-            transform: translateY(-2px) scale(1.03);
+        
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-align: center;
         }
-
-        .checkbox-container {
+        
+        /* Pizza Selection */
+        .pizza-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 14px;
-            margin: 18px 0;
-            padding: 18px;
-            background: linear-gradient(90deg, #fce4ec 0%, #e1bee7 100%);
-            border-radius: 12px;
-            border: 1.5px solid #ce93d8;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
         }
-
-        .checkbox-container div {
+        
+        .pizza-card {
+            background-color: var(--light-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .pizza-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pizza-card.selected {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(227, 24, 55, 0.3);
+        }
+        
+        .pizza-image {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .pizza-info {
+            padding: 15px;
+        }
+        
+        .pizza-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .pizza-description {
+            color: var(--gray-dark);
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .pizza-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .pizza-price {
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--primary-color);
+        }
+        
+        .btn-add {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            border: none;
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-add:hover {
+            background-color: #c1122c;
+        }
+        
+        /* Size and Crust Selection */
+        .size-options, .crust-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .size-option, .crust-option {
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .size-radio, .crust-radio {
+            display: none;
+        }
+        
+        .size-label, .crust-label {
+            display: block;
+            padding: 15px;
+            background-color: var(--gray-light);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .size-radio:checked + .size-label,
+        .crust-radio:checked + .crust-label {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            border-color: var(--primary-color);
+        }
+        
+        .size-name, .crust-name {
+            font-weight: 700;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .size-price, .crust-price {
+            font-size: 14px;
+            color: var(--gray-dark);
+        }
+        
+        .size-radio:checked + .size-label .size-price,
+        .crust-radio:checked + .crust-label .crust-price {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        /* Toppings Selection */
+        .toppings-section {
+            margin-bottom: 30px;
+        }
+        
+        .toppings-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .toppings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        
+        .topping-item {
             display: flex;
             align-items: center;
         }
-
-        .checkbox-container input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
+        
+        .topping-checkbox {
             margin-right: 10px;
-            accent-color: #ff4081;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
         }
-
-        .checkbox-container label {
-            font-weight: normal;
-            color: #6A1B9A;
-            white-space: nowrap;
+        
+        /* Order Summary */
+        .order-summary {
+            background-color: var(--gray-light);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .summary-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--gray-medium);
+            padding-bottom: 10px;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .summary-total {
+            font-weight: 700;
+            font-size: 18px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--gray-medium);
+        }
+        
+        /* Delivery Form */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--gray-medium);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(227, 24, 55, 0.1);
+        }
+        
+        /* Payment Methods */
+        .payment-methods {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .payment-method {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .payment-radio {
+            display: none;
+        }
+        
+        .payment-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            background-color: var(--gray-light);
+            border-radius: 8px;
             cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            height: 100%;
+        }
+        
+        .payment-radio:checked + .payment-label {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            border-color: var(--primary-color);
+        }
+        
+        .payment-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        /* Credit Card Form */
+        .card-form {
+            display: none;
+            background-color: var(--gray-light);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .payment-radio:checked ~ .card-form {
+            display: block;
+        }
+        
+        /* Cash Payment */
+        .cash-payment {
+            display: none;
+            background-color: var(--gray-light);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .payment-radio:checked ~ .cash-payment {
+            display: block;
+        }
+        
+        /* Order Confirmation */
+        .confirmation-message {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .confirmation-icon {
+            font-size: 60px;
+            color: var(--success-color);
+            margin-bottom: 20px;
+        }
+        
+        .confirmation-title {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .confirmation-text {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: var(--gray-dark);
+        }
+        
+        .order-details {
+            background-color: var(--gray-light);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: var(--dark-color);
+            color: var(--light-color);
+            padding: 40px 0;
+            margin-top: 60px;
+        }
+        
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+        
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: var(--light-color);
+            text-decoration: none;
             transition: color 0.3s;
-            font-size: 15px;
         }
-
-        .checkbox-container label:hover {
-            color: #ff4081;
+        
+        .footer-links a:hover {
+            color: var(--accent-color);
         }
-
-        input[type="radio"] {
-            accent-color: #7c4dff;
-            margin-right: 8px;
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
         }
-
-        #detallePedido, #ticketResumen {
-            background: linear-gradient(90deg, #fffde7 0%, #e1bee7 100%);
-            padding: 18px;
-            border-radius: 10px;
-            margin-top: 12px;
-            box-shadow: 0 1px 6px #f8bbd0;
-            border: 1.5px solid #ce93d8;
+        
+        .social-links a {
+            color: var(--light-color);
+            font-size: 20px;
+            transition: color 0.3s;
         }
-
-        ul {
-            list-style-type: disc;
-            padding-left: 20px;
+        
+        .social-links a:hover {
+            color: var(--accent-color);
         }
-
-        ul li {
-            padding: 5px 0;
-            color: #6A1B9A;
+        
+        .copyright {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray-medium);
         }
-
-        .mensaje-ok {
-            color: #43a047;
-            font-weight: bold;
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .nav-links {
+                margin-top: 15px;
+                justify-content: center;
+            }
+            
+            .nav-links li {
+                margin: 0 10px;
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+            
+            .order-steps {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .step:not(:last-child)::after {
+                display: none;
+            }
+            
+            .pizza-grid {
+                grid-template-columns: 1fr;
+            }
         }
-
-        .mensaje-error {
-            color: #d32f2f;
-            font-weight: bold;
-        }
-
-        #modalQuejas {
+        
+        /* Modal */
+        .modal {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(156, 39, 176, 0.25);
-            z-index: 1000;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
         }
-
-        .modal-contenido {
-            background: linear-gradient(120deg, #fff1eb 0%, #ace0f9 100%);
-            margin: 8% auto;
-            padding: 28px 18px;
-            width: 95%;
-            max-width: 420px;
-            border-radius: 16px;
-            border: 2px solid #e1bee7;
-            box-shadow: 0 4px 24px #ce93d8;
+        
+        .modal-content {
+            background-color: var(--light-color);
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            position: relative;
+            animation: modalFadeIn 0.3s;
         }
-
-        #btnQuejas {
-            background: linear-gradient(135deg, #ff4081 0%, #7c4dff 100%);
-            color: #fff;
-            border: none;
-            border-radius: 50%;
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
             cursor: pointer;
-            box-shadow: 0 2px 10px #e1bee7;
-            z-index: 999;
-            transition: background 0.3s, transform 0.2s;
+            color: var(--gray-dark);
+            transition: color 0.3s;
         }
-        #btnQuejas:hover {
-            background: linear-gradient(135deg, #7c4dff 0%, #ff4081 100%);
-            transform: scale(1.08);
-        }
-
-        /* Animación para el modal */
-        .modal-contenido {
-            animation: popIn 0.5s;
-        }
-        @keyframes popIn {
-            from { opacity: 0; transform: scale(0.8);}
-            to { opacity: 1; transform: scale(1);}
-        }
-
-        /* Responsive */
-        @media (max-width: 700px) {
-            .seccion {
-                margin: 18px;
-                padding: 18px;
-            }
-            .modal-contenido {
-                width: 98%;
-                margin: 10% auto;
-            }
-        }
-        @media (max-width: 500px) {
-            .checkbox-container {
-                grid-template-columns: 1fr;
-            }
-            .seccion {
-                margin: 8px;
-                padding: 10px;
-            }
-        }
-    </style>
-    </style>
-</head>
-<body>
-    <div id="bienvenida" class="seccion activa">
-        <h1>¡Bienvenido a Pizzería El Comunismo de Perú!</h1>
-        <p>Gracias por elegirnos para tus antojos</p>
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 18px; margin-top: 28px;">
-            <button id="comenzar" style="font-size: 1.25rem; padding: 16px 38px; border-radius: 12px; min-width: 220px;">Comenzar pedido</button>
-            <a href="Index.html" style="font-size: 1.1rem; color: #7c4dff; text-decoration: none; font-weight: bold; margin-top: 6px;">Volver a inicio</a>
-        </div>
-        <br>
-    </div>
-
-    <div id="formulario-seccion" class="seccion">
-        <h1>Pedidos de Pizza</h1>
-        <form id="formulario">
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" required>
-            
-            <label for="Fecha">Fecha:</label>
-            <input type="date" id="Fecha" name="Fecha" required>
-
-            <label for="Pizza1">Pizza 1:</label>
-            <select id="Pizza1" name="Pizza1">
-                <option value="">-- Seleccionar --</option> 
-                <option value="10">Mexicana ($10)</option>
-                <option value="12">Pepperoni ($12)</option>
-                <option value="11">Hawaiana ($11)</option>
-            </select>
-
-            <label for="Pizza2">Pizza 2:</label>
-            <select id="Pizza2" name="Pizza2">
-                <option value="">-- Seleccionar --</option> 
-                <option value="10">Mexicana ($10)</option>
-                <option value="12">Pepperoni ($12)</option>
-                <option value="11">Hawaiana ($11)</option>
-            </select>
-
-            <label for="Pizza3">Pizza 3:</label>
-            <select id="Pizza3" name="Pizza3">
-                <option value="">-- Seleccionar --</option> 
-                <option value="10">Mexicana ($10)</option>
-                <option value="12">Pepperoni ($12)</option>
-                <option value="11">Hawaiana ($11)</option>
-            </select>
-            
-            <h3>Complementos:</h3>
-            <div class="checkbox-container">
-                <div>
-                    <input type="checkbox" id="queso1" value="2">
-                    <label for="queso1">Queso extra (+$2)</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="orilla" value="3">
-                    <label for="orilla">Orilla rellena (+$3)</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="refresco" value="1.5">
-                    <label for="refresco">Refresco (+$1.50)</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="papas" value="2.5">
-                    <label for="papas">Papas fritas (+$2.50)</label>
-                </div>
-            </div>
-
-            <button type="button" id="calcular">Calcular Total</button>
-        </form>
-    </div>
-
-    <div id="detalle-seccion" class="seccion">
-        <h2>Detalle del Pedido</h2>
-        <p id="detallePedido"></p>
         
-        <h3 style="margin-top: 28px; margin-bottom: 12px; color: #7c4dff;">Tipo de Servicio:</h3>
-        <div style="display: flex; gap: 32px; justify-content: center; margin-bottom: 18px;">
-            <div style="display: flex; align-items: center;">
-            <input type="radio" name="tipoServicio" value="Entrega a domicilio" id="entregaDomicilio" required style="accent-color: #7c4dff; width: 20px; height: 20px;">
-            <label for="entregaDomicilio" style="margin-left: 8px; font-size: 1.08rem; color: #6A1B9A; cursor: pointer;">Entrega a Domicilio</label>
-            </div>
-            <div style="display: flex; align-items: center;">
-            <input type="radio" name="tipoServicio" value="Consumo en local" id="consumoLocal" required style="accent-color: #7c4dff; width: 20px; height: 20px;">
-            <label for="consumoLocal" style="margin-left: 8px; font-size: 1.08rem; color: #6A1B9A; cursor: pointer;">Consumo en local</label>
-            </div>
-        </div>
-
-        <button type="button" id="continuarServicio">Continuar</button>
-    </div>
-
-    <div id="pago-seccion" class="seccion">
-        <h2 style="color: #7c4dff; text-align: center; margin-bottom: 20px; text-shadow: 1px 2px 8px #e1bee7;">Método de Pago</h2>
-        <div style="background: linear-gradient(90deg, #fce4ec 0%, #e1bee7 100%); padding: 18px; border-radius: 12px; border: 1.5px solid #ce93d8; margin-bottom: 18px; text-align: center;">
-            <span style="font-size: 1.18rem; color: #6A1B9A; font-weight: bold;">Total a pagar: </span>
-            <span style="font-size: 1.25rem; color: #ff4081; font-weight: bold;">$<span id="totalPagar">0.00</span></span>
-        </div>
-        <div style="display: flex; justify-content: center; gap: 36px; margin-bottom: 22px;">
-            <div style="display: flex; align-items: center;">
-                <input type="radio" name="metodoPago" value="Efectivo" id="pagoEfectivo" required style="accent-color: #7c4dff; width: 22px; height: 22px;">
-                <label for="pagoEfectivo" style="margin-left: 10px; font-size: 1.08rem; color: #6A1B9A; cursor: pointer;">Pago en efectivo</label>
-            </div>
-            <div style="display: flex; align-items: center;">
-                <input type="radio" name="metodoPago" value="Tarjeta" id="pagoTarjeta" required style="accent-color: #7c4dff; width: 22px; height: 22px;">
-                <label for="pagoTarjeta" style="margin-left: 10px; font-size: 1.08rem; color: #6A1B9A; cursor: pointer;">Pago con tarjeta</label>
-            </div>
-        </div>
-        <button type="button" id="continuarPago" style="width: 100%; font-size: 1.15rem; padding: 14px 0; border-radius: 10px;">Continuar</button>
-    </div>
-
-    <div id="domicilio-seccion" class="seccion">
-        <h1>Datos para Entrega a Domicilio</h1>
-        <form id="domicilioForm">
-            <label for="direccion">Dirección:</label>
-            <input type="text" id="direccion" name="direccion" required>
-
-            <label for="telefono">Teléfono:</label>
-            <input type="tel" id="telefono" name="telefono" required pattern="[0-9]{10}" title="Ingrese un número de teléfono válido (10 dígitos)">
-
-            <button type="button" id="continuarDomicilio">Continuar</button>
-        </form>
-    </div>
-
-    <div id="tarjeta-seccion" class="seccion">
-        <h1>Pago con Tarjeta</h1>
-        <form>
-            <label for="numeroTarjeta">Número de Tarjeta:</label>
-            <input type="text" id="numeroTarjeta" required pattern="[0-9]{16}" title="Ingrese 16 dígitos de la tarjeta">
-
-            <label for="fechaExp">Fecha de Expiración:</label>
-            <input type="text" id="fechaExp" placeholder="MM/AA" required pattern="(0[1-9]|1[0-2])\/[0-9]{2}" title="Formato MM/AA">
-
-            <label for="cvv">CVV:</label>
-            <input type="text" id="cvv" required pattern="[0-9]{3,4}" title="3 o 4 dígitos del CVV">
-
-            <button type="button" id="finalizarTarjeta">Finalizar Pago</button>
-        </form>
-    </div>
-
-    <div id="efectivo-seccion" class="seccion">
-        <h1>Pago en Efectivo</h1>
-        <p>Total a pagar: $<span id="totalEfectivo">0.00</span></p>
-        
-        <label for="montoPago">Monto con el que pagas:</label>
-        <input type="number" id="montoPago" required min="0" step="0.01">
-        
-        <p id="mensajeCambio"></p>
-        
-        <button type="button" id="finalizarEfectivo">Finalizar Pedido</button>
-    </div>
-
-    <div id="ticket-seccion" class="seccion">
-        <h1>¡Gracias por tu Pedido!</h1>
-        <h3>Resumen del Pedido</h3>
-        <div id="ticketResumen"></div>
-        <button id="volver-inicio">Volver al Inicio</button>
-        <button id="imprimir-ticket">Imprimir Ticket</button>
-    </div>
-    <!-- Botón flotante de quejas -->
-    <button id="btnQuejas" style="position: fixed; bottom: 28px; right: 28px; padding: 0; width: 68px; height: 68px; background: linear-gradient(135deg, #ff4081 0%, #7c4dff 100%); color: #fff; border: none; border-radius: 50%; cursor: pointer; box-shadow: 0 4px 18px #e1bee7, 0 2px 10px rgba(0,0,0,0.18); z-index: 999; display: flex; align-items: center; justify-content: center; transition: transform 0.2s, box-shadow 0.2s;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-            <circle cx="19" cy="5" r="2.5" fill="#fff" stroke="#ff4081" stroke-width="1.5"/>
-        </svg>
-        <span style="position: absolute; top: -18px; right: 0; background: #ff4081; color: #fff; font-size: 0.85rem; font-weight: bold; padding: 2px 10px 2px 10px; border-radius: 12px 12px 12px 0; box-shadow: 0 2px 8px #e1bee7;">¿Queja?</span>
-    </button>
-
-    <!-- Modal de Quejas -->
-    <div id="modalQuejas">
-        <div class="modal-contenido" style="border: 2.5px solid #ff4081; box-shadow: 0 8px 32px #ff80ab;">
-            <h2 style="color: #ff4081; text-align: center; margin-bottom: 18px; text-shadow: 1px 2px 8px #e1bee7;">Quejas, Denuncias y Comentarios</h2>
-            <form id="formQuejas" style="display: flex; flex-direction: column; gap: 14px;">
-                <label for="nombreQueja" style="color: #7c4dff;">Nombre:</label>
-                <input type="text" id="nombreQueja" name="nombreQueja" required style="border: 2px solid #ff80ab; border-radius: 8px; padding: 10px;">
-
-                <label for="emailQueja" style="color: #7c4dff;">Correo electrónico:</label>
-                <input type="email" id="emailQueja" name="emailQueja" required style="border: 2px solid #ff80ab; border-radius: 8px; padding: 10px;">
-
-                <label for="comentarioQueja" style="color: #7c4dff;">Comentario:</label>
-                <textarea id="comentarioQueja" name="comentarioQueja" required style="border: 2px solid #ff80ab; border-radius: 8px; padding: 10px; min-height: 70px; background: #fff8fd;"></textarea>
-
-                <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px;">
-                    <button type="submit" style="background: linear-gradient(90deg, #ff80ab 0%, #7c4dff 100%); color: #fff; border: none; border-radius: 8px; padding: 10px 22px; font-weight: bold; font-size: 1.05rem; box-shadow: 0 2px 8px #e1bee7; transition: background 0.3s;">Enviar</button>
-                    <button type="button" id="cerrarModal" style="background: #fff; color: #ff4081; border: 2px solid #ff4081; border-radius: 8px; padding: 10px 22px; font-weight: bold; font-size: 1.05rem; box-shadow: 0 2px 8px #e1bee7; transition: background 0.3s;">Cerrar</button>
-                </div>
-            </form>
-        </div>
-    </div>
- <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-    <script>
-        let totalGlobal = 0;
-        let nombreGlobal = "";
-        let fechaGlobal = "";
-        let complementosDetalleGlobal = [];
-        let pizza1Global = {nombre: "", precio: 0};
-        let pizza2Global = {nombre: "", precio: 0};
-        let pizza3Global = {nombre: "", precio: 0};
-        let tipoServicioGlobal = "";
-        let metodoPagoGlobal = "";
-        let direccionGlobal = "";
-        let telefonoGlobal = "";
-
-        // Comenzar pedido
-      document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("comenzar").addEventListener("click", function() {
-        document.getElementById("bienvenida").classList.remove("activa");
-        document.getElementById("formulario-seccion").classList.add("activa");
-    });
-});
-        // Calcular pedido
-        document.getElementById("calcular").addEventListener("click", function() {
-            const nombre = document.getElementById("nombre").value;
-            const fecha = document.getElementById("Fecha").value;
-
-            if (!nombre || !fecha) {
-                alert("Por favor complete todos los campos obligatorios");
-                return;
-            }
-
-            const pizza1Select = document.getElementById("Pizza1");
-            pizza1Global = {
-                nombre: pizza1Select.options[pizza1Select.selectedIndex].text.split(" ")[0],
-                precio: parseFloat(pizza1Select.value) || 0
-            };
-
-            const pizza2Select = document.getElementById("Pizza2");
-            pizza2Global = {
-                nombre: pizza2Select.options[pizza2Select.selectedIndex].text.split(" ")[0],
-                precio: parseFloat(pizza2Select.value) || 0
-            };
-
-            const pizza3Select = document.getElementById("Pizza3");
-            pizza3Global = {
-                nombre: pizza3Select.options[pizza3Select.selectedIndex].text.split(" ")[0],
-                precio: parseFloat(pizza3Select.value) || 0
-            };
-
-            // Validar que al menos una pizza fue seleccionada
-            if (pizza1Global.precio === 0 && pizza2Global.precio === 0 && pizza3Global.precio === 0) {
-                alert("Por favor seleccione al menos una pizza");
-                return;
-            }
-
-            const complementos = document.querySelectorAll('.checkbox-container input[type="checkbox"]:checked');
-            let complementosTotal = 0;
-            let complementosDetalle = [];
-
-            complementos.forEach((complemento) => {
-                complementosTotal += parseFloat(complemento.value);
-                complementosDetalle.push(complemento.nextElementSibling.textContent);
-            });
-
-            const total = pizza1Global.precio + pizza2Global.precio + pizza3Global.precio + complementosTotal;
-
-            totalGlobal = total;
-            nombreGlobal = nombre;
-            fechaGlobal = fecha;
-            complementosDetalleGlobal = complementosDetalle;
-
-            document.getElementById("detalle-seccion").classList.add("activa");
-            document.getElementById("formulario-seccion").classList.remove("activa");
-
-            let detalleHTML = `
-                <strong>Nombre:</strong> ${nombre}<br>
-                <strong>Fecha:</strong> ${fecha}<br>
-                <strong>Productos:</strong> 
-                <ul>
-            `;
-
-            if (pizza1Global.precio > 0) {
-                detalleHTML += `<li>Pizza ${pizza1Global.nombre} ($${pizza1Global.precio.toFixed(2)})</li>`;
-            }
-            if (pizza2Global.precio > 0) {
-                detalleHTML += `<li>Pizza ${pizza2Global.nombre} ($${pizza2Global.precio.toFixed(2)})</li>`;
-            }
-            if (pizza3Global.precio > 0) {
-                detalleHTML += `<li>Pizza ${pizza3Global.nombre} ($${pizza3Global.precio.toFixed(2)})</li>`;
-            }
-
-            detalleHTML += `
-                </ul>
-                <strong>Complementos:</strong> ${complementosDetalle.join(", ") || 'Ninguno'}<br>
-                <strong>Total:</strong> $${total.toFixed(2)}
-            `;
-
-            document.getElementById("detallePedido").innerHTML = detalleHTML;
-        });
-
-        // Continuar selección de servicio
-        document.getElementById("continuarServicio").addEventListener("click", function() {
-            const servicioSeleccionado = document.querySelector('input[name="tipoServicio"]:checked');
-
-            if (!servicioSeleccionado) {
-                alert("Por favor seleccione un tipo de servicio");
-                return;
-            }
-
-            tipoServicioGlobal = servicioSeleccionado.value;
-
-            document.getElementById("detalle-seccion").classList.remove("activa");
-
-            if (tipoServicioGlobal === "Entrega a domicilio") {
-                document.getElementById("domicilio-seccion").classList.add("activa");
-            } else {
-                document.getElementById("pago-seccion").classList.add("activa");
-                document.getElementById("totalPagar").textContent = totalGlobal.toFixed(2);
-            }
-        });
-
-        // Continuar domicilio
-        document.getElementById("continuarDomicilio").addEventListener("click", function() {
-            const direccion = document.getElementById("direccion").value;
-            const telefono = document.getElementById("telefono").value;
-
-            if (!direccion || !telefono) {
-                alert("Por favor complete todos los datos de envío");
-                return;
-            }
-
-            direccionGlobal = direccion;
-            telefonoGlobal = telefono;
-
-            document.getElementById("domicilio-seccion").classList.remove("activa");
-            document.getElementById("pago-seccion").classList.add("activa");
-            document.getElementById("totalPagar").textContent = totalGlobal.toFixed(2);
-        });
-
-        // Continuar pago
-        document.getElementById("continuarPago").addEventListener("click", function() {
-            const metodoPago = document.querySelector('input[name="metodoPago"]:checked');
-
-            if (!metodoPago) {
-                alert("Por favor seleccione un método de pago");
-                return;
-            }
-
-            metodoPagoGlobal = metodoPago.value;
-
-            document.getElementById("pago-seccion").classList.remove("activa");
-
-            if (metodoPagoGlobal === "Efectivo") {
-                document.getElementById("efectivo-seccion").classList.add("activa");
-                document.getElementById("totalEfectivo").textContent = totalGlobal.toFixed(2);
-            } else if (metodoPagoGlobal === "Tarjeta") {
-                document.getElementById("tarjeta-seccion").classList.add("activa");
-            }
-        });
-
-       // Finalizar efectivo
-document.getElementById("finalizarEfectivo").addEventListener("click", function() {
-    const montoPago = parseFloat(document.getElementById("montoPago").value);
-    const mensajeCambio = document.getElementById("mensajeCambio");
-
-    if (isNaN(montoPago)) {  // Aquí estaba el error: faltaba cerrar el paréntesis
-        mensajeCambio.innerHTML = '<span class="mensaje-error">Por favor ingrese una cantidad válida</span>';
-        return;
-    }
-
-    if (montoPago < totalGlobal) {
-        mensajeCambio.innerHTML = '<span class="mensaje-error">El monto ingresado es insuficiente</span>';
-        return;
-    }
-
-    const cambio = montoPago - totalGlobal;
-    mensajeCambio.innerHTML = `<span class="mensaje-ok">Cambio: $${cambio.toFixed(2)}</span>`;
-
-    document.getElementById("efectivo-seccion").classList.remove("activa");
-    document.getElementById("ticket-seccion").classList.add("activa");
-
-    mostrarTicket("Efectivo", montoPago, cambio);
-});
-        // Finalizar tarjeta
-        document.getElementById("finalizarTarjeta").addEventListener("click", function() {
-            const numeroTarjeta = document.getElementById("numeroTarjeta").value;
-            const fechaExp = document.getElementById("fechaExp").value;
-            const cvv = document.getElementById("cvv").value;
-
-            if (!numeroTarjeta || !fechaExp || !cvv) {
-                alert("Por favor complete todos los datos de la tarjeta");
-                return;
-            }
-
-            // Validación básica de tarjeta
-            if (!/^\d{16}$/.test(numeroTarjeta)) {
-                alert("Número de tarjeta inválido. Debe tener 16 dígitos");
-                return;
-            }
-
-            if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(fechaExp)) {
-                alert("Formato de fecha inválido. Use MM/AA");
-                return;
-            }
-
-            if (!/^\d{3,4}$/.test(cvv)) {
-                alert("CVV inválido. Debe tener 3 o 4 dígitos");
-                return;
-            }
-
-            document.getElementById("tarjeta-seccion").classList.remove("activa");
-            document.getElementById("ticket-seccion").classList.add("activa");
-
-            mostrarTicket("Tarjeta", totalGlobal, 0);
-        });
-
-        // Mostrar ticket completo
-        function mostrarTicket(metodoPago, montoPagado, cambio) {
-            let ticketHTML = `
-                <h3>Pizzería El Comunismo de Perú</h3>
-                <p>Fecha: ${new Date().toLocaleString()}</p>
-                <hr>
-                <strong>Cliente:</strong> ${nombreGlobal}<br>
-                <strong>Fecha del pedido:</strong> ${fechaGlobal}<br>
-                <strong>Tipo de servicio:</strong> ${tipoServicioGlobal}<br>
-            `;
-
-            if (tipoServicioGlobal === "Entrega a domicilio") {
-                ticketHTML += `
-                    <strong>Dirección:</strong> ${direccionGlobal}<br>
-                    <strong>Teléfono:</strong> ${telefonoGlobal}<br>
-                `;
-            }
-
-            ticketHTML += `
-                <hr>
-                <h4>Detalle del Pedido:</h4>
-                <ul>
-            `;
-
-            if (pizza1Global.precio > 0) {
-                ticketHTML += `<li>Pizza ${pizza1Global.nombre} - $${pizza1Global.precio.toFixed(2)}</li>`;
-            }
-            if (pizza2Global.precio > 0) {
-                ticketHTML += `<li>Pizza ${pizza2Global.nombre} - $${pizza2Global.precio.toFixed(2)}</li>`;
-            }
-            if (pizza3Global.precio > 0) {
-                ticketHTML += `<li>Pizza ${pizza3Global.nombre} - $${pizza3Global.precio.toFixed(2)}</li>`;
-            }
-
-            if (complementosDetalleGlobal.length > 0) {
-                ticketHTML += `<li>Complementos: ${complementosDetalleGlobal.join(", ")}</li>`;
-            }
-
-            ticketHTML += `
-                </ul>
-                <hr>
-                <strong>Subtotal:</strong> $${(pizza1Global.precio + pizza2Global.precio + pizza3Global.precio).toFixed(2)}<br>
-                <strong>Complementos:</strong> $${(totalGlobal - (pizza1Global.precio + pizza2Global.precio + pizza3Global.precio)).toFixed(2)}<br>
-                <strong>Total:</strong> $${totalGlobal.toFixed(2)}<br>
-                <strong>Método de Pago:</strong> ${metodoPago}<br>
-            `;
-
-            if (metodoPago === "Efectivo") {
-                ticketHTML += `
-                    <strong>Monto recibido:</strong> $${montoPagado.toFixed(2)}<br>
-                    <strong>Cambio:</strong> $${cambio.toFixed(2)}<br>
-                `;
-            }
-
-            ticketHTML += `
-                <hr>
-                <p>¡Gracias por su compra!</p>
-            `;
-
-            document.getElementById("ticketResumen").innerHTML = ticketHTML;
+        .modal-close:hover {
+            color: var(--primary-color);
         }
-
-        // Funcionalidad para volver al inicio
-        document.getElementById("volver-inicio").addEventListener("click", function() {
-            location.reload();
-        });
-
-        // Funcionalidad para imprimir ticket
-        document.getElementById("imprimir-ticket").addEventListener("click", function() {
-            const contenido = document.getElementById("ticketResumen").innerHTML;
-            const ventana = window.open('', '', 'width=600,height=600');
-            ventana.document.write('<html><head><title>Ticket de Compra</title></head><body>');
-            ventana.document.write(contenido);
-            ventana.document.write('</body></html>');
-            ventana.document.close();
-            ventana.print();
-        });
-
-      
-        (function() {
-            emailjs.init('I7oEhEpXP4jX3imk-'); 
-        })();
         
+        .modal-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
         
-        document.getElementById("btnQuejas").addEventListener("click", function() {
-            document.getElementById("modalQuejas").style.display = "flex";
-        });
-
-        document.getElementById("cerrarModal").addEventListener("click", function() {
-            document.getElementById("modalQuejas").style.display = "none";
-            document.getElementById("formQuejas").reset();
-        });
-
-        document.getElementById("formQuejas").addEventListener("submit", function(e) {
-    e.preventDefault();
-    
-    const nombre = document.getElementById("nombreQueja").value;
-    const email = document.getElementById("emailQueja").value;
-    const comentario = document.getElementById("comentarioQueja").value;
-    
-    // Formatear fecha
-    const ahora = new Date();
-    const fechaFormateada = ahora.toLocaleDateString('es-PE', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
-    
-    emailjs.send('service_38oqoc8', 'template_si5y8mg', {
-        from_name: nombre,
-        from_email: email,
-        message: comentario,
-        date: fechaFormateada
-    })
-    .then(function(response) {
-        alert("Gracias por tus comentarios. Haremos lo posible por mejorar.");
-        document.getElementById("modalQuejas").style.display = "none";
-        document.getElementById("formQuejas").reset();
-    }, function(error) {
-        console.error('Error al enviar:', error);
-        alert("Ocurrió un error al enviar tu mensaje. Por favor intenta nuevamente.");
-    });
-});
-    </script>
-    
-</body>
-</html>
+        /* Cart Sidebar */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 100%;
+            max-width: 400px;
+            height: 100%;
+            background-color: var(--light-color);
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 1500;
+            transition: right 0.3s;
+            overflow-y: auto;
+        }
+        
+        .cart-sidebar.active {
+            right: 0;
+        }
+        
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-medium);
+        }
+        
+        .cart-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .cart-close {
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray-dark);
