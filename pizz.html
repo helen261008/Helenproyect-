@@ -316,6 +316,34 @@
             color: var(--primary-color);
         }
         
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .quantity-input {
+            width: 40px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+        }
+        
         .btn-add {
             background-color: var(--primary-color);
             color: var(--light-color);
@@ -549,7 +577,7 @@
             margin-top: 20px;
         }
         
-        .payment-radio:checked ~ .card-form {
+        #payment-card:checked ~ .card-form {
             display: block;
         }
         
@@ -562,7 +590,21 @@
             margin-top: 20px;
         }
         
-        .payment-radio:checked ~ .cash-payment {
+        #payment-cash:checked ~ .cash-payment {
+            display: block;
+        }
+        
+        /* PayPal Payment */
+        .paypal-payment {
+            display: none;
+            background-color: var(--gray-light);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        #payment-paypal:checked ~ .paypal-payment {
             display: block;
         }
         
@@ -699,6 +741,14 @@
             
             .pizza-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .size-options, .crust-options {
+                flex-direction: column;
+            }
+            
+            .payment-methods {
+                flex-direction: column;
             }
         }
         
@@ -942,6 +992,74 @@
         .delivery-option {
             margin-bottom: 15px;
         }
+        
+        /* Menu Navigation */
+        .menu-nav {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .menu-nav-btn {
+            padding: 10px 20px;
+            margin: 0 10px 10px 0;
+            background-color: var(--gray-light);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .menu-nav-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .menu-nav-btn:hover:not(.active) {
+            background-color: var(--gray-medium);
+        }
+        
+        /* Menu Sections */
+        .menu-section {
+            display: none;
+        }
+        
+        .menu-section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        /* Quantity Selector in Pizza Cards */
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .quantity-btn {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .quantity-input {
+            width: 40px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+        }
     </style>
 </head>
 <body>
@@ -953,10 +1071,10 @@
                 Pizzería Online
             </a>
             <ul class="nav-links">
-                <li><a href="#">Inicio</a></li>
-                <li><a href="#">Menú</a></li>
-                <li><a href="#">Ofertas</a></li>
-                <li><a href="#">Contacto</a></li>
+                <li><a href="#" class="nav-link" data-section="home">Inicio</a></li>
+                <li><a href="#" class="nav-link" data-section="menu">Menú</a></li>
+                <li><a href="#" class="nav-link" data-section="offers">Ofertas</a></li>
+                <li><a href="#" class="nav-link" data-section="contact">Contacto</a></li>
                 <li>
                     <div class="cart-icon">
                         <i class="fas fa-shopping-cart"></i>
@@ -968,17 +1086,375 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="hero">
+    <section class="hero" id="home-section">
         <div class="container hero-content">
             <h1>Las mejores pizzas a tu puerta</h1>
             <p>Ordena en línea y recibe en 30 minutos o menos, o la pizza es gratis</p>
             <a href="#" class="btn" id="start-order-btn">Ordenar Ahora</a>
-            <a href="#" class="btn btn-outline">Ver Menú</a>
+            <a href="#" class="btn btn-outline nav-link" data-section="menu">Ver Menú</a>
         </div>
     </section>
 
+    <!-- Menu Navigation -->
+    <div class="container" id="menu-section" style="display: none;">
+        <div class="menu-nav">
+            <button class="menu-nav-btn active" data-category="pizzas">Pizzas</button>
+            <button class="menu-nav-btn" data-category="beverages">Bebidas</button>
+            <button class="menu-nav-btn" data-category="desserts">Postres</button>
+            <button class="menu-nav-btn" data-category="combos">Combos</button>
+        </div>
+        
+        <!-- Pizzas Section -->
+        <div class="menu-section active" id="pizzas-section">
+            <h2 class="section-title">Nuestras Pizzas</h2>
+            <div class="pizza-grid">
+                <!-- Pizza 1 -->
+                <div class="pizza-card" data-pizza-id="1" data-pizza-name="Pepperoni" data-pizza-price="12.99">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Pepperoni</h3>
+                        <p class="pizza-description">Deliciosa pizza con pepperoni y queso mozzarella</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$12.99</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pizza 2 -->
+                <div class="pizza-card" data-pizza-id="2" data-pizza-name="Hawaiana" data-pizza-price="13.99">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Hawaiana</h3>
+                        <p class="pizza-description">Jamón, piña y queso mozzarella</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$13.99</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pizza 3 -->
+                <div class="pizza-card" data-pizza-id="3" data-pizza-name="Mexicana" data-pizza-price="14.99">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Mexicana</h3>
+                        <p class="pizza-description">Carne molida, jalapeños, pimientos y queso</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$14.99</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pizza 4 -->
+                <div class="pizza-card" data-pizza-id="4" data-pizza-name="Vegetariana" data-pizza-price="12.99">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1571066811602-716837d681de?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Vegetariana</h3>
+                        <p class="pizza-description">Champiñones, pimientos, cebolla y aceitunas</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$12.99</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pizza 5 -->
+                <div class="pizza-card" data-pizza-id="5" data-pizza-name="Cuatro Quesos" data-pizza-price="15.99">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1565299507177-b0ac66763828?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Cuatro Quesos</h3>
+                        <p class="pizza-description">Mozzarella, gorgonzola, parmesano y fontina</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$15.99</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pizza 6 -->
+                <div class="pizza-card" data-pizza-id="6" data-pizza-name="Barbacoa" data-pizza-price="16.99">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Barbacoa</h3>
+                        <p class="pizza-description">Carne de res, salsa barbacoa y cebolla caramelizada</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$16.99</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Beverages Section -->
+        <div class="menu-section" id="beverages-section">
+            <h2 class="section-title">Bebidas</h2>
+            <div class="pizza-grid">
+                <!-- Bebida 1 -->
+                <div class="pizza-card" data-item-id="b1" data-item-name="Refresco 500ml" data-item-price="3.50">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1553456558-aff63285bdd1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Refresco 500ml</h3>
+                        <p class="pizza-description">Coca-Cola, Fanta, Sprite o Inca Kola</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$3.50</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bebida 2 -->
+                <div class="pizza-card" data-item-id="b2" data-item-name="Agua Mineral" data-item-price="2.50">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1568484801950-f8ad841d1a7d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Agua Mineral</h3>
+                        <p class="pizza-description">Agua mineral sin gas 500ml</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$2.50</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bebida 3 -->
+                <div class="pizza-card" data-item-id="b3" data-item-name="Cerveza Artesanal" data-item-price="5.99">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1535958636474-b021ee887b13?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Cerveza Artesanal</h3>
+                        <p class="pizza-description">Cerveza rubia o negra 330ml</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$5.99</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Desserts Section -->
+        <div class="menu-section" id="desserts-section">
+            <h2 class="section-title">Postres</h2>
+            <div class="pizza-grid">
+                <!-- Postre 1 -->
+                <div class="pizza-card" data-item-id="d1" data-item-name="Brownie" data-item-price="4.50">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1564355808539-22fda35bed7e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Brownie</h3>
+                        <p class="pizza-description">Brownie de chocolate con nueces</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$4.50</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Postre 2 -->
+                <div class="pizza-card" data-item-id="d2" data-item-name="Helado" data-item-price="3.99">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Helado</h3>
+                        <p class="pizza-description">Helado de vainilla, chocolate o fresa</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$3.99</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Combos Section -->
+        <div class="menu-section" id="combos-section">
+            <h2 class="section-title">Combos</h2>
+            <div class="pizza-grid">
+                <!-- Combo 1 -->
+                <div class="pizza-card" data-item-id="c1" data-item-name="Combo Familiar" data-item-price="29.99">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1601924582970-9238bcb495d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Combo Familiar</h3>
+                        <p class="pizza-description">2 pizzas grandes + 2 refrescos + postre</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$29.99</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Combo 2 -->
+                <div class="pizza-card" data-item-id="c2" data-item-name="Combo Pareja" data-item-price="19.99">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Combo Pareja</h3>
+                        <p class="pizza-description">1 pizza mediana + 2 refrescos</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$19.99</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Offers Section -->
+    <div class="container" id="offers-section" style="display: none;">
+        <h2 class="section-title">Ofertas Especiales</h2>
+        <div class="pizza-grid">
+            <!-- Oferta 1 -->
+            <div class="pizza-card" data-item-id="o1" data-item-name="2x1 Martes" data-item-price="12.99">
+                <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                <div class="pizza-info">
+                    <h3 class="pizza-name">2x1 Martes</h3>
+                    <p class="pizza-description">Martes de 2x1 en pizzas medianas</p>
+                    <div class="quantity-controls">
+                        <button class="quantity-btn minus">-</button>
+                        <input type="number" class="quantity-input" value="1" min="1">
+                        <button class="quantity-btn plus">+</button>
+                    </div>
+                    <div class="pizza-footer">
+                        <span class="pizza-price">$12.99</span>
+                        <button class="btn-add">Agregar</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Oferta 2 -->
+            <div class="pizza-card" data-item-id="o2" data-item-name="Combo Fin de Semana" data-item-price="24.99">
+                <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1601924582970-9238bcb495d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                <div class="pizza-info">
+                    <h3 class="pizza-name">Combo Fin de Semana</h3>
+                    <p class="pizza-description">Pizza grande + 2 cervezas + postre</p>
+                    <div class="quantity-controls">
+                        <button class="quantity-btn minus">-</button>
+                        <input type="number" class="quantity-input" value="1" min="1">
+                        <button class="quantity-btn plus">+</button>
+                    </div>
+                    <div class="pizza-footer">
+                        <span class="pizza-price">$24.99</span>
+                        <button class="btn-add">Agregar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Section -->
+    <div class="container" id="contact-section" style="display: none;">
+        <h2 class="section-title">Contacto</h2>
+        <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 300px;">
+                <h3 style="margin-bottom: 20px;">Información de Contacto</h3>
+                <p style="margin-bottom: 15px;"><i class="fas fa-map-marker-alt"></i> Av. Principal 123, Lima, Perú</p>
+                <p style="margin-bottom: 15px;"><i class="fas fa-phone"></i> (01) 123-4567</p>
+                <p style="margin-bottom: 15px;"><i class="fas fa-envelope"></i> info@pizzeriaonline.com</p>
+                <p style="margin-bottom: 15px;"><i class="fas fa-clock"></i> Lunes a Domingo: 11:00 AM - 11:00 PM</p>
+                
+                <h3 style="margin-top: 30px; margin-bottom: 20px;">Síguenos</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            
+            <div style="flex: 1; min-width: 300px;">
+                <h3 style="margin-bottom: 20px;">Formulario de Contacto</h3>
+                <form id="contact-form">
+                    <div class="form-group">
+                        <label for="contact-name" class="form-label">Nombre</label>
+                        <input type="text" id="contact-name" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contact-email" class="form-label">Correo Electrónico</label>
+                        <input type="email" id="contact-email" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contact-subject" class="form-label">Asunto</label>
+                        <input type="text" id="contact-subject" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contact-message" class="form-label">Mensaje</label>
+                        <textarea id="contact-message" class="form-control" rows="5" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn">Enviar Mensaje</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Order Steps -->
-    <div class="container">
+    <div class="container" id="order-steps-container" style="display: none;">
         <div class="order-steps">
             <div class="step active" data-step="1">
                 <div class="step-number">1</div>
@@ -1004,88 +1480,12 @@
     </div>
 
     <!-- Order Sections -->
-    <div class="container">
+    <div class="container" id="order-sections-container" style="display: none;">
         <!-- Pizza Selection Section -->
         <section id="pizza-selection" class="order-section active">
             <h2 class="section-title">Elige tus pizzas favoritas</h2>
             <div class="pizza-grid">
-                <!-- Pizza 1 -->
-                <div class="pizza-card" data-pizza-id="1" data-pizza-name="Pepperoni" data-pizza-price="12.99">
-                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
-                    <div class="pizza-info">
-                        <h3 class="pizza-name">Pepperoni</h3>
-                        <p class="pizza-description">Deliciosa pizza con pepperoni y queso mozzarella</p>
-                        <div class="pizza-footer">
-                            <span class="pizza-price">$12.99</span>
-                            <button class="btn-add">Agregar</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Pizza 2 -->
-                <div class="pizza-card" data-pizza-id="2" data-pizza-name="Hawaiana" data-pizza-price="13.99">
-                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
-                    <div class="pizza-info">
-                        <h3 class="pizza-name">Hawaiana</h3>
-                        <p class="pizza-description">Jamón, piña y queso mozzarella</p>
-                        <div class="pizza-footer">
-                            <span class="pizza-price">$13.99</span>
-                            <button class="btn-add">Agregar</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Pizza 3 -->
-                <div class="pizza-card" data-pizza-id="3" data-pizza-name="Mexicana" data-pizza-price="14.99">
-                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
-                    <div class="pizza-info">
-                        <h3 class="pizza-name">Mexicana</h3>
-                        <p class="pizza-description">Carne molida, jalapeños, pimientos y queso</p>
-                        <div class="pizza-footer">
-                            <span class="pizza-price">$14.99</span>
-                            <button class="btn-add">Agregar</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Pizza 4 -->
-                <div class="pizza-card" data-pizza-id="4" data-pizza-name="Vegetariana" data-pizza-price="12.99">
-                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1571066811602-716837d681de?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
-                    <div class="pizza-info">
-                        <h3 class="pizza-name">Vegetariana</h3>
-                        <p class="pizza-description">Champiñones, pimientos, cebolla y aceitunas</p>
-                        <div class="pizza-footer">
-                            <span class="pizza-price">$12.99</span>
-                            <button class="btn-add">Agregar</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Pizza 5 -->
-                <div class="pizza-card" data-pizza-id="5" data-pizza-name="Cuatro Quesos" data-pizza-price="15.99">
-                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1565299507177-b0ac66763828?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
-                    <div class="pizza-info">
-                        <h3 class="pizza-name">Cuatro Quesos</h3>
-                        <p class="pizza-description">Mozzarella, gorgonzola, parmesano y fontina</p>
-                        <div class="pizza-footer">
-                            <span class="pizza-price">$15.99</span>
-                            <button class="btn-add">Agregar</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Pizza 6 -->
-                <div class="pizza-card" data-pizza-id="6" data-pizza-name="Barbacoa" data-pizza-price="16.99">
-                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
-                    <div class="pizza-info">
-                        <h3 class="pizza-name">Barbacoa</h3>
-                        <p class="pizza-description">Carne de res, salsa barbacoa y cebolla caramelizada</p>
-                        <div class="pizza-footer">
-                            <span class="pizza-price">$16.99</span>
-                            <button class="btn-add">Agregar</button>
-                        </div>
-                    </div>
-                </div>
+                <!-- Las pizzas se cargarán dinámicamente desde el menú -->
             </div>
             
             <div class="text-center" style="margin-top: 30px;">
@@ -1357,7 +1757,7 @@
                     <div class="card-form">
                         <div class="form-group">
                             <label for="card-number" class="form-label">Número de tarjeta</label>
-                            <input type="text" id="card-number" class="form-control" placeholder="1234 5678 9012 3456">
+                            <input type="text" id="card-number" class="form-control" placeholder="1234 5678 9012 3456" maxlength="16">
                         </div>
                         
                         <div class="form-group">
@@ -1368,12 +1768,12 @@
                         <div style="display: flex; gap: 15px;">
                             <div class="form-group" style="flex: 1;">
                                 <label for="card-expiry" class="form-label">Fecha de expiración</label>
-                                <input type="text" id="card-expiry" class="form-control" placeholder="MM/AA">
+                                <input type="text" id="card-expiry" class="form-control" placeholder="MM/AA" maxlength="5">
                             </div>
                             
                             <div class="form-group" style="flex: 1;">
                                 <label for="card-cvv" class="form-label">CVV</label>
-                                <input type="text" id="card-cvv" class="form-control" placeholder="123">
+                                <input type="text" id="card-cvv" class="form-control" placeholder="123" maxlength="4">
                             </div>
                         </div>
                     </div>
@@ -1385,8 +1785,11 @@
                         <i class="fab fa-paypal payment-icon"></i>
                         PayPal
                     </label>
-                    <div class="card-form">
+                    <div class="paypal-payment">
                         <p>Serás redirigido a PayPal para completar tu pago.</p>
+                        <button type="button" class="btn" id="paypal-btn" style="background-color: #003087; margin-top: 10px;">
+                            <i class="fab fa-paypal"></i> Pagar con PayPal
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1440,10 +1843,10 @@
             <div class="footer-column">
                 <h3>Enlaces</h3>
                 <ul class="footer-links">
-                    <li><a href="#">Inicio</a></li>
-                    <li><a href="#">Menú</a></li>
-                    <li><a href="#">Ofertas</a></li>
-                    <li><a href="#">Sobre Nosotros</a></li>
+                    <li><a href="#" class="nav-link" data-section="home">Inicio</a></li>
+                    <li><a href="#" class="nav-link" data-section="menu">Menú</a></li>
+                    <li><a href="#" class="nav-link" data-section="offers">Ofertas</a></li>
+                    <li><a href="#" class="nav-link" data-section="contact">Contacto</a></li>
                 </ul>
             </div>
             
@@ -1518,6 +1921,7 @@
         let currentPizza = null;
         let orderDetails = {};
         let currentStep = 1;
+        let currentSection = 'home'; // home, menu, offers, contact
 
         // DOM Elements
         const startOrderBtn = document.getElementById('start-order-btn');
@@ -1557,6 +1961,17 @@
         const deliveryAddressFields = document.getElementById('delivery-address-fields');
         const pickupFields = document.getElementById('pickup-fields');
         const cashAmountInput = document.getElementById('cash-amount');
+        const paypalBtn = document.getElementById('paypal-btn');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const menuNavBtns = document.querySelectorAll('.menu-nav-btn');
+        const menuSections = document.querySelectorAll('.menu-section');
+        const homeSection = document.getElementById('home-section');
+        const menuSection = document.getElementById('menu-section');
+        const offersSection = document.getElementById('offers-section');
+        const contactSection = document.getElementById('contact-section');
+        const orderStepsContainer = document.getElementById('order-steps-container');
+        const orderSectionsContainer = document.getElementById('order-sections-container');
+        const pizzaSelectionGrid = document.querySelector('#pizza-selection .pizza-grid');
 
         // Event Listeners
         document.addEventListener('DOMContentLoaded', function() {
@@ -1568,6 +1983,26 @@
             
             // Actualizar resúmenes
             updateOrderSummaries();
+            
+            // Cargar pizzas en el proceso de pedido
+            loadPizzasForOrder();
+        });
+
+        // Navegación principal
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const section = this.getAttribute('data-section');
+                showMainSection(section);
+            });
+        });
+
+        // Navegación del menú
+        menuNavBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const category = this.getAttribute('data-category');
+                showMenuCategory(category);
+            });
         });
 
         // Método de entrega
@@ -1604,6 +2039,7 @@
         // Botón para comenzar pedido
         startOrderBtn.addEventListener('click', function(e) {
             e.preventDefault();
+            showMainSection('order');
             goToStep(1);
         });
 
@@ -1618,6 +2054,29 @@
 
         // Botón para continuar a entrega
         continueToDeliveryBtn.addEventListener('click', function() {
+            // Guardar las selecciones de tamaño y masa para cada pizza
+            cart.forEach(item => {
+                if (item.type === 'pizza') {
+                    const sizeRadio = document.querySelector('input[name="size"]:checked');
+                    const crustRadio = document.querySelector('input[name="crust"]:checked');
+                    
+                    item.size = sizeRadio.value;
+                    item.sizePrice = parseFloat(sizeRadio.getAttribute('data-price'));
+                    item.crust = crustRadio.value;
+                    item.crustPrice = parseFloat(crustRadio.getAttribute('data-price'));
+                    
+                    // Guardar toppings seleccionados
+                    item.toppings = [];
+                    item.toppingsPrice = 0;
+                    
+                    document.querySelectorAll('.topping-checkbox:checked').forEach(checkbox => {
+                        item.toppings.push(checkbox.value);
+                        item.toppingsPrice += parseFloat(checkbox.getAttribute('data-price'));
+                    });
+                }
+            });
+            
+            updateCart();
             goToStep(3);
         });
 
@@ -1634,6 +2093,11 @@
                 
                 if (!name || !phone || !address || !deliveryTime) {
                     alert('Por favor completa todos los campos obligatorios');
+                    return;
+                }
+                
+                if (deliveryTime === 'specific' && !document.getElementById('specific-time').value) {
+                    alert('Por favor selecciona una hora específica');
                     return;
                 }
                 
@@ -1655,6 +2119,11 @@
                 
                 if (!name || !phone || !pickupTime) {
                     alert('Por favor completa todos los campos obligatorios');
+                    return;
+                }
+                
+                if (pickupTime === 'specific' && !document.getElementById('pickup-specific-time').value) {
+                    alert('Por favor selecciona una hora específica');
                     return;
                 }
                 
@@ -1695,6 +2164,11 @@
                 
                 if (!/^\d{3,4}$/.test(cardCvv)) {
                     alert('CVV inválido. Debe tener 3 o 4 dígitos');
+                    return;
+                }
+                
+                if (!/^\d{2}\/\d{2}$/.test(cardExpiry)) {
+                    alert('Fecha de expiración inválida. Use el formato MM/AA');
                     return;
                 }
             } else if (paymentMethod === 'cash') {
@@ -1790,6 +2264,7 @@
         checkoutBtn.addEventListener('click', function() {
             cartSidebar.classList.remove('active');
             overlay.classList.remove('active');
+            showMainSection('order');
             goToStep(3);
         });
 
@@ -1811,29 +2286,145 @@
         // Nuevo pedido
         newOrderBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            location.reload();
+            showMainSection('home');
         });
 
-        // Agregar pizzas al carrito
-        document.querySelectorAll('.btn-add').forEach(button => {
-            button.addEventListener('click', function() {
-                const pizzaCard = this.closest('.pizza-card');
-                const pizzaId = pizzaCard.getAttribute('data-pizza-id');
-                const pizzaName = pizzaCard.getAttribute('data-pizza-name');
-                const pizzaPrice = parseFloat(pizzaCard.getAttribute('data-pizza-price'));
+        // Botón PayPal
+        paypalBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Simular redirección a PayPal
+            alert('Serás redirigido a PayPal para completar el pago');
+            document.getElementById('payment-paypal').checked = true;
+        });
+
+        // Agregar items al carrito
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('btn-add')) {
+                const itemCard = e.target.closest('.pizza-card');
+                const itemId = itemCard.getAttribute('data-item-id') || itemCard.getAttribute('data-pizza-id');
+                const itemName = itemCard.getAttribute('data-item-name') || itemCard.getAttribute('data-pizza-name');
+                const itemPrice = parseFloat(itemCard.getAttribute('data-item-price') || itemCard.getAttribute('data-pizza-price'));
+                const quantityInput = itemCard.querySelector('.quantity-input');
+                const quantity = parseInt(quantityInput.value);
                 
-                // Agregar pizza al carrito
-                addToCart(pizzaId, pizzaName, pizzaPrice);
+                // Determinar si es pizza u otro item
+                const isPizza = itemCard.hasAttribute('data-pizza-id');
+                
+                // Agregar item al carrito
+                for (let i = 0; i < quantity; i++) {
+                    const item = {
+                        id: Date.now().toString() + i, // ID único
+                        itemId,
+                        name: itemName,
+                        basePrice: itemPrice,
+                        quantity: 1,
+                        type: isPizza ? 'pizza' : 'other'
+                    };
+                    
+                    if (isPizza) {
+                        // Configuración por defecto para pizzas
+                        item.size = 'small';
+                        item.sizePrice = 0;
+                        item.crust = 'thin';
+                        item.crustPrice = 0;
+                        item.toppings = [];
+                        item.toppingsPrice = 0;
+                    }
+                    
+                    cart.push(item);
+                }
+                
+                updateCart();
                 
                 // Resaltar tarjeta
-                pizzaCard.classList.add('selected');
+                itemCard.classList.add('selected');
                 setTimeout(() => {
-                    pizzaCard.classList.remove('selected');
+                    itemCard.classList.remove('selected');
                 }, 1000);
-            });
+            }
+        });
+
+        // Controladores de cantidad
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('quantity-btn')) {
+                const input = e.target.closest('.quantity-controls').querySelector('.quantity-input');
+                let value = parseInt(input.value);
+                
+                if (e.target.classList.contains('minus') && value > 1) {
+                    value--;
+                } else if (e.target.classList.contains('plus')) {
+                    value++;
+                }
+                
+                input.value = value;
+            }
         });
 
         // Funciones
+        function showMainSection(section) {
+            currentSection = section;
+            
+            // Ocultar todas las secciones
+            homeSection.style.display = 'none';
+            menuSection.style.display = 'none';
+            offersSection.style.display = 'none';
+            contactSection.style.display = 'none';
+            orderStepsContainer.style.display = 'none';
+            orderSectionsContainer.style.display = 'none';
+            
+            // Mostrar la sección seleccionada
+            switch(section) {
+                case 'home':
+                    homeSection.style.display = 'flex';
+                    break;
+                case 'menu':
+                    menuSection.style.display = 'block';
+                    break;
+                case 'offers':
+                    offersSection.style.display = 'block';
+                    break;
+                case 'contact':
+                    contactSection.style.display = 'block';
+                    break;
+                case 'order':
+                    orderStepsContainer.style.display = 'block';
+                    orderSectionsContainer.style.display = 'block';
+                    break;
+            }
+        }
+
+        function showMenuCategory(category) {
+            // Quitar active de todos los botones
+            menuNavBtns.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Agregar active al botón clickeado
+            document.querySelector(`.menu-nav-btn[data-category="${category}"]`).classList.add('active');
+            
+            // Ocultar todas las secciones del menú
+            menuSections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Mostrar la sección seleccionada
+            document.getElementById(`${category}-section`).classList.add('active');
+        }
+
+        function loadPizzasForOrder() {
+            // Limpiar el grid
+            pizzaSelectionGrid.innerHTML = '';
+            
+            // Obtener todas las pizzas del menú
+            const pizzas = document.querySelectorAll('#pizzas-section .pizza-card');
+            
+            // Clonar y agregar al proceso de pedido
+            pizzas.forEach(pizza => {
+                const clone = pizza.cloneNode(true);
+                pizzaSelectionGrid.appendChild(clone);
+            });
+        }
+
         function goToStep(step) {
             currentStep = step;
             updateSteps();
@@ -1887,27 +2478,6 @@
             }
         }
 
-        function addToCart(id, name, basePrice) {
-            // Crear nueva pizza
-            const pizza = {
-                id: Date.now().toString(), // ID único
-                pizzaId: id,
-                name,
-                basePrice,
-                size: 'small',
-                sizePrice: 0,
-                crust: 'thin',
-                crustPrice: 0,
-                toppings: [],
-                toppingsPrice: 0,
-                quantity: 1
-            };
-            
-            // Agregar al carrito
-            cart.push(pizza);
-            updateCart();
-        }
-
         function updateCart() {
             // Actualizar contador
             const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
@@ -1928,17 +2498,34 @@
                 let itemsHTML = '';
                 let total = 0;
                 
+                // Agrupar items iguales
+                const groupedItems = {};
+                
                 cart.forEach(item => {
-                    const itemTotal = (item.basePrice + item.sizePrice + item.crustPrice + item.toppingsPrice) * item.quantity;
+                    const key = `${item.itemId}-${item.size || ''}-${item.crust || ''}-${item.toppings.join(',')}`;
+                    
+                    if (!groupedItems[key]) {
+                        groupedItems[key] = {
+                            ...item,
+                            quantity: 1
+                        };
+                    } else {
+                        groupedItems[key].quantity++;
+                    }
+                });
+                
+                // Mostrar items agrupados
+                Object.values(groupedItems).forEach(item => {
+                    const itemTotal = (item.basePrice + (item.sizePrice || 0) + (item.crustPrice || 0) + (item.toppingsPrice || 0)) * item.quantity;
                     total += itemTotal;
                     
                     itemsHTML += `
                         <div class="cart-item" data-id="${item.id}">
                             <div class="cart-item-image" style="background-image: url('https://via.placeholder.com/80x80');"></div>
                             <div class="cart-item-details">
-                                <div class="cart-item-name">${item.name}</div>
+                                <div class="cart-item-name">${item.name} (${item.quantity}x)</div>
                                 <div class="cart-item-options">
-                                    Tamaño: ${getSizeName(item.size)}, Masa: ${getCrustName(item.crust)}
+                                    ${item.size ? `Tamaño: ${getSizeName(item.size)}, Masa: ${getCrustName(item.crust)}` : ''}
                                     ${item.toppings.length > 0 ? `<br>Extra: ${item.toppings.join(', ')}` : ''}
                                 </div>
                                 <div class="cart-item-price">$${itemTotal.toFixed(2)}</div>
@@ -1972,7 +2559,7 @@
 
         function calculateTotal() {
             return cart.reduce((total, item) => {
-                return total + (item.basePrice + item.sizePrice + item.crustPrice + item.toppingsPrice) * item.quantity;
+                return total + (item.basePrice + (item.sizePrice || 0) + (item.crustPrice || 0) + (item.toppingsPrice || 0)) * item.quantity;
             }, 0);
         }
 
@@ -1981,8 +2568,24 @@
             let summaryHTML = '';
             let total = 0;
             
+            // Agrupar items iguales para el resumen
+            const groupedItems = {};
+            
             cart.forEach(item => {
-                const itemTotal = (item.basePrice + item.sizePrice + item.crustPrice + item.toppingsPrice) * item.quantity;
+                const key = `${item.itemId}-${item.size || ''}-${item.crust || ''}-${item.toppings.join(',')}`;
+                
+                if (!groupedItems[key]) {
+                    groupedItems[key] = {
+                        ...item,
+                        quantity: 1
+                    };
+                } else {
+                    groupedItems[key].quantity++;
+                }
+            });
+            
+            Object.values(groupedItems).forEach(item => {
+                const itemTotal = (item.basePrice + (item.sizePrice || 0) + (item.crustPrice || 0) + (item.toppingsPrice || 0)) * item.quantity;
                 total += itemTotal;
                 
                 summaryHTML += `
@@ -2008,7 +2611,7 @@
         function showConfirmationDetails() {
             let detailsHTML = `
                 <p><strong>Número de pedido:</strong> ${orderDetails.orderNumber}</p>
-                <p><strong>Fecha:</strong> ${orderDetails.orderDate}</p>
+                <p><strong>Fecha y hora:</strong> ${orderDetails.orderDate}</p>
                 <p><strong>Cliente:</strong> ${orderDetails.delivery.name}</p>
                 ${orderDetails.delivery.method === 'home' ? `
                     <p><strong>Dirección:</strong> ${orderDetails.delivery.address}</p>
@@ -2022,12 +2625,29 @@
                 <ul style="margin-left: 20px; margin-bottom: 20px;">
             `;
             
+            // Agrupar items para la confirmación
+            const groupedItems = {};
+            
             orderDetails.items.forEach(item => {
+                const key = `${item.itemId}-${item.size || ''}-${item.crust || ''}-${item.toppings.join(',')}`;
+                
+                if (!groupedItems[key]) {
+                    groupedItems[key] = {
+                        ...item,
+                        quantity: 1
+                    };
+                } else {
+                    groupedItems[key].quantity++;
+                }
+            });
+            
+            Object.values(groupedItems).forEach(item => {
                 detailsHTML += `
                     <li>
-                        ${item.quantity}x ${item.name} (${getSizeName(item.size)}, ${getCrustName(item.crust)})
+                        ${item.quantity}x ${item.name}
+                        ${item.size ? ` (${getSizeName(item.size)}, ${getCrustName(item.crust)})` : ''}
                         ${item.toppings.length > 0 ? `<br>Extra: ${item.toppings.join(', ')}` : ''}
-                        <br><strong>$${(item.basePrice + item.sizePrice + item.crustPrice + item.toppingsPrice).toFixed(2)}</strong>
+                        <br><strong>$${(item.basePrice + (item.sizePrice || 0) + (item.crustPrice || 0) + (item.toppingsPrice || 0)).toFixed(2)}</strong>
                     </li>
                 `;
             });
@@ -2133,11 +2753,28 @@
         function getOrderDetailsForEmail() {
             let details = '';
             
+            // Agrupar items para el correo
+            const groupedItems = {};
+            
             orderDetails.items.forEach(item => {
+                const key = `${item.itemId}-${item.size || ''}-${item.crust || ''}-${item.toppings.join(',')}`;
+                
+                if (!groupedItems[key]) {
+                    groupedItems[key] = {
+                        ...item,
+                        quantity: 1
+                    };
+                } else {
+                    groupedItems[key].quantity++;
+                }
+            });
+            
+            Object.values(groupedItems).forEach(item => {
                 details += `
-                    ${item.quantity}x ${item.name} (${getSizeName(item.size)}, ${getCrustName(item.crust)})
+                    ${item.quantity}x ${item.name}
+                    ${item.size ? ` (${getSizeName(item.size)}, ${getCrustName(item.crust)})` : ''}
                     ${item.toppings.length > 0 ? `\nExtra: ${item.toppings.join(', ')}` : ''}
-                    - $${(item.basePrice + item.sizePrice + item.crustPrice + item.toppingsPrice).toFixed(2)}\n\n
+                    - $${(item.basePrice + (item.sizePrice || 0) + (item.crustPrice || 0) + (item.toppingsPrice || 0)).toFixed(2)}\n\n
                 `;
             });
             
@@ -2198,16 +2835,38 @@
             doc.setFont('helvetica', 'normal');
             
             let yPosition = 100;
+            
+            // Agrupar items para el ticket
+            const groupedItems = {};
+            
             orderDetails.items.forEach(item => {
-                doc.text(`${item.quantity}x ${item.name} (${getSizeName(item.size)}, ${getCrustName(item.crust)})`, 20, yPosition);
+                const key = `${item.itemId}-${item.size || ''}-${item.crust || ''}-${item.toppings.join(',')}`;
+                
+                if (!groupedItems[key]) {
+                    groupedItems[key] = {
+                        ...item,
+                        quantity: 1
+                    };
+                } else {
+                    groupedItems[key].quantity++;
+                }
+            });
+            
+            Object.values(groupedItems).forEach(item => {
+                doc.text(`${item.quantity}x ${item.name}`, 20, yPosition);
                 yPosition += 5;
+                
+                if (item.size) {
+                    doc.text(`Tamaño: ${getSizeName(item.size)}, Masa: ${getCrustName(item.crust)}`, 25, yPosition);
+                    yPosition += 5;
+                }
                 
                 if (item.toppings.length > 0) {
                     doc.text(`Extra: ${item.toppings.join(', ')}`, 25, yPosition);
                     yPosition += 5;
                 }
                 
-                doc.text(`$${(item.basePrice + item.sizePrice + item.crustPrice + item.toppingsPrice).toFixed(2)}`, 180, yPosition - 5, { align: 'right' });
+                doc.text(`$${(item.basePrice + (item.sizePrice || 0) + (item.crustPrice || 0) + (item.toppingsPrice || 0)).toFixed(2)}`, 180, yPosition - (item.toppings.length > 0 ? 10 : 5), { align: 'right' });
                 yPosition += 10;
             });
             
