@@ -467,6 +467,38 @@
             box-shadow: 0 0 0 3px rgba(227, 24, 55, 0.1);
         }
         
+        /* Delivery Method */
+        .delivery-methods {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .delivery-method {
+            flex: 1;
+        }
+        
+        .delivery-radio {
+            display: none;
+        }
+        
+        .delivery-label {
+            display: block;
+            padding: 15px;
+            background-color: var(--gray-light);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .delivery-radio:checked + .delivery-label {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            border-color: var(--primary-color);
+        }
+        
         /* Payment Methods */
         .payment-methods {
             display: flex;
@@ -532,6 +564,11 @@
         
         .payment-radio:checked ~ .cash-payment {
             display: block;
+        }
+        
+        /* Cash Amount Input */
+        .cash-amount-group {
+            margin-top: 15px;
         }
         
         /* Order Confirmation */
@@ -896,6 +933,15 @@
             align-items: center;
             height: 200px;
         }
+        
+        /* Delivery Options */
+        .delivery-options {
+            margin-bottom: 20px;
+        }
+        
+        .delivery-option {
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 <body>
@@ -1173,43 +1219,95 @@
                 </div>
             </div>
             
+            <div class="delivery-options">
+                <h3>Método de entrega</h3>
+                <div class="delivery-methods">
+                    <div class="delivery-method">
+                        <input type="radio" id="delivery-home" name="delivery-method" class="delivery-radio" value="home" checked>
+                        <label for="delivery-home" class="delivery-label">
+                            <i class="fas fa-home"></i><br>
+                            A domicilio
+                        </label>
+                    </div>
+                    <div class="delivery-method">
+                        <input type="radio" id="delivery-store" name="delivery-method" class="delivery-radio" value="store">
+                        <label for="delivery-store" class="delivery-label">
+                            <i class="fas fa-store"></i><br>
+                            Recoger en tienda
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
             <form id="delivery-form">
-                <div class="form-group">
-                    <label for="delivery-name" class="form-label">Nombre completo</label>
-                    <input type="text" id="delivery-name" class="form-control" required>
+                <div id="delivery-address-fields">
+                    <div class="form-group">
+                        <label for="delivery-name" class="form-label">Nombre completo</label>
+                        <input type="text" id="delivery-name" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="delivery-phone" class="form-label">Teléfono</label>
+                        <input type="tel" id="delivery-phone" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="delivery-address" class="form-label">Dirección</label>
+                        <input type="text" id="delivery-address" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="delivery-instructions" class="form-label">Instrucciones especiales</label>
+                        <textarea id="delivery-instructions" class="form-control" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="delivery-time" class="form-label">Hora de entrega</label>
+                        <select id="delivery-time" class="form-control" required>
+                            <option value="">Seleccione una hora</option>
+                            <option value="asap">Lo más pronto posible</option>
+                            <option value="30">En 30 minutos</option>
+                            <option value="60">En 1 hora</option>
+                            <option value="90">En 1 hora y media</option>
+                            <option value="120">En 2 horas</option>
+                            <option value="specific">Hora específica</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="specific-time-group" style="display: none;">
+                        <label for="specific-time" class="form-label">Seleccione hora específica</label>
+                        <input type="time" id="specific-time" class="form-control">
+                    </div>
                 </div>
                 
-                <div class="form-group">
-                    <label for="delivery-phone" class="form-label">Teléfono</label>
-                    <input type="tel" id="delivery-phone" class="form-control" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="delivery-address" class="form-label">Dirección</label>
-                    <input type="text" id="delivery-address" class="form-control" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="delivery-instructions" class="form-label">Instrucciones especiales</label>
-                    <textarea id="delivery-instructions" class="form-control" rows="3"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="delivery-time" class="form-label">Hora de entrega</label>
-                    <select id="delivery-time" class="form-control" required>
-                        <option value="">Seleccione una hora</option>
-                        <option value="asap">Lo más pronto posible</option>
-                        <option value="30">En 30 minutos</option>
-                        <option value="60">En 1 hora</option>
-                        <option value="90">En 1 hora y media</option>
-                        <option value="120">En 2 horas</option>
-                        <option value="specific">Hora específica</option>
-                    </select>
-                </div>
-                
-                <div class="form-group" id="specific-time-group" style="display: none;">
-                    <label for="specific-time" class="form-label">Seleccione hora específica</label>
-                    <input type="time" id="specific-time" class="form-control">
+                <div id="pickup-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="pickup-name" class="form-label">Nombre completo</label>
+                        <input type="text" id="pickup-name" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pickup-phone" class="form-label">Teléfono</label>
+                        <input type="tel" id="pickup-phone" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pickup-time" class="form-label">Hora de recogida</label>
+                        <select id="pickup-time" class="form-control">
+                            <option value="">Seleccione una hora</option>
+                            <option value="asap">Lo más pronto posible</option>
+                            <option value="30">En 30 minutos</option>
+                            <option value="60">En 1 hora</option>
+                            <option value="90">En 1 hora y media</option>
+                            <option value="120">En 2 horas</option>
+                            <option value="specific">Hora específica</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="pickup-specific-time-group" style="display: none;">
+                        <label for="pickup-specific-time" class="form-label">Seleccione hora específica</label>
+                        <input type="time" id="pickup-specific-time" class="form-control">
+                    </div>
                 </div>
                 
                 <div style="margin-top: 30px; display: flex; justify-content: space-between;">
@@ -1243,7 +1341,10 @@
                     </label>
                     <div class="cash-payment">
                         <p>Paga en efectivo cuando recibas tu pedido.</p>
-                        <p>Por favor ten el cambio exacto o cercano.</p>
+                        <div class="form-group cash-amount-group">
+                            <label for="cash-amount" class="form-label">Monto con el que pagarás</label>
+                            <input type="number" id="cash-amount" class="form-control" min="0" step="0.01">
+                        </div>
                     </div>
                 </div>
                 
@@ -1315,8 +1416,9 @@
                 <p style="margin-bottom: 20px;">Hemos enviado un correo electrónico con los detalles de tu pedido.</p>
                 
                 <div style="display: flex; gap: 15px; justify-content: center;">
-                    <a href="#" class="btn" id="track-order-btn">Seguir Pedido</a>
-                    <a href="#" class="btn btn-outline" id="new-order-btn">Hacer Otro Pedido</a>
+                    <button class="btn" id="download-ticket-btn">Descargar Ticket</button>
+                    <button class="btn" id="track-order-btn">Seguir Pedido</button>
+                    <button class="btn btn-outline" id="new-order-btn">Hacer Otro Pedido</button>
                 </div>
             </div>
         </section>
@@ -1443,11 +1545,18 @@
         const confirmationDetails = document.getElementById('confirmation-details');
         const deliveryTimeSelect = document.getElementById('delivery-time');
         const specificTimeGroup = document.getElementById('specific-time-group');
+        const pickupTimeSelect = document.getElementById('pickup-time');
+        const pickupSpecificTimeGroup = document.getElementById('pickup-specific-time-group');
         const trackOrderBtn = document.querySelector('.track-order-btn');
         const newOrderBtn = document.getElementById('new-order-btn');
         const trackOrderBtnConfirmation = document.getElementById('track-order-btn');
+        const downloadTicketBtn = document.getElementById('download-ticket-btn');
         const steps = document.querySelectorAll('.step');
         const orderSections = document.querySelectorAll('.order-section');
+        const deliveryMethodRadios = document.querySelectorAll('input[name="delivery-method"]');
+        const deliveryAddressFields = document.getElementById('delivery-address-fields');
+        const pickupFields = document.getElementById('pickup-fields');
+        const cashAmountInput = document.getElementById('cash-amount');
 
         // Event Listeners
         document.addEventListener('DOMContentLoaded', function() {
@@ -1456,6 +1565,40 @@
             
             // Mostrar sección activa
             showActiveSection();
+            
+            // Actualizar resúmenes
+            updateOrderSummaries();
+        });
+
+        // Método de entrega
+        deliveryMethodRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'home') {
+                    deliveryAddressFields.style.display = 'block';
+                    pickupFields.style.display = 'none';
+                } else {
+                    deliveryAddressFields.style.display = 'none';
+                    pickupFields.style.display = 'block';
+                }
+            });
+        });
+
+        // Hora de entrega específica
+        deliveryTimeSelect.addEventListener('change', function() {
+            if (this.value === 'specific') {
+                specificTimeGroup.style.display = 'block';
+            } else {
+                specificTimeGroup.style.display = 'none';
+            }
+        });
+
+        // Hora de recogida específica
+        pickupTimeSelect.addEventListener('change', function() {
+            if (this.value === 'specific') {
+                pickupSpecificTimeGroup.style.display = 'block';
+            } else {
+                pickupSpecificTimeGroup.style.display = 'none';
+            }
         });
 
         // Botón para comenzar pedido
@@ -1480,25 +1623,50 @@
 
         // Botón para continuar a pago
         continueToPaymentBtn.addEventListener('click', function() {
-            // Validar formulario de entrega
-            const name = document.getElementById('delivery-name').value;
-            const phone = document.getElementById('delivery-phone').value;
-            const address = document.getElementById('delivery-address').value;
+            const deliveryMethod = document.querySelector('input[name="delivery-method"]:checked').value;
             
-            if (!name || !phone || !address) {
-                alert('Por favor completa todos los campos obligatorios');
-                return;
+            if (deliveryMethod === 'home') {
+                // Validar formulario de entrega a domicilio
+                const name = document.getElementById('delivery-name').value;
+                const phone = document.getElementById('delivery-phone').value;
+                const address = document.getElementById('delivery-address').value;
+                const deliveryTime = document.getElementById('delivery-time').value;
+                
+                if (!name || !phone || !address || !deliveryTime) {
+                    alert('Por favor completa todos los campos obligatorios');
+                    return;
+                }
+                
+                // Guardar detalles de entrega
+                orderDetails.delivery = {
+                    method: 'home',
+                    name,
+                    phone,
+                    address,
+                    instructions: document.getElementById('delivery-instructions').value,
+                    time: deliveryTime,
+                    specificTime: document.getElementById('specific-time').value
+                };
+            } else {
+                // Validar formulario de recogida en tienda
+                const name = document.getElementById('pickup-name').value;
+                const phone = document.getElementById('pickup-phone').value;
+                const pickupTime = document.getElementById('pickup-time').value;
+                
+                if (!name || !phone || !pickupTime) {
+                    alert('Por favor completa todos los campos obligatorios');
+                    return;
+                }
+                
+                // Guardar detalles de recogida
+                orderDetails.delivery = {
+                    method: 'store',
+                    name,
+                    phone,
+                    time: pickupTime,
+                    specificTime: document.getElementById('pickup-specific-time').value
+                };
             }
-            
-            // Guardar detalles de entrega
-            orderDetails.delivery = {
-                name,
-                phone,
-                address,
-                instructions: document.getElementById('delivery-instructions').value,
-                time: document.getElementById('delivery-time').value,
-                specificTime: document.getElementById('specific-time').value
-            };
             
             goToStep(4);
         });
@@ -1529,6 +1697,19 @@
                     alert('CVV inválido. Debe tener 3 o 4 dígitos');
                     return;
                 }
+            } else if (paymentMethod === 'cash') {
+                const cashAmount = parseFloat(cashAmountInput.value);
+                const orderTotal = calculateTotal();
+                
+                if (!cashAmount || isNaN(cashAmount)) {
+                    alert('Por favor ingresa el monto con el que pagarás');
+                    return;
+                }
+                
+                if (cashAmount < orderTotal) {
+                    alert('El monto ingresado es menor al total del pedido');
+                    return;
+                }
             }
             
             // Guardar método de pago
@@ -1539,6 +1720,9 @@
                     cardName: document.getElementById('card-name').value,
                     cardExpiry: document.getElementById('card-expiry').value,
                     cardCvv: document.getElementById('card-cvv').value
+                } : paymentMethod === 'cash' ? {
+                    cashAmount: parseFloat(cashAmountInput.value),
+                    change: parseFloat(cashAmountInput.value) - calculateTotal()
                 } : null
             };
             
@@ -1609,15 +1793,6 @@
             goToStep(3);
         });
 
-        // Selección de hora de entrega
-        deliveryTimeSelect.addEventListener('change', function() {
-            if (this.value === 'specific') {
-                specificTimeGroup.style.display = 'block';
-            } else {
-                specificTimeGroup.style.display = 'none';
-            }
-        });
-
         // Botón de seguimiento de pedido
         trackOrderBtn.addEventListener('click', function() {
             alert('Función de seguimiento de pedido en desarrollo');
@@ -1626,6 +1801,11 @@
         trackOrderBtnConfirmation.addEventListener('click', function(e) {
             e.preventDefault();
             alert(`Tu pedido #${orderDetails.orderNumber} está en camino. Tiempo estimado: 30 minutos`);
+        });
+
+        // Descargar ticket
+        downloadTicketBtn.addEventListener('click', function() {
+            generateTicketPDF();
         });
 
         // Nuevo pedido
@@ -1830,9 +2010,13 @@
                 <p><strong>Número de pedido:</strong> ${orderDetails.orderNumber}</p>
                 <p><strong>Fecha:</strong> ${orderDetails.orderDate}</p>
                 <p><strong>Cliente:</strong> ${orderDetails.delivery.name}</p>
-                <p><strong>Dirección:</strong> ${orderDetails.delivery.address}</p>
+                ${orderDetails.delivery.method === 'home' ? `
+                    <p><strong>Dirección:</strong> ${orderDetails.delivery.address}</p>
+                ` : `
+                    <p><strong>Método:</strong> Recoger en tienda</p>
+                `}
                 <p><strong>Teléfono:</strong> ${orderDetails.delivery.phone}</p>
-                <p><strong>Hora de entrega:</strong> ${getDeliveryTimeText()}</p>
+                <p><strong>Hora de ${orderDetails.delivery.method === 'home' ? 'entrega' : 'recogida'}:</strong> ${getDeliveryTimeText()}</p>
                 
                 <h4 style="margin-top: 20px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Detalles del pedido:</h4>
                 <ul style="margin-left: 20px; margin-bottom: 20px;">
@@ -1851,6 +2035,16 @@
             detailsHTML += `
                 </ul>
                 <p><strong>Método de pago:</strong> ${getPaymentMethodText()}</p>
+            `;
+            
+            if (orderDetails.payment.method === 'cash') {
+                detailsHTML += `
+                    <p><strong>Monto pagado:</strong> $${orderDetails.payment.details.cashAmount.toFixed(2)}</p>
+                    <p><strong>Cambio:</strong> $${orderDetails.payment.details.change.toFixed(2)}</p>
+                `;
+            }
+            
+            detailsHTML += `
                 <p style="font-size: 20px; font-weight: bold; margin-top: 15px;">
                     <strong>Total:</strong> $${orderDetails.total.toFixed(2)}
                 </p>
@@ -1884,14 +2078,20 @@
         }
 
         function getDeliveryTimeText() {
-            switch(orderDetails.delivery.time) {
+            const delivery = orderDetails.delivery;
+            
+            if (delivery.time === 'specific' && delivery.specificTime) {
+                return delivery.specificTime;
+            }
+            
+            switch(delivery.time) {
                 case 'asap': return 'Lo más pronto posible';
                 case '30': return 'En 30 minutos';
                 case '60': return 'En 1 hora';
                 case '90': return 'En 1 hora y media';
                 case '120': return 'En 2 horas';
-                case 'specific': return orderDetails.delivery.specificTime || 'Hora específica';
-                default: return orderDetails.delivery.time;
+                case 'specific': return 'Hora específica';
+                default: return delivery.time;
             }
         }
 
@@ -1913,7 +2113,8 @@
                 customer_name: orderDetails.delivery.name,
                 order_number: orderDetails.orderNumber,
                 order_date: orderDetails.orderDate,
-                delivery_address: orderDetails.delivery.address,
+                delivery_method: orderDetails.delivery.method === 'home' ? 'A domicilio' : 'Recoger en tienda',
+                delivery_address: orderDetails.delivery.method === 'home' ? orderDetails.delivery.address : 'Tienda Principal - Av. Principal 123, Lima',
                 delivery_time: getDeliveryTimeText(),
                 payment_method: getPaymentMethodText(),
                 order_total: orderDetails.total.toFixed(2),
@@ -1941,6 +2142,101 @@
             });
             
             return details;
+        }
+
+        function generateTicketPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Logo y título
+            doc.setFontSize(20);
+            doc.setTextColor(40);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Pizzería Online', 105, 20, { align: 'center' });
+            
+            doc.setFontSize(12);
+            doc.setTextColor(100);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Av. Principal 123, Lima - Tel: (01) 123-4567', 105, 28, { align: 'center' });
+            
+            // Línea divisoria
+            doc.setDrawColor(200);
+            doc.setLineWidth(0.5);
+            doc.line(20, 35, 190, 35);
+            
+            // Información del pedido
+            doc.setFontSize(14);
+            doc.setTextColor(40);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Ticket de Pedido', 105, 45, { align: 'center' });
+            
+            doc.setFontSize(10);
+            doc.setTextColor(80);
+            doc.setFont('helvetica', 'normal');
+            doc.text(`Número: ${orderDetails.orderNumber}`, 20, 55);
+            doc.text(`Fecha: ${orderDetails.orderDate}`, 20, 60);
+            doc.text(`Cliente: ${orderDetails.delivery.name}`, 20, 65);
+            
+            if (orderDetails.delivery.method === 'home') {
+                doc.text(`Dirección: ${orderDetails.delivery.address}`, 20, 70);
+                doc.text(`Teléfono: ${orderDetails.delivery.phone}`, 20, 75);
+                doc.text(`Hora de entrega: ${getDeliveryTimeText()}`, 20, 80);
+            } else {
+                doc.text(`Teléfono: ${orderDetails.delivery.phone}`, 20, 70);
+                doc.text(`Hora de recogida: ${getDeliveryTimeText()}`, 20, 75);
+                doc.text(`Método: Recoger en tienda`, 20, 80);
+            }
+            
+            // Detalles del pedido
+            doc.setFontSize(12);
+            doc.setTextColor(40);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Detalles del Pedido', 20, 90);
+            
+            doc.setFontSize(10);
+            doc.setTextColor(80);
+            doc.setFont('helvetica', 'normal');
+            
+            let yPosition = 100;
+            orderDetails.items.forEach(item => {
+                doc.text(`${item.quantity}x ${item.name} (${getSizeName(item.size)}, ${getCrustName(item.crust)})`, 20, yPosition);
+                yPosition += 5;
+                
+                if (item.toppings.length > 0) {
+                    doc.text(`Extra: ${item.toppings.join(', ')}`, 25, yPosition);
+                    yPosition += 5;
+                }
+                
+                doc.text(`$${(item.basePrice + item.sizePrice + item.crustPrice + item.toppingsPrice).toFixed(2)}`, 180, yPosition - 5, { align: 'right' });
+                yPosition += 10;
+            });
+            
+            // Total
+            doc.setFontSize(12);
+            doc.setTextColor(40);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Total:', 160, yPosition + 5);
+            doc.text(`$${orderDetails.total.toFixed(2)}`, 180, yPosition + 5, { align: 'right' });
+            
+            // Método de pago
+            doc.setFontSize(10);
+            doc.setTextColor(80);
+            doc.setFont('helvetica', 'normal');
+            doc.text(`Método de pago: ${getPaymentMethodText()}`, 20, yPosition + 15);
+            
+            if (orderDetails.payment.method === 'cash') {
+                doc.text(`Monto pagado: $${orderDetails.payment.details.cashAmount.toFixed(2)}`, 20, yPosition + 20);
+                doc.text(`Cambio: $${orderDetails.payment.details.change.toFixed(2)}`, 20, yPosition + 25);
+            }
+            
+            // Pie de página
+            doc.setFontSize(8);
+            doc.setTextColor(100);
+            doc.text('¡Gracias por su compra!', 105, 280, { align: 'center' });
+            doc.text('Vuelva pronto', 105, 285, { align: 'center' });
+            
+            // Guardar PDF
+            doc.save(`ticket-pedido-${orderDetails.orderNumber}.pdf`);
         }
     </script>
 </body>
