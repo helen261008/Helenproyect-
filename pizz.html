@@ -5,27 +5,1069 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pizzería Online - Pedidos a Domicilio</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- Agregar Font Awesome para los iconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <style>
-        /* [Todos los estilos CSS permanecen iguales] */
-        /* ... (todo el CSS que ya tenías) ... */
+        :root {
+            --primary-color: #e31837;
+            --secondary-color: #005fae;
+            --accent-color: #ffc72c;
+            --light-color: #ffffff;
+            --dark-color: #333333;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --gray-light: #f8f9fa;
+            --gray-medium: #e9ecef;
+            --gray-dark: #6c757d;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--gray-light);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header */
+        .header {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--light-color);
+        }
+        
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 20px;
+        }
+        
+        .nav-links a {
+            color: var(--light-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+        
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--accent-color);
+            color: var(--dark-color);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            color: var(--light-color);
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background-color: #c1122c;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--light-color);
+            margin-left: 15px;
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Order Steps */
+        .order-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            padding: 0 20px;
+        }
+        
+        .step {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+        
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 60%;
+            width: 80%;
+            height: 2px;
+            background-color: var(--gray-medium);
+            z-index: 1;
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background-color: var(--gray-medium);
+            color: var(--gray-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: 700;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .step.active .step-number {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+        }
+        
+        .step-title {
+            font-weight: 500;
+            color: var(--gray-dark);
+        }
+        
+        .step.active .step-title {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+        
+        /* Order Sections */
+        .order-section {
+            display: none;
+            background-color: var(--light-color);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .order-section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-align: center;
+        }
+        
+        /* Pizza Selection */
+        .pizza-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .pizza-card {
+            background-color: var(--light-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .pizza-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pizza-card.selected {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(227, 24, 55, 0.3);
+        }
+        
+        .pizza-image {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .pizza-info {
+            padding: 15px;
+        }
+        
+        .pizza-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .pizza-description {
+            color: var(--gray-dark);
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .pizza-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .pizza-price {
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--primary-color);
+        }
+        
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .quantity-input {
+            width: 40px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+        }
+        
+        .btn-add {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            border: none;
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-add:hover {
+            background-color: #c1122c;
+        }
+        
+        /* Size and Crust Selection */
+        .size-options, .crust-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .size-option, .crust-option {
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .size-radio, .crust-radio {
+            display: none;
+        }
+        
+        .size-label, .crust-label {
+            display: block;
+            padding: 15px;
+            background-color: var(--gray-light);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .size-radio:checked + .size-label,
+        .crust-radio:checked + .crust-label {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            border-color: var(--primary-color);
+        }
+        
+        .size-name, .crust-name {
+            font-weight: 700;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .size-price, .crust-price {
+            font-size: 14px;
+            color: var(--gray-dark);
+        }
+        
+        .size-radio:checked + .size-label .size-price,
+        .crust-radio:checked + .crust-label .crust-price {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        /* Toppings Selection */
+        .toppings-section {
+            margin-bottom: 30px;
+        }
+        
+        .toppings-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .toppings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        
+        .topping-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .topping-checkbox {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+        }
+        
+        /* Order Summary */
+        .order-summary {
+            background-color: var(--gray-light);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .summary-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--gray-medium);
+            padding-bottom: 10px;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .summary-total {
+            font-weight: 700;
+            font-size: 18px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--gray-medium);
+        }
+        
+        /* Delivery Form */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--gray-medium);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(227, 24, 55, 0.1);
+        }
+        
+        /* Delivery Method */
+        .delivery-methods {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .delivery-method {
+            flex: 1;
+        }
+        
+        .delivery-radio {
+            display: none;
+        }
+        
+        .delivery-label {
+            display: block;
+            padding: 15px;
+            background-color: var(--gray-light);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .delivery-radio:checked + .delivery-label {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            border-color: var(--primary-color);
+        }
+        
+        /* Payment Methods */
+        .payment-methods {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .payment-method {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .payment-radio {
+            display: none;
+        }
+        
+        .payment-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            background-color: var(--gray-light);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            height: 100%;
+        }
+        
+        .payment-radio:checked + .payment-label {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            border-color: var(--primary-color);
+        }
+        
+        .payment-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        /* Credit Card Form */
+        .card-form {
+            display: none;
+            background-color: var(--gray-light);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        #payment-card:checked ~ .card-form {
+            display: block;
+        }
+        
+        /* Cash Payment */
+        .cash-payment {
+            display: none;
+            background-color: var(--gray-light);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        #payment-cash:checked ~ .cash-payment {
+            display: block;
+        }
+        
+        /* PayPal Payment */
+        .paypal-payment {
+            display: none;
+            background-color: var(--gray-light);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        #payment-paypal:checked ~ .paypal-payment {
+            display: block;
+        }
+        
+        /* Cash Amount Input */
+        .cash-amount-group {
+            margin-top: 15px;
+        }
+        
+        /* Order Confirmation */
+        .confirmation-message {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .confirmation-icon {
+            font-size: 60px;
+            color: var(--success-color);
+            margin-bottom: 20px;
+        }
+        
+        .confirmation-title {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .confirmation-text {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: var(--gray-dark);
+        }
+        
+        .order-details {
+            background-color: var(--gray-light);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: var(--dark-color);
+            color: var(--light-color);
+            padding: 40px 0;
+            margin-top: 60px;
+        }
+        
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+        
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: var(--light-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent-color);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-links a {
+            color: var(--light-color);
+            font-size: 20px;
+            transition: color 0.3s;
+        }
+        
+        .social-links a:hover {
+            color: var(--accent-color);
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray-medium);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .nav-links {
+                margin-top: 15px;
+                justify-content: center;
+            }
+            
+            .nav-links li {
+                margin: 0 10px;
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+            
+            .order-steps {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .step:not(:last-child)::after {
+                display: none;
+            }
+            
+            .pizza-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .size-options, .crust-options {
+                flex-direction: column;
+            }
+            
+            .payment-methods {
+                flex-direction: column;
+            }
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: var(--light-color);
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            position: relative;
+            animation: modalFadeIn 0.3s;
+        }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray-dark);
+            transition: color 0.3s;
+        }
+        
+        .modal-close:hover {
+            color: var(--primary-color);
+        }
+        
+        .modal-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        
+        /* Cart Sidebar */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 100%;
+            max-width: 400px;
+            height: 100%;
+            background-color: var(--light-color);
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 1500;
+            transition: right 0.3s;
+            overflow-y: auto;
+        }
+        
+        .cart-sidebar.active {
+            right: 0;
+        }
+        
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-medium);
+        }
+        
+        .cart-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .cart-close {
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray-dark);
+            transition: color 0.3s;
+        }
+        
+        .cart-close:hover {
+            color: var(--primary-color);
+        }
+        
+        .cart-items {
+            padding: 20px;
+        }
+        
+        .cart-item {
+            display: flex;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--gray-medium);
+        }
+        
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+            margin-right: 15px;
+        }
+        
+        .cart-item-details {
+            flex: 1;
+        }
+        
+        .cart-item-name {
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .cart-item-options {
+            font-size: 14px;
+            color: var(--gray-dark);
+            margin-bottom: 10px;
+        }
+        
+        .cart-item-price {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .cart-item-remove {
+            color: var(--danger-color);
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 5px;
+            display: inline-block;
+        }
+        
+        .cart-summary {
+            padding: 20px;
+            border-top: 1px solid var(--gray-medium);
+        }
+        
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .cart-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray-dark);
+        }
+        
+        .cart-empty-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: var(--gray-medium);
+        }
+        
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+        }
+        
+        .overlay.active {
+            display: block;
+        }
+        
+        /* Track Order Button */
+        .track-order-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+        
+        .track-order-btn:hover {
+            transform: scale(1.1);
+            background-color: #c1122c;
+        }
+        
+        .track-order-icon {
+            font-size: 24px;
+        }
+        
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+        
+        /* Delivery Options */
+        .delivery-options {
+            margin-bottom: 20px;
+        }
+        
+        .delivery-option {
+            margin-bottom: 15px;
+        }
+        
+        /* Menu Navigation */
+        .menu-nav {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .menu-nav-btn {
+            padding: 10px 20px;
+            margin: 0 10px 10px 0;
+            background-color: var(--gray-light);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .menu-nav-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .menu-nav-btn:hover:not(.active) {
+            background-color: var(--gray-medium);
+        }
+        
+        /* Menu Sections */
+        .menu-section {
+            display: none;
+        }
+        
+        .menu-section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        /* Quantity Selector in Pizza Cards */
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .quantity-btn {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .quantity-input {
+            width: 40px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+        }
     </style>
 </head>
 <body>
-    <!-- Back to Home Button -->
-    <div class="back-to-home" id="back-to-home-btn">
-        <i class="fas fa-home"></i>
-    </div>
-
     <!-- Header -->
     <header class="header">
         <div class="container header-container">
             <a href="#" class="logo">
-                <img src="https://via.placeholder.com/50x50/FF6B6B/FFFFFF?text=PZ" alt="Pizzería Online Logo">
+                <img src="https://via.placeholder.com/40x40" alt="Pizzería Online Logo">
                 Pizzería Online
             </a>
             <ul class="nav-links">
@@ -34,7 +1076,7 @@
                 <li><a href="#" class="nav-link" data-section="offers">Ofertas</a></li>
                 <li><a href="#" class="nav-link" data-section="contact">Contacto</a></li>
                 <li>
-                    <div class="cart-icon" id="cart-icon">
+                    <div class="cart-icon">
                         <i class="fas fa-shopping-cart"></i>
                         <span class="cart-count">0</span>
                     </div>
@@ -45,28 +1087,386 @@
 
     <!-- Hero Section -->
     <section class="hero" id="home-section">
-        <div class="hero-content">
-            <h1>Las mejores pizzas de la ciudad</h1>
-            <p>Disfruta de nuestras deliciosas pizzas recién horneadas con ingredientes frescos</p>
-            <a href="#" class="btn" id="start-order-btn">Hacer Pedido</a>
-            <a href="#" class="btn btn-outline">Ver Menú</a>
+        <div class="container hero-content">
+            <h1>Las mejores pizzas a tu puerta</h1>
+            <p>Ordena en línea y recibe en 30 minutos o menos, o la pizza es gratis</p>
+            <a href="#" class="btn" id="start-order-btn">Ordenar Ahora</a>
+            <a href="#" class="btn btn-outline nav-link" data-section="menu">Ver Menú</a>
         </div>
     </section>
 
-    <!-- Order Steps (visible solo durante el pedido) -->
+    <!-- Menu Navigation -->
+    <div class="container" id="menu-section" style="display: none;">
+        <div class="menu-nav">
+            <button class="menu-nav-btn active" data-category="pizzas">Pizzas</button>
+            <button class="menu-nav-btn" data-category="beverages">Bebidas</button>
+            <button class="menu-nav-btn" data-category="desserts">Postres</button>
+            <button class="menu-nav-btn" data-category="combos">Combos</button>
+        </div>
+        
+        <!-- Pizzas Section -->
+        <div class="menu-section active" id="pizzas-section">
+            <h2 class="section-title">Nuestras Pizzas</h2>
+            <div class="pizza-grid">
+                <!-- Pizza 1 -->
+                <div class="pizza-card" data-pizza-id="1" data-pizza-name="Pepperoni" data-pizza-price="12.99">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Pepperoni</h3>
+                        <p class="pizza-description">Deliciosa pizza con pepperoni y queso mozzarella</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$12.99</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pizza 2 -->
+                <div class="pizza-card" data-pizza-id="2" data-pizza-name="Hawaiana" data-pizza-price="13.99">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Hawaiana</h3>
+                        <p class="pizza-description">Jamón, piña y queso mozzarella</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$13.99</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pizza 3 -->
+                <div class="pizza-card" data-pizza-id="3" data-pizza-name="Mexicana" data-pizza-price="14.99">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Mexicana</h3>
+                        <p class="pizza-description">Carne molida, jalapeños, pimientos y queso</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$14.99</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pizza 4 -->
+                <div class="pizza-card" data-pizza-id="4" data-pizza-name="Vegetariana" data-pizza-price="12.99">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1571066811602-716837d681de?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Vegetariana</h3>
+                        <p class="pizza-description">Champiñones, pimientos, cebolla y aceitunas</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$12.99</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pizza 5 -->
+                <div class="pizza-card" data-pizza-id="5" data-pizza-name="Cuatro Quesos" data-pizza-price="15.99">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1565299507177-b0ac66763828?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Cuatro Quesos</h3>
+                        <p class="pizza-description">Mozzarella, gorgonzola, parmesano y fontina</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$15.99</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pizza 6 -->
+                <div class="pizza-card" data-pizza-id="6" data-pizza-name="Barbacoa" data-pizza-price="16.99">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Barbacoa</h3>
+                        <p class="pizza-description">Carne de res, salsa barbacoa y cebolla caramelizada</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$16.99</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Beverages Section -->
+        <div class="menu-section" id="beverages-section">
+            <h2 class="section-title">Bebidas</h2>
+            <div class="pizza-grid">
+                <!-- Bebida 1 -->
+                <div class="pizza-card" data-item-id="b1" data-item-name="Refresco 500ml" data-item-price="3.50">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1553456558-aff63285bdd1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Refresco 500ml</h3>
+                        <p class="pizza-description">Coca-Cola, Fanta, Sprite o Inca Kola</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$3.50</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bebida 2 -->
+                <div class="pizza-card" data-item-id="b2" data-item-name="Agua Mineral" data-item-price="2.50">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1568484801950-f8ad841d1a7d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Agua Mineral</h3>
+                        <p class="pizza-description">Agua mineral sin gas 500ml</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$2.50</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bebida 3 -->
+                <div class="pizza-card" data-item-id="b3" data-item-name="Cerveza Artesanal" data-item-price="5.99">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1535958636474-b021ee887b13?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Cerveza Artesanal</h3>
+                        <p class="pizza-description">Cerveza rubia o negra 330ml</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$5.99</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Desserts Section -->
+        <div class="menu-section" id="desserts-section">
+            <h2 class="section-title">Postres</h2>
+            <div class="pizza-grid">
+                <!-- Postre 1 -->
+                <div class="pizza-card" data-item-id="d1" data-item-name="Brownie" data-item-price="4.50">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1564355808539-22fda35bed7e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Brownie</h3>
+                        <p class="pizza-description">Brownie de chocolate con nueces</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$4.50</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Postre 2 -->
+                <div class="pizza-card" data-item-id="d2" data-item-name="Helado" data-item-price="3.99">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Helado</h3>
+                        <p class="pizza-description">Helado de vainilla, chocolate o fresa</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$3.99</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Combos Section -->
+        <div class="menu-section" id="combos-section">
+            <h2 class="section-title">Combos</h2>
+            <div class="pizza-grid">
+                <!-- Combo 1 -->
+                <div class="pizza-card" data-item-id="c1" data-item-name="Combo Familiar" data-item-price="29.99">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1601924582970-9238bcb495d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Combo Familiar</h3>
+                        <p class="pizza-description">2 pizzas grandes + 2 refrescos + postre</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$29.99</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Combo 2 -->
+                <div class="pizza-card" data-item-id="c2" data-item-name="Combo Pareja" data-item-price="19.99">
+                    <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="pizza-info">
+                        <h3 class="pizza-name">Combo Pareja</h3>
+                        <p class="pizza-description">1 pizza mediana + 2 refrescos</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <div class="pizza-footer">
+                            <span class="pizza-price">$19.99</span>
+                            <button class="btn-add">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Offers Section -->
+    <div class="container" id="offers-section" style="display: none;">
+        <h2 class="section-title">Ofertas Especiales</h2>
+        <div class="pizza-grid">
+            <!-- Oferta 1 -->
+            <div class="pizza-card" data-item-id="o1" data-item-name="2x1 Martes" data-item-price="12.99">
+                <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                <div class="pizza-info">
+                    <h3 class="pizza-name">2x1 Martes</h3>
+                    <p class="pizza-description">Martes de 2x1 en pizzas medianas</p>
+                    <div class="quantity-controls">
+                        <button class="quantity-btn minus">-</button>
+                        <input type="number" class="quantity-input" value="1" min="1">
+                        <button class="quantity-btn plus">+</button>
+                    </div>
+                    <div class="pizza-footer">
+                        <span class="pizza-price">$12.99</span>
+                        <button class="btn-add">Agregar</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Oferta 2 -->
+            <div class="pizza-card" data-item-id="o2" data-item-name="Combo Fin de Semana" data-item-price="24.99">
+                <div class="pizza-image" style="background-image: url('https://images.unsplash.com/photo-1601924582970-9238bcb495d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                <div class="pizza-info">
+                    <h3 class="pizza-name">Combo Fin de Semana</h3>
+                    <p class="pizza-description">Pizza grande + 2 cervezas + postre</p>
+                    <div class="quantity-controls">
+                        <button class="quantity-btn minus">-</button>
+                        <input type="number" class="quantity-input" value="1" min="1">
+                        <button class="quantity-btn plus">+</button>
+                    </div>
+                    <div class="pizza-footer">
+                        <span class="pizza-price">$24.99</span>
+                        <button class="btn-add">Agregar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Section -->
+    <div class="container" id="contact-section" style="display: none;">
+        <h2 class="section-title">Contacto</h2>
+        <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 300px;">
+                <h3 style="margin-bottom: 20px;">Información de Contacto</h3>
+                <p style="margin-bottom: 15px;"><i class="fas fa-map-marker-alt"></i> Av. Principal 123, Lima, Perú</p>
+                <p style="margin-bottom: 15px;"><i class="fas fa-phone"></i> (01) 123-4567</p>
+                <p style="margin-bottom: 15px;"><i class="fas fa-envelope"></i> info@pizzeriaonline.com</p>
+                <p style="margin-bottom: 15px;"><i class="fas fa-clock"></i> Lunes a Domingo: 11:00 AM - 11:00 PM</p>
+                
+                <h3 style="margin-top: 30px; margin-bottom: 20px;">Síguenos</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            
+            <div style="flex: 1; min-width: 300px;">
+                <h3 style="margin-bottom: 20px;">Formulario de Contacto</h3>
+                <form id="contact-form">
+                    <div class="form-group">
+                        <label for="contact-name" class="form-label">Nombre</label>
+                        <input type="text" id="contact-name" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contact-email" class="form-label">Correo Electrónico</label>
+                        <input type="email" id="contact-email" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contact-subject" class="form-label">Asunto</label>
+                        <input type="text" id="contact-subject" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contact-message" class="form-label">Mensaje</label>
+                        <textarea id="contact-message" class="form-control" rows="5" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn">Enviar Mensaje</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Steps -->
     <div class="container" id="order-steps-container" style="display: none;">
         <div class="order-steps">
             <div class="step active" data-step="1">
                 <div class="step-number">1</div>
-                <div class="step-title">Seleccionar Pizza</div>
+                <div class="step-title">Elige tu pizza</div>
             </div>
             <div class="step" data-step="2">
                 <div class="step-number">2</div>
-                <div class="step-title">Personalizar</div>
+                <div class="step-title">Personaliza</div>
             </div>
             <div class="step" data-step="3">
                 <div class="step-number">3</div>
-                <div class="step-title">Entrega</div>
+                <div class="step-title">Datos de entrega</div>
             </div>
             <div class="step" data-step="4">
                 <div class="step-number">4</div>
@@ -79,158 +1479,396 @@
         </div>
     </div>
 
-    <!-- Order Sections (visible solo durante el pedido) -->
+    <!-- Order Sections -->
     <div class="container" id="order-sections-container" style="display: none;">
         <!-- Pizza Selection Section -->
-        <section class="order-section active" id="pizza-selection">
-            <h2 class="section-title">Elige tu pizza favorita</h2>
-            <div class="pizza-grid" id="pizza-grid">
-                <!-- Las pizzas se cargarán dinámicamente aquí -->
+        <section id="pizza-selection" class="order-section active">
+            <h2 class="section-title">Elige tus pizzas favoritas</h2>
+            <div class="pizza-grid">
+                <!-- Las pizzas se cargarán dinámicamente desde el menú -->
             </div>
-            <div class="text-center">
+            
+            <div class="text-center" style="margin-top: 30px;">
                 <button class="btn" id="continue-to-customize">Continuar</button>
             </div>
         </section>
 
         <!-- Customize Pizza Section -->
-        <section class="order-section" id="customize-pizza">
+        <section id="customize-pizza" class="order-section">
             <h2 class="section-title">Personaliza tu pizza</h2>
-            <div class="pizza-preview">
-                <!-- Vista previa de la pizza seleccionada -->
+            
+            <div class="order-summary">
+                <h3 class="summary-title">Tu pedido</h3>
+                <div id="order-summary-items">
+                    <!-- Aquí se agregarán los items dinámicamente -->
+                </div>
+                <div class="summary-total">
+                    <span>Total:</span>
+                    <span id="order-summary-total">$0.00</span>
+                </div>
             </div>
-            <div class="size-options">
-                <!-- Opciones de tamaño -->
-            </div>
-            <div class="crust-options">
-                <!-- Opciones de masa -->
-            </div>
-            <div class="toppings-section">
-                <!-- Ingredientes adicionales -->
-            </div>
-            <div class="text-center">
-                <button class="btn" id="back-to-selection">Atrás</button>
-                <button class="btn" id="continue-to-delivery">Continuar</button>
+            
+            <div id="customize-options">
+                <!-- Aquí se mostrarán las opciones de personalización -->
+                <h3>Selecciona tamaño y masa</h3>
+                <div class="size-options">
+                    <div class="size-option">
+                        <input type="radio" id="size-small" name="size" class="size-radio" value="small" data-price="0" checked>
+                        <label for="size-small" class="size-label">
+                            <span class="size-name">Pequeña</span>
+                            <span class="size-price">25cm</span>
+                        </label>
+                    </div>
+                    <div class="size-option">
+                        <input type="radio" id="size-medium" name="size" class="size-radio" value="medium" data-price="3">
+                        <label for="size-medium" class="size-label">
+                            <span class="size-name">Mediana</span>
+                            <span class="size-price">30cm (+$3.00)</span>
+                        </label>
+                    </div>
+                    <div class="size-option">
+                        <input type="radio" id="size-large" name="size" class="size-radio" value="large" data-price="5">
+                        <label for="size-large" class="size-label">
+                            <span class="size-name">Grande</span>
+                            <span class="size-price">35cm (+$5.00)</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="crust-options" style="margin-top: 20px;">
+                    <div class="crust-option">
+                        <input type="radio" id="crust-thin" name="crust" class="crust-radio" value="thin" data-price="0" checked>
+                        <label for="crust-thin" class="crust-label">
+                            <span class="crust-name">Delgada</span>
+                            <span class="crust-price">Masa tradicional</span>
+                        </label>
+                    </div>
+                    <div class="crust-option">
+                        <input type="radio" id="crust-thick" name="crust" class="crust-radio" value="thick" data-price="2">
+                        <label for="crust-thick" class="crust-label">
+                            <span class="crust-name">Gruesa</span>
+                            <span class="crust-price">Masa esponjosa (+$2.00)</span>
+                        </label>
+                    </div>
+                    <div class="crust-option">
+                        <input type="radio" id="crust-cheese" name="crust" class="crust-radio" value="cheese" data-price="3">
+                        <label for="crust-cheese" class="crust-label">
+                            <span class="crust-name">Queso</span>
+                            <span class="crust-price">Borde de queso (+$3.00)</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="toppings-section" style="margin-top: 30px;">
+                    <h3 class="toppings-title">Ingredientes extra ($1.50 c/u)</h3>
+                    <div class="toppings-grid">
+                        <div class="topping-item">
+                            <input type="checkbox" id="topping-pepperoni" class="topping-checkbox" value="Pepperoni" data-price="1.5">
+                            <label for="topping-pepperoni">Pepperoni</label>
+                        </div>
+                        <div class="topping-item">
+                            <input type="checkbox" id="topping-jamon" class="topping-checkbox" value="Jamón" data-price="1.5">
+                            <label for="topping-jamon">Jamón</label>
+                        </div>
+                        <div class="topping-item">
+                            <input type="checkbox" id="topping-champinones" class="topping-checkbox" value="Champiñones" data-price="1.5">
+                            <label for="topping-champinones">Champiñones</label>
+                        </div>
+                        <div class="topping-item">
+                            <input type="checkbox" id="topping-pina" class="topping-checkbox" value="Piña" data-price="1.5">
+                            <label for="topping-pina">Piña</label>
+                        </div>
+                        <div class="topping-item">
+                            <input type="checkbox" id="topping-cebolla" class="topping-checkbox" value="Cebolla" data-price="1.5">
+                            <label for="topping-cebolla">Cebolla</label>
+                        </div>
+                        <div class="topping-item">
+                            <input type="checkbox" id="topping-pimientos" class="topping-checkbox" value="Pimientos" data-price="1.5">
+                            <label for="topping-pimientos">Pimientos</label>
+                        </div>
+                        <div class="topping-item">
+                            <input type="checkbox" id="topping-aceitunas" class="topping-checkbox" value="Aceitunas" data-price="1.5">
+                            <label for="topping-aceitunas">Aceitunas</label>
+                        </div>
+                        <div class="topping-item">
+                            <input type="checkbox" id="topping-extraqueso" class="topping-checkbox" value="Extra Queso" data-price="1.5">
+                            <label for="topping-extraqueso">Extra Queso</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px; display: flex; justify-content: space-between;">
+                    <button class="btn" id="back-to-selection" style="background-color: var(--gray-dark);">Volver</button>
+                    <button class="btn" id="continue-to-delivery">Continuar</button>
+                </div>
             </div>
         </section>
 
         <!-- Delivery Section -->
-        <section class="order-section" id="delivery-section">
-            <h2 class="section-title">Información de Entrega</h2>
+        <section id="delivery-section" class="order-section">
+            <h2 class="section-title">Datos de entrega</h2>
+            
+            <div class="order-summary">
+                <h3 class="summary-title">Tu pedido</h3>
+                <div id="delivery-summary-items">
+                    <!-- Aquí se agregarán los items dinámicamente -->
+                </div>
+                <div class="summary-total">
+                    <span>Total:</span>
+                    <span id="delivery-summary-total">$0.00</span>
+                </div>
+            </div>
+            
             <div class="delivery-options">
-                <!-- Opciones de entrega o recogida -->
+                <h3>Método de entrega</h3>
+                <div class="delivery-methods">
+                    <div class="delivery-method">
+                        <input type="radio" id="delivery-home" name="delivery-method" class="delivery-radio" value="home" checked>
+                        <label for="delivery-home" class="delivery-label">
+                            <i class="fas fa-home"></i><br>
+                            A domicilio
+                        </label>
+                    </div>
+                    <div class="delivery-method">
+                        <input type="radio" id="delivery-store" name="delivery-method" class="delivery-radio" value="store">
+                        <label for="delivery-store" class="delivery-label">
+                            <i class="fas fa-store"></i><br>
+                            Recoger en tienda
+                        </label>
+                    </div>
+                </div>
             </div>
-            <div class="delivery-form">
-                <!-- Formulario de dirección -->
-            </div>
-            <div class="text-center">
-                <button class="btn" id="back-to-customize">Atrás</button>
-                <button class="btn" id="continue-to-payment">Continuar</button>
-            </div>
+            
+            <form id="delivery-form">
+                <div id="delivery-address-fields">
+                    <div class="form-group">
+                        <label for="delivery-name" class="form-label">Nombre completo</label>
+                        <input type="text" id="delivery-name" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="delivery-phone" class="form-label">Teléfono</label>
+                        <input type="tel" id="delivery-phone" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="delivery-address" class="form-label">Dirección</label>
+                        <input type="text" id="delivery-address" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="delivery-instructions" class="form-label">Instrucciones especiales</label>
+                        <textarea id="delivery-instructions" class="form-control" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="delivery-time" class="form-label">Hora de entrega</label>
+                        <select id="delivery-time" class="form-control" required>
+                            <option value="">Seleccione una hora</option>
+                            <option value="asap">Lo más pronto posible</option>
+                            <option value="30">En 30 minutos</option>
+                            <option value="60">En 1 hora</option>
+                            <option value="90">En 1 hora y media</option>
+                            <option value="120">En 2 horas</option>
+                            <option value="specific">Hora específica</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="specific-time-group" style="display: none;">
+                        <label for="specific-time" class="form-label">Seleccione hora específica</label>
+                        <input type="time" id="specific-time" class="form-control">
+                    </div>
+                </div>
+                
+                <div id="pickup-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="pickup-name" class="form-label">Nombre completo</label>
+                        <input type="text" id="pickup-name" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pickup-phone" class="form-label">Teléfono</label>
+                        <input type="tel" id="pickup-phone" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pickup-time" class="form-label">Hora de recogida</label>
+                        <select id="pickup-time" class="form-control">
+                            <option value="">Seleccione una hora</option>
+                            <option value="asap">Lo más pronto posible</option>
+                            <option value="30">En 30 minutos</option>
+                            <option value="60">En 1 hora</option>
+                            <option value="90">En 1 hora y media</option>
+                            <option value="120">En 2 horas</option>
+                            <option value="specific">Hora específica</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="pickup-specific-time-group" style="display: none;">
+                        <label for="pickup-specific-time" class="form-label">Seleccione hora específica</label>
+                        <input type="time" id="pickup-specific-time" class="form-control">
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px; display: flex; justify-content: space-between;">
+                    <button type="button" class="btn" id="back-to-customize" style="background-color: var(--gray-dark);">Volver</button>
+                    <button type="button" class="btn" id="continue-to-payment">Continuar</button>
+                </div>
+            </form>
         </section>
 
         <!-- Payment Section -->
-        <section class="order-section" id="payment-section">
-            <h2 class="section-title">Método de Pago</h2>
-            <div class="payment-methods">
-                <!-- Opciones de pago -->
+        <section id="payment-section" class="order-section">
+            <h2 class="section-title">Método de pago</h2>
+            
+            <div class="order-summary">
+                <h3 class="summary-title">Tu pedido</h3>
+                <div id="payment-summary-items">
+                    <!-- Aquí se agregarán los items dinámicamente -->
+                </div>
+                <div class="summary-total">
+                    <span>Total:</span>
+                    <span id="payment-summary-total">$0.00</span>
+                </div>
             </div>
-            <div class="text-center">
-                <button class="btn" id="back-to-delivery">Atrás</button>
-                <button class="btn" id="complete-order">Completar Pedido</button>
+            
+            <div class="payment-methods">
+                <div class="payment-method">
+                    <input type="radio" id="payment-cash" name="payment" class="payment-radio" value="cash" checked>
+                    <label for="payment-cash" class="payment-label">
+                        <i class="fas fa-money-bill-wave payment-icon"></i>
+                        Efectivo
+                    </label>
+                    <div class="cash-payment">
+                        <p>Paga en efectivo cuando recibas tu pedido.</p>
+                        <div class="form-group cash-amount-group">
+                            <label for="cash-amount" class="form-label">Monto con el que pagarás</label>
+                            <input type="number" id="cash-amount" class="form-control" min="0" step="0.01">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="payment-method">
+                    <input type="radio" id="payment-card" name="payment" class="payment-radio" value="card">
+                    <label for="payment-card" class="payment-label">
+                        <i class="fas fa-credit-card payment-icon"></i>
+                        Tarjeta
+                    </label>
+                    <div class="card-form">
+                        <div class="form-group">
+                            <label for="card-number" class="form-label">Número de tarjeta</label>
+                            <input type="text" id="card-number" class="form-control" placeholder="1234 5678 9012 3456" maxlength="16">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="card-name" class="form-label">Nombre en la tarjeta</label>
+                            <input type="text" id="card-name" class="form-control">
+                        </div>
+                        
+                        <div style="display: flex; gap: 15px;">
+                            <div class="form-group" style="flex: 1;">
+                                <label for="card-expiry" class="form-label">Fecha de expiración</label>
+                                <input type="text" id="card-expiry" class="form-control" placeholder="MM/AA" maxlength="5">
+                            </div>
+                            
+                            <div class="form-group" style="flex: 1;">
+                                <label for="card-cvv" class="form-label">CVV</label>
+                                <input type="text" id="card-cvv" class="form-control" placeholder="123" maxlength="4">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="payment-method">
+                    <input type="radio" id="payment-paypal" name="payment" class="payment-radio" value="paypal">
+                    <label for="payment-paypal" class="payment-label">
+                        <i class="fab fa-paypal payment-icon"></i>
+                        PayPal
+                    </label>
+                    <div class="paypal-payment">
+                        <p>Serás redirigido a PayPal para completar tu pago.</p>
+                        <button type="button" class="btn" id="paypal-btn" style="background-color: #003087; margin-top: 10px;">
+                            <i class="fab fa-paypal"></i> Pagar con PayPal
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px; display: flex; justify-content: space-between;">
+                <button type="button" class="btn" id="back-to-delivery" style="background-color: var(--gray-dark);">Volver</button>
+                <button type="button" class="btn" id="complete-order">Completar Pedido</button>
             </div>
         </section>
 
         <!-- Confirmation Section -->
-        <section class="order-section" id="confirmation-section">
+        <section id="confirmation-section" class="order-section">
             <div class="confirmation-message">
                 <div class="confirmation-icon">
                     <i class="fas fa-check-circle"></i>
                 </div>
                 <h2 class="confirmation-title">¡Pedido Confirmado!</h2>
-                <p class="confirmation-text">Gracias por tu pedido. Estamos preparando tu pizza.</p>
-                <div class="order-details" id="confirmation-details">
-                    <!-- Detalles del pedido -->
+                <p class="confirmation-text">Tu pedido ha sido recibido y está siendo preparado.</p>
+                
+                <div class="order-details">
+                    <h3>Detalles del pedido</h3>
+                    <div id="confirmation-details">
+                        <!-- Aquí se mostrarán los detalles del pedido -->
+                    </div>
                 </div>
-                <button class="btn" id="new-order-btn">Hacer otro pedido</button>
-                <button class="btn btn-outline" id="track-order-btn">Seguir Pedido</button>
-                <button class="btn btn-outline" id="download-ticket-btn">Descargar Ticket</button>
+                
+                <p style="margin-bottom: 20px;">Hemos enviado un correo electrónico con los detalles de tu pedido.</p>
+                
+                <div style="display: flex; gap: 15px; justify-content: center;">
+                    <button class="btn" id="download-ticket-btn">Descargar Ticket</button>
+                    <button class="btn" id="track-order-btn">Seguir Pedido</button>
+                    <button class="btn btn-outline" id="new-order-btn">Hacer Otro Pedido</button>
+                </div>
             </div>
         </section>
     </div>
-
-    <!-- Menu Section -->
-    <section class="container" id="menu-section" style="display: none;">
-        <h2 class="section-title">Nuestro Menú</h2>
-        <div class="menu-nav">
-            <button class="menu-nav-btn active" data-category="pizzas">Pizzas</button>
-            <button class="menu-nav-btn" data-category="beverages">Bebidas</button>
-            <button class="menu-nav-btn" data-category="desserts">Postres</button>
-            <button class="menu-nav-btn" data-category="sides">Acompañamientos</button>
-        </div>
-        <div class="menu-section active" id="pizzas-menu">
-            <!-- Pizzas del menú -->
-        </div>
-        <div class="menu-section" id="beverages-menu">
-            <!-- Bebidas del menú -->
-        </div>
-        <div class="menu-section" id="desserts-menu">
-            <!-- Postres del menú -->
-        </div>
-        <div class="menu-section" id="sides-menu">
-            <!-- Acompañamientos del menú -->
-        </div>
-    </section>
-
-    <!-- Offers Section -->
-    <section class="container" id="offers-section" style="display: none;">
-        <h2 class="section-title">Ofertas Especiales</h2>
-        <!-- Ofertas especiales -->
-    </section>
-
-    <!-- Contact Section -->
-    <section class="container" id="contact-section" style="display: none;">
-        <h2 class="section-title">Contacto</h2>
-        <!-- Información de contacto -->
-    </section>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container footer-container">
             <div class="footer-column">
                 <h3>Pizzería Online</h3>
-                <p>Las mejores pizzas entregadas en tu puerta.</p>
+                <p>Las mejores pizzas entregadas a tu puerta en 30 minutos o menos.</p>
                 <div class="social-links">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
+            
             <div class="footer-column">
                 <h3>Enlaces</h3>
                 <ul class="footer-links">
-                    <li><a href="#">Inicio</a></li>
-                    <li><a href="#">Menú</a></li>
-                    <li><a href="#">Ofertas</a></li>
-                    <li><a href="#">Contacto</a></li>
+                    <li><a href="#" class="nav-link" data-section="home">Inicio</a></li>
+                    <li><a href="#" class="nav-link" data-section="menu">Menú</a></li>
+                    <li><a href="#" class="nav-link" data-section="offers">Ofertas</a></li>
+                    <li><a href="#" class="nav-link" data-section="contact">Contacto</a></li>
                 </ul>
             </div>
+            
             <div class="footer-column">
                 <h3>Contacto</h3>
                 <ul class="footer-links">
-                    <li><i class="fas fa-map-marker-alt"></i> Calle Principal 123</li>
-                    <li><i class="fas fa-phone"></i> +123 456 7890</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Av. Principal 123, Lima</li>
+                    <li><i class="fas fa-phone"></i> (01) 123-4567</li>
                     <li><i class="fas fa-envelope"></i> info@pizzeriaonline.com</li>
                 </ul>
             </div>
+            
             <div class="footer-column">
                 <h3>Horario</h3>
                 <ul class="footer-links">
-                    <li>Lunes-Viernes: 11:00 - 23:00</li>
-                    <li>Sábado-Domingo: 12:00 - 00:00</li>
+                    <li>Lunes - Viernes: 11am - 11pm</li>
+                    <li>Sábado - Domingo: 12pm - 12am</li>
                 </ul>
             </div>
         </div>
-        <div class="copyright">
+        
+        <div class="container copyright">
             <p>&copy; 2023 Pizzería Online. Todos los derechos reservados.</p>
         </div>
     </footer>
@@ -239,21 +1877,25 @@
     <div class="cart-sidebar">
         <div class="cart-header">
             <h3 class="cart-title">Tu Carrito</h3>
-            <div class="cart-close"><i class="fas fa-times"></i></div>
+            <span class="cart-close">&times;</span>
         </div>
+        
         <div class="cart-items">
-            <!-- Los items del carrito se agregarán aquí dinámicamente -->
+            <!-- Aquí se mostrarán los items del carrito -->
             <div class="cart-empty">
-                <div class="cart-empty-icon"><i class="fas fa-shopping-cart"></i></div>
+                <div class="cart-empty-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
                 <p>Tu carrito está vacío</p>
             </div>
         </div>
+        
         <div class="cart-summary">
             <div class="cart-total">
                 <span>Total:</span>
                 <span id="cart-total-amount">$0.00</span>
             </div>
-            <button class="btn" id="checkout-btn" disabled>Finalizar Compra</button>
+            <button class="btn" id="checkout-btn" disabled>Pagar Ahora</button>
         </div>
     </div>
 
@@ -262,9 +1904,12 @@
 
     <!-- Track Order Button -->
     <div class="track-order-btn">
-        <div class="track-order-icon"><i class="fas fa-map-marker-alt"></i></div>
+        <i class="fas fa-map-marker-alt track-order-icon"></i>
     </div>
 
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    
     <script>
         // Inicializar EmailJS
         (function() {
@@ -276,7 +1921,7 @@
         let currentPizza = null;
         let orderDetails = {};
         let currentStep = 1;
-        let currentSection = 'home';
+        let currentSection = 'home'; // home, menu, offers, contact
 
         // DOM Elements
         const startOrderBtn = document.getElementById('start-order-btn');
@@ -287,7 +1932,7 @@
         const backToSelectionBtn = document.getElementById('back-to-selection');
         const backToCustomizeBtn = document.getElementById('back-to-customize');
         const backToDeliveryBtn = document.getElementById('back-to-delivery');
-        const cartIcon = document.getElementById('cart-icon');
+        const cartIcon = document.querySelector('.cart-icon');
         const cartCount = document.querySelector('.cart-count');
         const cartSidebar = document.querySelector('.cart-sidebar');
         const cartClose = document.querySelector('.cart-close');
@@ -295,84 +1940,427 @@
         const checkoutBtn = document.getElementById('checkout-btn');
         const cartItemsContainer = document.querySelector('.cart-items');
         const cartTotalAmount = document.getElementById('cart-total-amount');
-        const orderStepsContainer = document.getElementById('order-steps-container');
-        const orderSectionsContainer = document.getElementById('order-sections-container');
-        const pizzaGrid = document.getElementById('pizza-grid');
+        const orderSummaryItems = document.getElementById('order-summary-items');
+        const orderSummaryTotal = document.getElementById('order-summary-total');
+        const deliverySummaryItems = document.getElementById('delivery-summary-items');
+        const deliverySummaryTotal = document.getElementById('delivery-summary-total');
+        const paymentSummaryItems = document.getElementById('payment-summary-items');
+        const paymentSummaryTotal = document.getElementById('payment-summary-total');
+        const confirmationDetails = document.getElementById('confirmation-details');
+        const deliveryTimeSelect = document.getElementById('delivery-time');
+        const specificTimeGroup = document.getElementById('specific-time-group');
+        const pickupTimeSelect = document.getElementById('pickup-time');
+        const pickupSpecificTimeGroup = document.getElementById('pickup-specific-time-group');
+        const trackOrderBtn = document.querySelector('.track-order-btn');
+        const newOrderBtn = document.getElementById('new-order-btn');
+        const trackOrderBtnConfirmation = document.getElementById('track-order-btn');
+        const downloadTicketBtn = document.getElementById('download-ticket-btn');
+        const steps = document.querySelectorAll('.step');
+        const orderSections = document.querySelectorAll('.order-section');
+        const deliveryMethodRadios = document.querySelectorAll('input[name="delivery-method"]');
+        const deliveryAddressFields = document.getElementById('delivery-address-fields');
+        const pickupFields = document.getElementById('pickup-fields');
+        const cashAmountInput = document.getElementById('cash-amount');
+        const paypalBtn = document.getElementById('paypal-btn');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const menuNavBtns = document.querySelectorAll('.menu-nav-btn');
+        const menuSections = document.querySelectorAll('.menu-section');
         const homeSection = document.getElementById('home-section');
         const menuSection = document.getElementById('menu-section');
         const offersSection = document.getElementById('offers-section');
         const contactSection = document.getElementById('contact-section');
-        const navLinks = document.querySelectorAll('.nav-link');
-        const menuNavBtns = document.querySelectorAll('.menu-nav-btn');
-        const menuSections = document.querySelectorAll('.menu-section');
-        const backToHomeBtn = document.getElementById('back-to-home-btn');
-
-        // Datos de ejemplo para las pizzas
-        const pizzas = [
-            {
-                id: 1,
-                name: "Margarita",
-                description: "Salsa de tomate, mozzarella y albahaca fresca.",
-                price: 8.99,
-                image: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-            },
-            {
-                id: 2,
-                name: "Pepperoni",
-                description: "Salsa de tomate, mozzarella y pepperoni.",
-                price: 9.99,
-                image: "https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-            },
-            {
-                id: 3,
-                name: "Hawaiana",
-                description: "Salsa de tomate, mozzarella, jamón y piña.",
-                price: 10.99,
-                image: "https://images.unsplash.com/photo-1552539618-7eec9b4d1796?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-            },
-            {
-                id: 4,
-                name: "Vegetariana",
-                description: "Salsa de tomate, mozzarella y variedad de vegetales frescos.",
-                price: 9.99,
-                image: "https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-            }
-        ];
+        const orderStepsContainer = document.getElementById('order-steps-container');
+        const orderSectionsContainer = document.getElementById('order-sections-container');
+        const pizzaSelectionGrid = document.querySelector('#pizza-selection .pizza-grid');
 
         // Event Listeners
         document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar pasos
+            updateSteps();
+            
+            // Mostrar sección activa
+            showActiveSection();
+            
+            // Actualizar resúmenes
+            updateOrderSummaries();
+            
+            // Cargar pizzas en el proceso de pedido
             loadPizzasForOrder();
-            setupEventListeners();
         });
 
-        function setupEventListeners() {
-            // Navegación principal
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const section = this.getAttribute('data-section');
-                    showMainSection(section);
-                });
+        // Navegación principal
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const section = this.getAttribute('data-section');
+                showMainSection(section);
             });
+        });
 
-            // Navegación del menú
-            menuNavBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const category = this.getAttribute('data-category');
-                    showMenuCategory(category);
-                });
+        // Navegación del menú
+        menuNavBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const category = this.getAttribute('data-category');
+                showMenuCategory(category);
             });
+        });
 
-            // Carrito
-            cartIcon.addEventListener('click', toggleCart);
-            cartClose.addEventListener('click', toggleCart);
-            overlay.addEventListener('click', toggleCart);
+        // Método de entrega
+        deliveryMethodRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'home') {
+                    deliveryAddressFields.style.display = 'block';
+                    pickupFields.style.display = 'none';
+                } else {
+                    deliveryAddressFields.style.display = 'none';
+                    pickupFields.style.display = 'block';
+                }
+            });
+        });
 
-            // Proceso de pedido
-            startOrderBtn.addEventListener('click', startOrderProcess);
-            backToHomeBtn.addEventListener('click', () => showMainSection('home'));
-        }
+        // Hora de entrega específica
+        deliveryTimeSelect.addEventListener('change', function() {
+            if (this.value === 'specific') {
+                specificTimeGroup.style.display = 'block';
+            } else {
+                specificTimeGroup.style.display = 'none';
+            }
+        });
 
+        // Hora de recogida específica
+        pickupTimeSelect.addEventListener('change', function() {
+            if (this.value === 'specific') {
+                pickupSpecificTimeGroup.style.display = 'block';
+            } else {
+                pickupSpecificTimeGroup.style.display = 'none';
+            }
+        });
+
+        // Botón para comenzar pedido
+        startOrderBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            showMainSection('order');
+            goToStep(1);
+        });
+
+        // Botón para continuar a personalización
+        continueToCustomizeBtn.addEventListener('click', function() {
+            if (cart.length === 0) {
+                alert('Por favor agrega al menos una pizza a tu pedido');
+                return;
+            }
+            goToStep(2);
+        });
+
+        // Botón para continuar a entrega
+        continueToDeliveryBtn.addEventListener('click', function() {
+            // Guardar las selecciones de tamaño y masa para cada pizza
+            cart.forEach(item => {
+                if (item.type === 'pizza') {
+                    const sizeRadio = document.querySelector('input[name="size"]:checked');
+                    const crustRadio = document.querySelector('input[name="crust"]:checked');
+                    
+                    item.size = sizeRadio.value;
+                    item.sizePrice = parseFloat(sizeRadio.getAttribute('data-price'));
+                    item.crust = crustRadio.value;
+                    item.crustPrice = parseFloat(crustRadio.getAttribute('data-price'));
+                    
+                    // Guardar toppings seleccionados
+                    item.toppings = [];
+                    item.toppingsPrice = 0;
+                    
+                    document.querySelectorAll('.topping-checkbox:checked').forEach(checkbox => {
+                        item.toppings.push(checkbox.value);
+                        item.toppingsPrice += parseFloat(checkbox.getAttribute('data-price'));
+                    });
+                }
+            });
+            
+            updateCart();
+            goToStep(3);
+        });
+
+        // Botón para continuar a pago
+        continueToPaymentBtn.addEventListener('click', function() {
+            const deliveryMethod = document.querySelector('input[name="delivery-method"]:checked').value;
+            
+            if (deliveryMethod === 'home') {
+                // Validar formulario de entrega a domicilio
+                const name = document.getElementById('delivery-name').value;
+                const phone = document.getElementById('delivery-phone').value;
+                const address = document.getElementById('delivery-address').value;
+                const deliveryTime = document.getElementById('delivery-time').value;
+                
+                if (!name || !phone || !address || !deliveryTime) {
+                    alert('Por favor completa todos los campos obligatorios');
+                    return;
+                }
+                
+                if (deliveryTime === 'specific' && !document.getElementById('specific-time').value) {
+                    alert('Por favor selecciona una hora específica');
+                    return;
+                }
+                
+                // Guardar detalles de entrega
+                orderDetails.delivery = {
+                    method: 'home',
+                    name,
+                    phone,
+                    address,
+                    instructions: document.getElementById('delivery-instructions').value,
+                    time: deliveryTime,
+                    specificTime: document.getElementById('specific-time').value
+                };
+            } else {
+                // Validar formulario de recogida en tienda
+                const name = document.getElementById('pickup-name').value;
+                const phone = document.getElementById('pickup-phone').value;
+                const pickupTime = document.getElementById('pickup-time').value;
+                
+                if (!name || !phone || !pickupTime) {
+                    alert('Por favor completa todos los campos obligatorios');
+                    return;
+                }
+                
+                if (pickupTime === 'specific' && !document.getElementById('pickup-specific-time').value) {
+                    alert('Por favor selecciona una hora específica');
+                    return;
+                }
+                
+                // Guardar detalles de recogida
+                orderDetails.delivery = {
+                    method: 'store',
+                    name,
+                    phone,
+                    time: pickupTime,
+                    specificTime: document.getElementById('pickup-specific-time').value
+                };
+            }
+            
+            goToStep(4);
+        });
+
+        // Botón para completar pedido
+        completeOrderBtn.addEventListener('click', function() {
+            // Validar método de pago
+            const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+            
+            if (paymentMethod === 'card') {
+                const cardNumber = document.getElementById('card-number').value;
+                const cardName = document.getElementById('card-name').value;
+                const cardExpiry = document.getElementById('card-expiry').value;
+                const cardCvv = document.getElementById('card-cvv').value;
+                
+                if (!cardNumber || !cardName || !cardExpiry || !cardCvv) {
+                    alert('Por favor completa todos los datos de la tarjeta');
+                    return;
+                }
+                
+                // Validar formato de tarjeta (simplificado)
+                if (!/^\d{16}$/.test(cardNumber.replace(/\s/g, ''))) {
+                    alert('Número de tarjeta inválido. Debe tener 16 dígitos');
+                    return;
+                }
+                
+                if (!/^\d{3,4}$/.test(cardCvv)) {
+                    alert('CVV inválido. Debe tener 3 o 4 dígitos');
+                    return;
+                }
+                
+                if (!/^\d{2}\/\d{2}$/.test(cardExpiry)) {
+                    alert('Fecha de expiración inválida. Use el formato MM/AA');
+                    return;
+                }
+            } else if (paymentMethod === 'cash') {
+                const cashAmount = parseFloat(cashAmountInput.value);
+                const orderTotal = calculateTotal();
+                
+                if (!cashAmount || isNaN(cashAmount)) {
+                    alert('Por favor ingresa el monto con el que pagarás');
+                    return;
+                }
+                
+                if (cashAmount < orderTotal) {
+                    alert('El monto ingresado es menor al total del pedido');
+                    return;
+                }
+            }
+            
+            // Guardar método de pago
+            orderDetails.payment = {
+                method: paymentMethod,
+                details: paymentMethod === 'card' ? {
+                    cardNumber: document.getElementById('card-number').value,
+                    cardName: document.getElementById('card-name').value,
+                    cardExpiry: document.getElementById('card-expiry').value,
+                    cardCvv: document.getElementById('card-cvv').value
+                } : paymentMethod === 'cash' ? {
+                    cashAmount: parseFloat(cashAmountInput.value),
+                    change: parseFloat(cashAmountInput.value) - calculateTotal()
+                } : null
+            };
+            
+            // Mostrar loading
+            completeOrderBtn.innerHTML = '<div class="spinner"></div> Procesando...';
+            completeOrderBtn.disabled = true;
+            
+            // Simular envío del pedido
+            setTimeout(function() {
+                // Guardar pedido completo
+                orderDetails.items = cart;
+                orderDetails.total = calculateTotal();
+                orderDetails.orderNumber = generateOrderNumber();
+                orderDetails.orderDate = new Date().toLocaleString();
+                
+                // Enviar confirmación por correo
+                sendConfirmationEmail();
+                
+                // Ir a confirmación
+                goToStep(5);
+                
+                // Mostrar detalles en confirmación
+                showConfirmationDetails();
+                
+                // Limpiar carrito
+                cart = [];
+                updateCart();
+                
+                // Resetear botón
+                completeOrderBtn.innerHTML = 'Completar Pedido';
+                completeOrderBtn.disabled = false;
+            }, 2000);
+        });
+
+        // Botones para volver
+        backToSelectionBtn.addEventListener('click', function() {
+            goToStep(1);
+        });
+
+        backToCustomizeBtn.addEventListener('click', function() {
+            goToStep(2);
+        });
+
+        backToDeliveryBtn.addEventListener('click', function() {
+            goToStep(3);
+        });
+
+        // Carrito
+        cartIcon.addEventListener('click', function() {
+            cartSidebar.classList.add('active');
+            overlay.classList.add('active');
+        });
+
+        cartClose.addEventListener('click', function() {
+            cartSidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        overlay.addEventListener('click', function() {
+            cartSidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // Checkout desde carrito
+        checkoutBtn.addEventListener('click', function() {
+            cartSidebar.classList.remove('active');
+            overlay.classList.remove('active');
+            showMainSection('order');
+            goToStep(3);
+        });
+
+        // Botón de seguimiento de pedido
+        trackOrderBtn.addEventListener('click', function() {
+            alert('Función de seguimiento de pedido en desarrollo');
+        });
+
+        trackOrderBtnConfirmation.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert(`Tu pedido #${orderDetails.orderNumber} está en camino. Tiempo estimado: 30 minutos`);
+        });
+
+        // Descargar ticket
+        downloadTicketBtn.addEventListener('click', function() {
+            generateTicketPDF();
+        });
+
+        // Nuevo pedido
+        newOrderBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            showMainSection('home');
+        });
+
+        // Botón PayPal
+        paypalBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Simular redirección a PayPal
+            alert('Serás redirigido a PayPal para completar el pago');
+            document.getElementById('payment-paypal').checked = true;
+        });
+
+        // Agregar items al carrito
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('btn-add')) {
+                const itemCard = e.target.closest('.pizza-card');
+                const itemId = itemCard.getAttribute('data-item-id') || itemCard.getAttribute('data-pizza-id');
+                const itemName = itemCard.getAttribute('data-item-name') || itemCard.getAttribute('data-pizza-name');
+                const itemPrice = parseFloat(itemCard.getAttribute('data-item-price') || itemCard.getAttribute('data-pizza-price'));
+                const quantityInput = itemCard.querySelector('.quantity-input');
+                const quantity = parseInt(quantityInput.value);
+                
+                // Determinar si es pizza u otro item
+                const isPizza = itemCard.hasAttribute('data-pizza-id');
+                
+                // Agregar item al carrito
+                for (let i = 0; i < quantity; i++) {
+                    const item = {
+                        id: Date.now().toString() + i, // ID único
+                        itemId,
+                        name: itemName,
+                        basePrice: itemPrice,
+                        quantity: 1,
+                        type: isPizza ? 'pizza' : 'other'
+                    };
+                    
+                    if (isPizza) {
+                        // Configuración por defecto para pizzas
+                        item.size = 'small';
+                        item.sizePrice = 0;
+                        item.crust = 'thin';
+                        item.crustPrice = 0;
+                        item.toppings = [];
+                        item.toppingsPrice = 0;
+                    }
+                    
+                    cart.push(item);
+                }
+                
+                updateCart();
+                
+                // Resaltar tarjeta
+                itemCard.classList.add('selected');
+                setTimeout(() => {
+                    itemCard.classList.remove('selected');
+                }, 1000);
+            }
+        });
+
+        // Controladores de cantidad
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('quantity-btn')) {
+                const input = e.target.closest('.quantity-controls').querySelector('.quantity-input');
+                let value = parseInt(input.value);
+                
+                if (e.target.classList.contains('minus') && value > 1) {
+                    value--;
+                } else if (e.target.classList.contains('plus')) {
+                    value++;
+                }
+                
+                input.value = value;
+            }
+        });
+
+        // Funciones
         function showMainSection(section) {
             currentSection = section;
             
@@ -385,171 +2373,529 @@
             orderSectionsContainer.style.display = 'none';
             
             // Mostrar la sección seleccionada
-            if (section === 'home') {
-                homeSection.style.display = 'block';
-            } else if (section === 'menu') {
-                menuSection.style.display = 'block';
-            } else if (section === 'offers') {
-                offersSection.style.display = 'block';
-            } else if (section === 'contact') {
-                contactSection.style.display = 'block';
+            switch(section) {
+                case 'home':
+                    homeSection.style.display = 'flex';
+                    break;
+                case 'menu':
+                    menuSection.style.display = 'block';
+                    break;
+                case 'offers':
+                    offersSection.style.display = 'block';
+                    break;
+                case 'contact':
+                    contactSection.style.display = 'block';
+                    break;
+                case 'order':
+                    orderStepsContainer.style.display = 'block';
+                    orderSectionsContainer.style.display = 'block';
+                    break;
             }
         }
 
         function showMenuCategory(category) {
-            // Remover active de todos los botones
-            menuNavBtns.forEach(btn => btn.classList.remove('active'));
+            // Quitar active de todos los botones
+            menuNavBtns.forEach(btn => {
+                btn.classList.remove('active');
+            });
             
-            // Agregar active al botón seleccionado
+            // Agregar active al botón clickeado
             document.querySelector(`.menu-nav-btn[data-category="${category}"]`).classList.add('active');
             
             // Ocultar todas las secciones del menú
-            menuSections.forEach(section => section.classList.remove('active'));
+            menuSections.forEach(section => {
+                section.classList.remove('active');
+            });
             
             // Mostrar la sección seleccionada
-            document.getElementById(`${category}-menu`).classList.add('active');
+            document.getElementById(`${category}-section`).classList.add('active');
         }
 
         function loadPizzasForOrder() {
-            pizzaGrid.innerHTML = '';
+            // Limpiar el grid
+            pizzaSelectionGrid.innerHTML = '';
             
+            // Obtener todas las pizzas del menú
+            const pizzas = document.querySelectorAll('#pizzas-section .pizza-card');
+            
+            // Clonar y agregar al proceso de pedido
             pizzas.forEach(pizza => {
-                const pizzaCard = document.createElement('div');
-                pizzaCard.className = 'pizza-card';
-                pizzaCard.innerHTML = `
-                    <div class="pizza-image" style="background-image: url('${pizza.image}')"></div>
-                    <div class="pizza-info">
-                        <h3 class="pizza-name">${pizza.name}</h3>
-                        <p class="pizza-description">${pizza.description}</p>
-                        <div class="pizza-footer">
-                            <span class="pizza-price">$${pizza.price.toFixed(2)}</span>
-                            <button class="btn-add" data-id="${pizza.id}">Añadir</button>
-                        </div>
-                    </div>
-                `;
-                
-                pizzaGrid.appendChild(pizzaCard);
-            });
-            
-            // Agregar event listeners a los botones "Añadir"
-            document.querySelectorAll('.btn-add').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const pizzaId = parseInt(this.getAttribute('data-id'));
-                    addToCart(pizzaId);
-                });
+                const clone = pizza.cloneNode(true);
+                pizzaSelectionGrid.appendChild(clone);
             });
         }
 
-        function addToCart(pizzaId) {
-            const pizza = pizzas.find(p => p.id === pizzaId);
-            
-            if (pizza) {
-                // Verificar si la pizza ya está en el carrito
-                const existingItem = cart.find(item => item.id === pizza.id);
-                
-                if (existingItem) {
-                    existingItem.quantity += 1;
-                } else {
-                    cart.push({
-                        ...pizza,
-                        quantity: 1
-                    });
-                }
-                
-                updateCart();
-            }
-        }
-
-        function updateCart() {
-            // Actualizar contador del carrito
-            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            cartCount.textContent = totalItems;
-            
-            // Actualizar sidebar del carrito
-            if (cart.length === 0) {
-                cartItemsContainer.innerHTML = `
-                    <div class="cart-empty">
-                        <div class="cart-empty-icon"><i class="fas fa-shopping-cart"></i></div>
-                        <p>Tu carrito está vacío</p>
-                    </div>
-                `;
-                checkoutBtn.disabled = true;
-            } else {
-                cartItemsContainer.innerHTML = '';
-                
-                cart.forEach(item => {
-                    const cartItem = document.createElement('div');
-                    cartItem.className = 'cart-item';
-                    cartItem.innerHTML = `
-                        <div class="cart-item-image" style="background-image: url('${item.image}')"></div>
-                        <div class="cart-item-details">
-                            <h4 class="cart-item-name">${item.name}</h4>
-                            <p class="cart-item-options">Cantidad: ${item.quantity}</p>
-                            <p class="cart-item-price">$${(item.price * item.quantity).toFixed(2)}</p>
-                            <span class="cart-item-remove" data-id="${item.id}">Eliminar</span>
-                        </div>
-                    `;
-                    
-                    cartItemsContainer.appendChild(cartItem);
-                });
-                
-                // Calcular total
-                const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-                cartTotalAmount.textContent = `$${total.toFixed(2)}`;
-                checkoutBtn.disabled = false;
-            }
-            
-            // Agregar event listeners a los botones de eliminar
-            document.querySelectorAll('.cart-item-remove').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const pizzaId = parseInt(this.getAttribute('data-id'));
-                    removeFromCart(pizzaId);
-                });
-            });
-        }
-
-        function removeFromCart(pizzaId) {
-            cart = cart.filter(item => item.id !== pizzaId);
-            updateCart();
-        }
-
-        function toggleCart() {
-            cartSidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-            document.body.classList.toggle('no-scroll');
-        }
-
-        function startOrderProcess(e) {
-            e.preventDefault();
-            currentStep = 1;
+        function goToStep(step) {
+            currentStep = step;
             updateSteps();
+            showActiveSection();
+            updateOrderSummaries();
             
-            // Ocultar secciones principales
-            homeSection.style.display = 'none';
-            menuSection.style.display = 'none';
-            offersSection.style.display = 'none';
-            contactSection.style.display = 'none';
-            
-            // Mostrar pasos y secciones del pedido
-            orderStepsContainer.style.display = 'block';
-            orderSectionsContainer.style.display = 'block';
-            
-            // Mostrar la primera sección
-            document.querySelectorAll('.order-section').forEach(section => {
-                section.classList.remove('active');
+            // Scroll to top
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
             });
-            document.getElementById('pizza-selection').classList.add('active');
         }
 
         function updateSteps() {
             steps.forEach(step => {
                 const stepNumber = parseInt(step.getAttribute('data-step'));
                 
-                step.classList.remove('active');
-                if (stepNumber <= currentStep) {
+                if (stepNumber < currentStep) {
+                    step.classList.add('completed');
+                    step.classList.remove('active');
+                } else if (stepNumber === currentStep) {
                     step.classList.add('active');
+                    step.classList.remove('completed');
+                } else {
+                    step.classList.remove('active', 'completed');
                 }
             });
+        }
+
+        function showActiveSection() {
+            orderSections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            switch(currentStep) {
+                case 1:
+                    document.getElementById('pizza-selection').classList.add('active');
+                    break;
+                case 2:
+                    document.getElementById('customize-pizza').classList.add('active');
+                    break;
+                case 3:
+                    document.getElementById('delivery-section').classList.add('active');
+                    break;
+                case 4:
+                    document.getElementById('payment-section').classList.add('active');
+                    break;
+                case 5:
+                    document.getElementById('confirmation-section').classList.add('active');
+                    break;
+            }
+        }
+
+        function updateCart() {
+            // Actualizar contador
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            cartCount.textContent = totalItems;
+            
+            // Actualizar sidebar del carrito
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `
+                    <div class="cart-empty">
+                        <div class="cart-empty-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <p>Tu carrito está vacío</p>
+                    </div>
+                `;
+                checkoutBtn.disabled = true;
+            } else {
+                let itemsHTML = '';
+                let total = 0;
+                
+                // Agrupar items iguales
+                const groupedItems = {};
+                
+                cart.forEach(item => {
+                    const key = `${item.itemId}-${item.size || ''}-${item.crust || ''}-${item.toppings.join(',')}`;
+                    
+                    if (!groupedItems[key]) {
+                        groupedItems[key] = {
+                            ...item,
+                            quantity: 1
+                        };
+                    } else {
+                        groupedItems[key].quantity++;
+                    }
+                });
+                
+                // Mostrar items agrupados
+                Object.values(groupedItems).forEach(item => {
+                    const itemTotal = (item.basePrice + (item.sizePrice || 0) + (item.crustPrice || 0) + (item.toppingsPrice || 0)) * item.quantity;
+                    total += itemTotal;
+                    
+                    itemsHTML += `
+                        <div class="cart-item" data-id="${item.id}">
+                            <div class="cart-item-image" style="background-image: url('https://via.placeholder.com/80x80');"></div>
+                            <div class="cart-item-details">
+                                <div class="cart-item-name">${item.name} (${item.quantity}x)</div>
+                                <div class="cart-item-options">
+                                    ${item.size ? `Tamaño: ${getSizeName(item.size)}, Masa: ${getCrustName(item.crust)}` : ''}
+                                    ${item.toppings.length > 0 ? `<br>Extra: ${item.toppings.join(', ')}` : ''}
+                                </div>
+                                <div class="cart-item-price">$${itemTotal.toFixed(2)}</div>
+                                <div class="cart-item-remove">Eliminar</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                cartItemsContainer.innerHTML = itemsHTML;
+                cartTotalAmount.textContent = `$${total.toFixed(2)}`;
+                checkoutBtn.disabled = false;
+                
+                // Agregar eventos a los botones de eliminar
+                document.querySelectorAll('.cart-item-remove').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const itemId = this.closest('.cart-item').getAttribute('data-id');
+                        removeFromCart(itemId);
+                    });
+                });
+            }
+            
+            // Actualizar resúmenes de pedido
+            updateOrderSummaries();
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCart();
+        }
+
+        function calculateTotal() {
+            return cart.reduce((total, item) => {
+                return total + (item.basePrice + (item.sizePrice || 0) + (item.crustPrice || 0) + (item.toppingsPrice || 0)) * item.quantity;
+            }, 0);
+        }
+
+        function updateOrderSummaries() {
+            // Resumen en personalización
+            let summaryHTML = '';
+            let total = 0;
+            
+            // Agrupar items iguales para el resumen
+            const groupedItems = {};
+            
+            cart.forEach(item => {
+                const key = `${item.itemId}-${item.size || ''}-${item.crust || ''}-${item.toppings.join(',')}`;
+                
+                if (!groupedItems[key]) {
+                    groupedItems[key] = {
+                        ...item,
+                        quantity: 1
+                    };
+                } else {
+                    groupedItems[key].quantity++;
+                }
+            });
+            
+            Object.values(groupedItems).forEach(item => {
+                const itemTotal = (item.basePrice + (item.sizePrice || 0) + (item.crustPrice || 0) + (item.toppingsPrice || 0)) * item.quantity;
+                total += itemTotal;
+                
+                summaryHTML += `
+                    <div class="summary-item">
+                        <span>${item.quantity}x ${item.name}</span>
+                        <span>$${itemTotal.toFixed(2)}</span>
+                    </div>
+                `;
+            });
+            
+            orderSummaryItems.innerHTML = summaryHTML;
+            orderSummaryTotal.textContent = `$${total.toFixed(2)}`;
+            
+            // Resumen en entrega
+            deliverySummaryItems.innerHTML = summaryHTML;
+            deliverySummaryTotal.textContent = `$${total.toFixed(2)}`;
+            
+            // Resumen en pago
+            paymentSummaryItems.innerHTML = summaryHTML;
+            paymentSummaryTotal.textContent = `$${total.toFixed(2)}`;
+        }
+
+        function showConfirmationDetails() {
+            let detailsHTML = `
+                <p><strong>Número de pedido:</strong> ${orderDetails.orderNumber}</p>
+                <p><strong>Fecha y hora:</strong> ${orderDetails.orderDate}</p>
+                <p><strong>Cliente:</strong> ${orderDetails.delivery.name}</p>
+                ${orderDetails.delivery.method === 'home' ? `
+                    <p><strong>Dirección:</strong> ${orderDetails.delivery.address}</p>
+                ` : `
+                    <p><strong>Método:</strong> Recoger en tienda</p>
+                `}
+                <p><strong>Teléfono:</strong> ${orderDetails.delivery.phone}</p>
+                <p><strong>Hora de ${orderDetails.delivery.method === 'home' ? 'entrega' : 'recogida'}:</strong> ${getDeliveryTimeText()}</p>
+                
+                <h4 style="margin-top: 20px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Detalles del pedido:</h4>
+                <ul style="margin-left: 20px; margin-bottom: 20px;">
+            `;
+            
+            // Agrupar items para la confirmación
+            const groupedItems = {};
+            
+            orderDetails.items.forEach(item => {
+                const key = `${item.itemId}-${item.size || ''}-${item.crust || ''}-${item.toppings.join(',')}`;
+                
+                if (!groupedItems[key]) {
+                    groupedItems[key] = {
+                        ...item,
+                        quantity: 1
+                    };
+                } else {
+                    groupedItems[key].quantity++;
+                }
+            });
+            
+            Object.values(groupedItems).forEach(item => {
+                detailsHTML += `
+                    <li>
+                        ${item.quantity}x ${item.name}
+                        ${item.size ? ` (${getSizeName(item.size)}, ${getCrustName(item.crust)})` : ''}
+                        ${item.toppings.length > 0 ? `<br>Extra: ${item.toppings.join(', ')}` : ''}
+                        <br><strong>$${(item.basePrice + (item.sizePrice || 0) + (item.crustPrice || 0) + (item.toppingsPrice || 0)).toFixed(2)}</strong>
+                    </li>
+                `;
+            });
+            
+            detailsHTML += `
+                </ul>
+                <p><strong>Método de pago:</strong> ${getPaymentMethodText()}</p>
+            `;
+            
+            if (orderDetails.payment.method === 'cash') {
+                detailsHTML += `
+                    <p><strong>Monto pagado:</strong> $${orderDetails.payment.details.cashAmount.toFixed(2)}</p>
+                    <p><strong>Cambio:</strong> $${orderDetails.payment.details.change.toFixed(2)}</p>
+                `;
+            }
+            
+            detailsHTML += `
+                <p style="font-size: 20px; font-weight: bold; margin-top: 15px;">
+                    <strong>Total:</strong> $${orderDetails.total.toFixed(2)}
+                </p>
+            `;
+            
+            if (orderDetails.delivery.instructions) {
+                detailsHTML += `
+                    <p style="margin-top: 15px;"><strong>Instrucciones especiales:</strong> ${orderDetails.delivery.instructions}</p>
+                `;
+            }
+            
+            confirmationDetails.innerHTML = detailsHTML;
+        }
+
+        function getSizeName(size) {
+            switch(size) {
+                case 'small': return 'Pequeña';
+                case 'medium': return 'Mediana';
+                case 'large': return 'Grande';
+                default: return size;
+            }
+        }
+
+        function getCrustName(crust) {
+            switch(crust) {
+                case 'thin': return 'Delgada';
+                case 'thick': return 'Gruesa';
+                case 'cheese': return 'Queso';
+                default: return crust;
+            }
+        }
+
+        function getDeliveryTimeText() {
+            const delivery = orderDetails.delivery;
+            
+            if (delivery.time === 'specific' && delivery.specificTime) {
+                return delivery.specificTime;
+            }
+            
+            switch(delivery.time) {
+                case 'asap': return 'Lo más pronto posible';
+                case '30': return 'En 30 minutos';
+                case '60': return 'En 1 hora';
+                case '90': return 'En 1 hora y media';
+                case '120': return 'En 2 horas';
+                case 'specific': return 'Hora específica';
+                default: return delivery.time;
+            }
+        }
+
+        function getPaymentMethodText() {
+            switch(orderDetails.payment.method) {
+                case 'cash': return 'Efectivo';
+                case 'card': return 'Tarjeta de crédito/débito';
+                case 'paypal': return 'PayPal';
+                default: return orderDetails.payment.method;
+            }
+        }
+
+        function generateOrderNumber() {
+            return 'ORD-' + Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+        }
+
+        function sendConfirmationEmail() {
+            const templateParams = {
+                customer_name: orderDetails.delivery.name,
+                order_number: orderDetails.orderNumber,
+                order_date: orderDetails.orderDate,
+                delivery_method: orderDetails.delivery.method === 'home' ? 'A domicilio' : 'Recoger en tienda',
+                delivery_address: orderDetails.delivery.method === 'home' ? orderDetails.delivery.address : 'Tienda Principal - Av. Principal 123, Lima',
+                delivery_time: getDeliveryTimeText(),
+                payment_method: getPaymentMethodText(),
+                order_total: orderDetails.total.toFixed(2),
+                order_details: getOrderDetailsForEmail(),
+                customer_email: 'customer@example.com' // En una aplicación real, esto vendría del formulario
+            };
+
+            emailjs.send('service_38oqoc8', 'template_si5y8mg', templateParams)
+                .then(function(response) {
+                    console.log('Correo enviado', response.status, response.text);
+                }, function(error) {
+                    console.error('Error al enviar correo', error);
+                });
+        }
+
+        function getOrderDetailsForEmail() {
+            let details = '';
+            
+            // Agrupar items para el correo
+            const groupedItems = {};
+            
+            orderDetails.items.forEach(item => {
+                const key = `${item.itemId}-${item.size || ''}-${item.crust || ''}-${item.toppings.join(',')}`;
+                
+                if (!groupedItems[key]) {
+                    groupedItems[key] = {
+                        ...item,
+                        quantity: 1
+                    };
+                } else {
+                    groupedItems[key].quantity++;
+                }
+            });
+            
+            Object.values(groupedItems).forEach(item => {
+                details += `
+                    ${item.quantity}x ${item.name}
+                    ${item.size ? ` (${getSizeName(item.size)}, ${getCrustName(item.crust)})` : ''}
+                    ${item.toppings.length > 0 ? `\nExtra: ${item.toppings.join(', ')}` : ''}
+                    - $${(item.basePrice + (item.sizePrice || 0) + (item.crustPrice || 0) + (item.toppingsPrice || 0)).toFixed(2)}\n\n
+                `;
+            });
+            
+            return details;
+        }
+
+        function generateTicketPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Logo y título
+            doc.setFontSize(20);
+            doc.setTextColor(40);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Pizzería Online', 105, 20, { align: 'center' });
+            
+            doc.setFontSize(12);
+            doc.setTextColor(100);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Av. Principal 123, Lima - Tel: (01) 123-4567', 105, 28, { align: 'center' });
+            
+            // Línea divisoria
+            doc.setDrawColor(200);
+            doc.setLineWidth(0.5);
+            doc.line(20, 35, 190, 35);
+            
+            // Información del pedido
+            doc.setFontSize(14);
+            doc.setTextColor(40);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Ticket de Pedido', 105, 45, { align: 'center' });
+            
+            doc.setFontSize(10);
+            doc.setTextColor(80);
+            doc.setFont('helvetica', 'normal');
+            doc.text(`Número: ${orderDetails.orderNumber}`, 20, 55);
+            doc.text(`Fecha: ${orderDetails.orderDate}`, 20, 60);
+            doc.text(`Cliente: ${orderDetails.delivery.name}`, 20, 65);
+            
+            if (orderDetails.delivery.method === 'home') {
+                doc.text(`Dirección: ${orderDetails.delivery.address}`, 20, 70);
+                doc.text(`Teléfono: ${orderDetails.delivery.phone}`, 20, 75);
+                doc.text(`Hora de entrega: ${getDeliveryTimeText()}`, 20, 80);
+            } else {
+                doc.text(`Teléfono: ${orderDetails.delivery.phone}`, 20, 70);
+                doc.text(`Hora de recogida: ${getDeliveryTimeText()}`, 20, 75);
+                doc.text(`Método: Recoger en tienda`, 20, 80);
+            }
+            
+            // Detalles del pedido
+            doc.setFontSize(12);
+            doc.setTextColor(40);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Detalles del Pedido', 20, 90);
+            
+            doc.setFontSize(10);
+            doc.setTextColor(80);
+            doc.setFont('helvetica', 'normal');
+            
+            let yPosition = 100;
+            
+            // Agrupar items para el ticket
+            const groupedItems = {};
+            
+            orderDetails.items.forEach(item => {
+                const key = `${item.itemId}-${item.size || ''}-${item.crust || ''}-${item.toppings.join(',')}`;
+                
+                if (!groupedItems[key]) {
+                    groupedItems[key] = {
+                        ...item,
+                        quantity: 1
+                    };
+                } else {
+                    groupedItems[key].quantity++;
+                }
+            });
+            
+            Object.values(groupedItems).forEach(item => {
+                doc.text(`${item.quantity}x ${item.name}`, 20, yPosition);
+                yPosition += 5;
+                
+                if (item.size) {
+                    doc.text(`Tamaño: ${getSizeName(item.size)}, Masa: ${getCrustName(item.crust)}`, 25, yPosition);
+                    yPosition += 5;
+                }
+                
+                if (item.toppings.length > 0) {
+                    doc.text(`Extra: ${item.toppings.join(', ')}`, 25, yPosition);
+                    yPosition += 5;
+                }
+                
+                doc.text(`$${(item.basePrice + (item.sizePrice || 0) + (item.crustPrice || 0) + (item.toppingsPrice || 0)).toFixed(2)}`, 180, yPosition - (item.toppings.length > 0 ? 10 : 5), { align: 'right' });
+                yPosition += 10;
+            });
+            
+            // Total
+            doc.setFontSize(12);
+            doc.setTextColor(40);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Total:', 160, yPosition + 5);
+            doc.text(`$${orderDetails.total.toFixed(2)}`, 180, yPosition + 5, { align: 'right' });
+            
+            // Método de pago
+            doc.setFontSize(10);
+            doc.setTextColor(80);
+            doc.setFont('helvetica', 'normal');
+            doc.text(`Método de pago: ${getPaymentMethodText()}`, 20, yPosition + 15);
+            
+            if (orderDetails.payment.method === 'cash') {
+                doc.text(`Monto pagado: $${orderDetails.payment.details.cashAmount.toFixed(2)}`, 20, yPosition + 20);
+                doc.text(`Cambio: $${orderDetails.payment.details.change.toFixed(2)}`, 20, yPosition + 25);
+            }
+            
+            // Pie de página
+            doc.setFontSize(8);
+            doc.setTextColor(100);
+            doc.text('¡Gracias por su compra!', 105, 280, { align: 'center' });
+            doc.text('Vuelva pronto', 105, 285, { align: 'center' });
+            
+            // Guardar PDF
+            doc.save(`ticket-pedido-${orderDetails.orderNumber}.pdf`);
         }
     </script>
 </body>
