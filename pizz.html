@@ -1379,10 +1379,10 @@
                 Pizza Digital
             </a>
             <ul class="nav-links">
-                <li><a href="#"><i class="fas fa-home"></i> Inicio</a></li>
-                <li><a href="#"><i class="fas fa-pizza-slice"></i> Menú</a></li>
-                <li><a href="#"><i class="fas fa-tag"></i> Ofertas</a></li>
-                <li><a href="#"><i class="fas fa-phone"></i> Contacto</a></li>
+                <li><a href="#" class="nav-home"><i class="fas fa-home"></i> Inicio</a></li>
+                <li><a href="#pizza-selection" class="nav-menu"><i class="fas fa-pizza-slice"></i> Menú</a></li>
+                <li><a href="#special-offer" class="nav-offers"><i class="fas fa-tag"></i> Ofertas</a></li>
+                <li><a href="#footer" class="nav-contact"><i class="fas fa-phone"></i> Contacto</a></li>
                 <li>
                     <div class="cart-icon" id="cart-icon">
                         <i class="fas fa-shopping-cart"></i>
@@ -1399,12 +1399,12 @@
             <h1>¡Pizza Digital en tu Casa!</h1>
             <p>Ordena online y recibe tu pizza caliente en menos de 30 minutos</p>
             <a href="#" class="btn" id="start-order-btn">Ordenar Ahora</a>
-            <a href="#" class="btn btn-outline">Ver Ofertas</a>
+            <a href="#special-offer" class="btn btn-outline">Ver Ofertas</a>
         </div>
     </section>
 
     <!-- Special Offer -->
-    <div class="container">
+    <div class="container" id="special-offer">
         <div class="special-offer">
             <i class="fas fa-gift"></i>
             <div class="special-offer-text">
@@ -1694,6 +1694,9 @@
                     <button class="btn" id="back-to-selection" style="background-color: #666; padding: 12px 30px;">
                         <i class="fas fa-arrow-left"></i> Volver
                     </button>
+                    <button class="btn" id="back-to-home-from-customize" style="background-color: #444; padding: 12px 30px;">
+                        <i class="fas fa-home"></i> Inicio
+                    </button>
                     <button class="btn" id="continue-to-delivery" style="padding: 12px 30px;">
                         Continuar <i class="fas fa-arrow-right"></i>
                     </button>
@@ -1761,6 +1764,9 @@
             <div style="margin-top: 40px; display: flex; justify-content: space-between;">
                 <button class="btn" id="back-to-customize" style="background-color: #666; padding: 12px 30px;">
                     <i class="fas fa-arrow-left"></i> Volver
+                </button>
+                <button class="btn" id="back-to-home-from-delivery" style="background-color: #444; padding: 12px 30px;">
+                    <i class="fas fa-home"></i> Inicio
                 </button>
                 <button class="btn" id="continue-to-payment" style="padding: 12px 30px;">
                     Continuar a Pago <i class="fas fa-arrow-right"></i>
@@ -1841,6 +1847,9 @@
                 <button class="btn" id="back-to-delivery" style="background-color: #666; padding: 12px 30px;">
                     <i class="fas fa-arrow-left"></i> Volver
                 </button>
+                <button class="btn" id="back-to-home-from-payment" style="background-color: #444; padding: 12px 30px;">
+                    <i class="fas fa-home"></i> Inicio
+                </button>
                 <button class="btn" id="confirm-order" style="padding: 12px 30px;">
                     Confirmar Pedido <i class="fas fa-check"></i>
                 </button>
@@ -1874,10 +1883,10 @@
                 </button>
                 
                 <div style="margin-top: 40px;">
-                    <a href="index.html" class="btn" style="display: inline-block; margin-right: 15px;">
+                    <a href="#" class="btn nav-home" style="display: inline-block; margin-right: 15px;">
                         <i class="fas fa-home"></i> Volver al Inicio
                     </a>
-                    <a href="#" class="btn btn-outline" style="display: inline-block;">
+                    <a href="#pizza-selection" class="btn btn-outline nav-menu" style="display: inline-block;">
                         <i class="fas fa-pizza-slice"></i> Hacer Otro Pedido
                     </a>
                 </div>
@@ -1886,7 +1895,7 @@
     </div>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer class="footer" id="footer">
         <div class="container footer-container">
             <div class="footer-column">
                 <h3>Pizza Digital</h3>
@@ -1902,9 +1911,9 @@
             <div class="footer-column">
                 <h3>Menú</h3>
                 <ul class="footer-links">
-                    <li><a href="#">Pizzas Clásicas</a></li>
-                    <li><a href="#">Pizzas Especiales</a></li>
-                    <li><a href="#">Pizzas Vegetarianas</a></li>
+                    <li><a href="#pizza-selection">Pizzas Clásicas</a></li>
+                    <li><a href="#pizza-selection">Pizzas Especiales</a></li>
+                    <li><a href="#pizza-selection">Pizzas Vegetarianas</a></li>
                     <li><a href="#">Bebidas</a></li>
                     <li><a href="#">Postres</a></li>
                 </ul>
@@ -2054,6 +2063,22 @@
                 goToStep(3);
             });
             
+            // Botones de regresar al inicio
+            document.getElementById('back-to-home-from-customize').addEventListener('click', function() {
+                goToStep(1);
+                scrollToTop();
+            });
+            
+            document.getElementById('back-to-home-from-delivery').addEventListener('click', function() {
+                goToStep(1);
+                scrollToTop();
+            });
+            
+            document.getElementById('back-to-home-from-payment').addEventListener('click', function() {
+                goToStep(1);
+                scrollToTop();
+            });
+            
             // Carrito
             document.getElementById('cart-icon').addEventListener('click', toggleCart);
             document.getElementById('cart-close').addEventListener('click', toggleCart);
@@ -2080,6 +2105,37 @@
                 });
             });
             
+            // Navegación del menú principal
+            document.querySelectorAll('.nav-home').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    goToStep(1);
+                    scrollToTop();
+                });
+            });
+            
+            document.querySelectorAll('.nav-menu').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    goToStep(1);
+                    document.getElementById('pizza-selection').scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+            
+            document.querySelectorAll('.nav-offers').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.getElementById('special-offer').scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+            
+            document.querySelectorAll('.nav-contact').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.getElementById('footer').scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+            
             // Actualizar precios cuando cambian las opciones
             const sizeRadios = document.querySelectorAll('.size-radio');
             sizeRadios.forEach(radio => {
@@ -2094,6 +2150,40 @@
             const toppingCheckboxes = document.querySelectorAll('.topping-checkbox');
             toppingCheckboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', updateOrderSummary);
+            });
+            
+            // Efecto hover para todos los botones
+            document.querySelectorAll('.btn').forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.15)';
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                    this.style.boxShadow = '';
+                });
+                
+                button.addEventListener('mousedown', function() {
+                    this.style.transform = 'translateY(1px)';
+                });
+                
+                button.addEventListener('mouseup', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+            });
+            
+            // Enlaces del footer
+            document.querySelectorAll('.footer-links a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (this.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                        const target = document.querySelector(this.getAttribute('href'));
+                        if (target) {
+                            target.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
+                });
             });
         }
         
@@ -2119,6 +2209,12 @@
             
             currentStep = step;
             scrollToTop();
+            
+            // Actualizar el resumen si es necesario
+            if (step === 2) updateOrderSummary();
+            if (step === 3) updateDeliverySummary();
+            if (step === 4) updatePaymentSummary();
+            if (step === 5) updateConfirmationDetails();
         }
         
         function getSectionId(step) {
@@ -2608,7 +2704,7 @@
             alert.style.bottom = '20px';
             alert.style.left = '50%';
             alert.style.transform = 'translateX(-50%)';
-            alert.style.backgroundColor = 'var(--danger)';
+            alert.style.backgroundColor = 'var(--primary)';
             alert.style.color = 'white';
             alert.style.padding = '15px 25px';
             alert.style.borderRadius = '50px';
