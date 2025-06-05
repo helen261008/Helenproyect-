@@ -36,10 +36,12 @@
         }
         
         .top-bar {
-            background-color: #f6f6f6;
+            background-color: #ff2e63;
+            color: white;
             padding: 8px 0;
             font-size: 12px;
             text-align: center;
+            font-weight: bold;
         }
         
         .main-header {
@@ -53,6 +55,8 @@
             font-size: 24px;
             font-weight: bold;
             color: #ff2e63;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
         .search-bar {
@@ -78,6 +82,11 @@
             color: #333;
             text-decoration: none;
             position: relative;
+            transition: color 0.3s;
+        }
+        
+        .user-actions a:hover {
+            color: #ff2e63;
         }
         
         .cart-count {
@@ -97,8 +106,8 @@
         
         /* Navegación */
         nav {
-            background-color: #fff;
-            border-top: 1px solid #eee;
+            background-color: #ff2e63;
+            border-top: 1px solid rgba(255,255,255,0.1);
         }
         
         .nav-links {
@@ -110,16 +119,24 @@
         .nav-links li {
             padding: 15px 20px;
             position: relative;
-        }
-        
-        .nav-links li a {
-            color: #333;
-            text-decoration: none;
-            font-weight: 500;
+            transition: background-color 0.3s;
         }
         
         .nav-links li:hover {
-            color: #ff2e63;
+            background-color: #e61e53;
+        }
+        
+        .nav-links li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+        
+        .nav-links li.active {
+            background-color: #e61e53;
         }
         
         /* Banner principal */
@@ -172,6 +189,20 @@
             text-align: center;
             margin-bottom: 30px;
             font-size: 28px;
+            color: #333;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: #ff2e63;
         }
         
         .category-grid {
@@ -187,6 +218,11 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
         }
         
         .category-card img {
@@ -231,6 +267,7 @@
         
         .product-card:hover {
             transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
         
         .product-image {
@@ -243,6 +280,11 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
         }
         
         .discount-badge {
@@ -254,6 +296,7 @@
             padding: 5px 10px;
             border-radius: 4px;
             font-size: 12px;
+            font-weight: bold;
         }
         
         .product-info {
@@ -265,6 +308,7 @@
             margin-bottom: 8px;
             height: 40px;
             overflow: hidden;
+            color: #555;
         }
         
         .product-price {
@@ -333,6 +377,12 @@
         .close-cart {
             font-size: 24px;
             cursor: pointer;
+            color: #555;
+            transition: color 0.3s;
+        }
+        
+        .close-cart:hover {
+            color: #ff2e63;
         }
         
         .cart-item {
@@ -347,6 +397,7 @@
             height: 80px;
             object-fit: cover;
             margin-right: 15px;
+            border-radius: 4px;
         }
         
         .cart-item-info {
@@ -356,18 +407,25 @@
         .cart-item-title {
             font-size: 14px;
             margin-bottom: 5px;
+            color: #333;
         }
         
         .cart-item-price {
             font-size: 14px;
             color: #ff2e63;
             margin-bottom: 5px;
+            font-weight: bold;
         }
         
         .cart-item-remove {
             color: #999;
             font-size: 12px;
             cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .cart-item-remove:hover {
+            color: #ff2e63;
         }
         
         .cart-item-quantity {
@@ -382,12 +440,20 @@
             background-color: #f1f1f1;
             border: none;
             cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .quantity-btn:hover {
+            background-color: #ddd;
         }
         
         .quantity-input {
             width: 40px;
             text-align: center;
             margin: 0 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
         }
         
         .cart-total {
@@ -395,6 +461,7 @@
             font-weight: bold;
             font-size: 18px;
             text-align: right;
+            color: #333;
         }
         
         .checkout-btn {
@@ -407,6 +474,11 @@
             margin-top: 20px;
             cursor: pointer;
             font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        .checkout-btn:hover {
+            background-color: #e61e53;
         }
         
         /* Checkout */
@@ -458,6 +530,8 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 10px;
+            font-weight: bold;
+            color: #555;
         }
         
         .step.active .step-number {
@@ -498,6 +572,7 @@
             display: block;
             margin-bottom: 5px;
             font-size: 14px;
+            color: #555;
         }
         
         .form-group input, .form-group select, .form-group textarea {
@@ -505,6 +580,7 @@
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
+            font-size: 14px;
         }
         
         .delivery-methods {
@@ -520,6 +596,11 @@
             border: 1px solid #ddd;
             border-radius: 4px;
             cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .delivery-method:hover {
+            border-color: #ff2e63;
         }
         
         .delivery-method.selected {
@@ -550,6 +631,11 @@
             border: 1px solid #ddd;
             border-radius: 4px;
             cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .payment-method:hover {
+            border-color: #ff2e63;
         }
         
         .payment-method.selected {
@@ -578,15 +664,25 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
         
         .btn-back {
             background-color: #f1f1f1;
+            color: #555;
+        }
+        
+        .btn-back:hover {
+            background-color: #ddd;
         }
         
         .btn-next {
             background-color: #ff2e63;
             color: white;
+        }
+        
+        .btn-next:hover {
+            background-color: #e61e53;
         }
         
         .order-summary {
@@ -599,6 +695,7 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 10px;
+            color: #555;
         }
         
         .order-total {
@@ -607,6 +704,7 @@
             margin-top: 10px;
             padding-top: 10px;
             border-top: 1px solid #eee;
+            color: #333;
         }
         
         /* Ticket */
@@ -635,9 +733,23 @@
             margin-bottom: 20px;
         }
         
+        .ticket-header h2 {
+            color: #ff2e63;
+            margin-bottom: 10px;
+        }
+        
         .ticket-details {
             text-align: left;
             margin-bottom: 20px;
+            color: #555;
+        }
+        
+        .ticket-details p {
+            margin-bottom: 5px;
+        }
+        
+        .ticket-details strong {
+            color: #333;
         }
         
         .ticket-items {
@@ -650,12 +762,14 @@
             margin-bottom: 10px;
             padding-bottom: 10px;
             border-bottom: 1px dashed #eee;
+            color: #555;
         }
         
         .ticket-total {
             font-weight: bold;
             font-size: 18px;
             margin-top: 20px;
+            color: #333;
         }
         
         .btn-download {
@@ -666,6 +780,11 @@
             border-radius: 4px;
             margin-top: 20px;
             cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-download:hover {
+            background-color: #e61e53;
         }
         
         /* Página de categoría */
@@ -686,6 +805,11 @@
             align-items: center;
             color: #333;
             text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .back-to-home:hover {
+            color: #ff2e63;
         }
         
         .back-to-home i {
@@ -710,6 +834,11 @@
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .contact-card:hover {
+            transform: translateY(-5px);
         }
         
         .contact-card i {
@@ -720,6 +849,7 @@
         
         .contact-card h3 {
             margin-bottom: 15px;
+            color: #333;
         }
         
         /* Redes sociales */
@@ -781,6 +911,7 @@
         .contact-form h2 {
             text-align: center;
             margin-bottom: 30px;
+            color: #333;
         }
         
         .form-row {
@@ -803,6 +934,11 @@
             font-size: 16px;
             display: block;
             margin: 0 auto;
+            transition: background-color 0.3s;
+        }
+        
+        .submit-btn:hover {
+            background-color: #e61e53;
         }
         
         /* Mapa */
@@ -817,6 +953,20 @@
             border: none;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Notificación */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: opacity 0.5s;
         }
         
         /* Responsive */
@@ -929,7 +1079,7 @@
         <nav>
             <div class="container">
                 <ul class="nav-links">
-                    <li><a href="#" class="nav-link" data-category="all">Inicio</a></li>
+                    <li><a href="#" class="nav-link active" data-category="all">Inicio</a></li>
                     <li><a href="#" class="nav-link" data-category="women">Mujer</a></li>
                     <li><a href="#" class="nav-link" data-category="men">Hombre</a></li>
                     <li><a href="#" class="nav-link" data-category="kids">Niños</a></li>
@@ -969,16 +1119,16 @@
                             <h3>Ropa de Hombre</h3>
                         </div>
                     </div>
+                    <div class="category-card" data-category="kids">
+                        <img src="https://images.unsplash.com/photo-1519238263530-99bdd11dfd76?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Ropa para niños">
+                        <div class="category-overlay">
+                            <h3>Ropa para Niños</h3>
+                        </div>
+                    </div>
                     <div class="category-card" data-category="accessories">
                         <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-1.2.1&auto=format&fit=crop&w=1366&q=80" alt="Accesorios">
                         <div class="category-overlay">
                             <h3>Accesorios</h3>
-                        </div>
-                    </div>
-                    <div class="category-card" data-category="shoes">
-                        <img src="https://images.unsplash.com/photo-1460353581641-37baddab0fa2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1351&q=80" alt="Zapatos">
-                        <div class="category-overlay">
-                            <h3>Zapatos</h3>
                         </div>
                     </div>
                 </div>
@@ -1374,95 +1524,581 @@
         
         // Datos de productos (simulados)
         const products = {
-            all: generateProducts(10, 'all'),
-            women: generateProducts(50, 'women'),
-            men: generateProducts(50, 'men'),
-            kids: generateProducts(50, 'kids'),
-            accessories: generateProducts(50, 'accessories'),
-            shoes: generateProducts(50, 'shoes'),
-            offers: generateProducts(50, 'offers')
+            all: [
+                {
+                    id: "women-1",
+                    name: "Elegante Vestido Negro",
+                    price: 59.99,
+                    discount: 20,
+                    image: "https://images.unsplash.com/photo-1539533018447-63fcce2678e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "women"
+                },
+                {
+                    id: "men-1",
+                    name: "Moderno Traje Azul",
+                    price: 89.99,
+                    discount: 15,
+                    image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "men"
+                },
+                {
+                    id: "kids-1",
+                    name: "Divertido Conjunto Rosa",
+                    price: 29.99,
+                    discount: 10,
+                    image: "https://images.unsplash.com/photo-1519238263530-99bdd11dfd76?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "kids"
+                },
+                {
+                    id: "accessories-1",
+                    name: "Estiloso Bolso Negro",
+                    price: 39.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "accessories"
+                },
+                {
+                    id: "shoes-1",
+                    name: "Cómodos Zapatos Blancos",
+                    price: 49.99,
+                    discount: 25,
+                    image: "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "shoes"
+                },
+                {
+                    id: "women-2",
+                    name: "Blusa Elegante Blanca",
+                    price: 34.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "women"
+                },
+                {
+                    id: "men-2",
+                    name: "Camisa Formal Gris",
+                    price: 44.99,
+                    discount: 10,
+                    image: "https://images.unsplash.com/photo-1527719327859-c6ce80353573?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "men"
+                },
+                {
+                    id: "kids-2",
+                    name: "Conjunto Deportivo Azul",
+                    price: 24.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1604917018618-597b68a5b5dd?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "kids"
+                },
+                {
+                    id: "accessories-2",
+                    name: "Reloj de Lujo Dorado",
+                    price: 99.99,
+                    discount: 30,
+                    image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "accessories"
+                },
+                {
+                    id: "shoes-2",
+                    name: "Botas de Cuero Marrón",
+                    price: 79.99,
+                    discount: 15,
+                    image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "shoes"
+                }
+            ],
+            women: [
+                {
+                    id: "women-1",
+                    name: "Elegante Vestido Negro",
+                    price: 59.99,
+                    discount: 20,
+                    image: "https://images.unsplash.com/photo-1539533018447-63fcce2678e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "women"
+                },
+                {
+                    id: "women-2",
+                    name: "Blusa Elegante Blanca",
+                    price: 34.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "women"
+                },
+                {
+                    id: "women-3",
+                    name: "Falda Plisada Roja",
+                    price: 39.99,
+                    discount: 15,
+                    image: "https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "women"
+                },
+                {
+                    id: "women-4",
+                    name: "Jeans Skinny Azul",
+                    price: 49.99,
+                    discount: 10,
+                    image: "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "women"
+                },
+                {
+                    id: "women-5",
+                    name: "Abrigo Largo Beige",
+                    price: 89.99,
+                    discount: 25,
+                    image: "https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "women"
+                },
+                {
+                    id: "women-6",
+                    name: "Top de Encaje Negro",
+                    price: 29.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "women"
+                },
+                {
+                    id: "women-7",
+                    name: "Short Denim Azul",
+                    price: 34.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "women"
+                },
+                {
+                    id: "women-8",
+                    name: "Chamarra de Cuero Negro",
+                    price: 99.99,
+                    discount: 30,
+                    image: "https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "women"
+                },
+                {
+                    id: "women-9",
+                    name: "Vestido Floral Veraniego",
+                    price: 44.99,
+                    discount: 15,
+                    image: "https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "women"
+                },
+                {
+                    id: "women-10",
+                    name: "Blazer Formal Gris",
+                    price: 69.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "women"
+                }
+            ],
+            men: [
+                {
+                    id: "men-1",
+                    name: "Moderno Traje Azul",
+                    price: 89.99,
+                    discount: 15,
+                    image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "men"
+                },
+                {
+                    id: "men-2",
+                    name: "Camisa Formal Gris",
+                    price: 44.99,
+                    discount: 10,
+                    image: "https://images.unsplash.com/photo-1527719327859-c6ce80353573?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "men"
+                },
+                {
+                    id: "men-3",
+                    name: "Pantalón de Vestir Negro",
+                    price: 49.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "men"
+                },
+                {
+                    id: "men-4",
+                    name: "Sudadera con Capucha",
+                    price: 39.99,
+                    discount: 20,
+                    image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "men"
+                },
+                {
+                    id: "men-5",
+                    name: "Chaqueta de Mezclilla",
+                    price: 59.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "men"
+                },
+                {
+                    id: "men-6",
+                    name: "Jeans Slim Fit",
+                    price: 49.99,
+                    discount: 10,
+                    image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "men"
+                },
+                {
+                    id: "men-7",
+                    name: "Playera Básica Blanca",
+                    price: 19.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "men"
+                },
+                {
+                    id: "men-8",
+                    name: "Short Deportivo Negro",
+                    price: 29.99,
+                    discount: 15,
+                    image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "men"
+                },
+                {
+                    id: "men-9",
+                    name: "Chaleco Elegante Gris",
+                    price: 39.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "men"
+                },
+                {
+                    id: "men-10",
+                    name: "Traje de Baño Azul",
+                    price: 34.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "men"
+                }
+            ],
+            kids: [
+                {
+                    id: "kids-1",
+                    name: "Divertido Conjunto Rosa",
+                    price: 29.99,
+                    discount: 10,
+                    image: "https://images.unsplash.com/photo-1519238263530-99bdd11dfd76?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "kids"
+                },
+                {
+                    id: "kids-2",
+                    name: "Conjunto Deportivo Azul",
+                    price: 24.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1604917018618-597b68a5b5dd?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "kids"
+                },
+                {
+                    id: "kids-3",
+                    name: "Vestido de Niña con Flores",
+                    price: 34.99,
+                    discount: 15,
+                    image: "https://images.unsplash.com/photo-1519238263530-99bdd11dfd76?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "kids"
+                },
+                {
+                    id: "kids-4",
+                    name: "Playera Infantil con Estampado",
+                    price: 19.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1519238263530-99bdd11dfd76?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "kids"
+                },
+                {
+                    id: "kids-5",
+                    name: "Pantalón de Niño Azul",
+                    price: 24.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1519238263530-99bdd11dfd76?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "kids"
+                },
+                {
+                    id: "kids-6",
+                    name: "Champara Infantil Amarilla",
+                    price: 39.99,
+                    discount: 20,
+                    image: "https://images.unsplash.com/photo-1519238263530-99bdd11dfd76?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "kids"
+                },
+                {
+                    id: "kids-7",
+                    name: "Falda de Niña Roja",
+                    price: 22.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1519238263530-99bdd11dfd76?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "kids"
+                },
+                {
+                    id: "kids-8",
+                    name: "Short Deportivo Negro",
+                    price: 19.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1519238263530-99bdd11dfd76?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "kids"
+                },
+                {
+                    id: "kids-9",
+                    name: "Sudadera Infantil con Capucha",
+                    price: 29.99,
+                    discount: 10,
+                    image: "https://images.unsplash.com/photo-1519238263530-99bdd11dfd76?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "kids"
+                },
+                {
+                    id: "kids-10",
+                    name: "Pijama Infantil de Dinosaurios",
+                    price: 34.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1519238263530-99bdd11dfd76?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "kids"
+                }
+            ],
+            accessories: [
+                {
+                    id: "accessories-1",
+                    name: "Estiloso Bolso Negro",
+                    price: 39.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "accessories"
+                },
+                {
+                    id: "accessories-2",
+                    name: "Reloj de Lujo Dorado",
+                    price: 99.99,
+                    discount: 30,
+                    image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "accessories"
+                },
+                {
+                    id: "accessories-3",
+                    name: "Cinturón de Cuero Negro",
+                    price: 29.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "accessories"
+                },
+                {
+                    id: "accessories-4",
+                    name: "Gorra Deportiva Negra",
+                    price: 24.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "accessories"
+                },
+                {
+                    id: "accessories-5",
+                    name: "Bufanda de Lana Gris",
+                    price: 19.99,
+                    discount: 15,
+                    image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "accessories"
+                },
+                {
+                    id: "accessories-6",
+                    name: "Lentes de Sol Aviador",
+                    price: 49.99,
+                    discount: 20,
+                    image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "accessories"
+                },
+                {
+                    id: "accessories-7",
+                    name: "Collar Elegante Plateado",
+                    price: 34.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "accessories"
+                },
+                {
+                    id: "accessories-8",
+                    name: "Sombrero de Paja",
+                    price: 29.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "accessories"
+                },
+                {
+                    id: "accessories-9",
+                    name: "Mochila Urbana Negra",
+                    price: 59.99,
+                    discount: 10,
+                    image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "accessories"
+                },
+                {
+                    id: "accessories-10",
+                    name: "Billetera de Cuero Marrón",
+                    price: 39.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "accessories"
+                }
+            ],
+            shoes: [
+                {
+                    id: "shoes-1",
+                    name: "Cómodos Zapatos Blancos",
+                    price: 49.99,
+                    discount: 25,
+                    image: "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "shoes"
+                },
+                {
+                    id: "shoes-2",
+                    name: "Botas de Cuero Marrón",
+                    price: 79.99,
+                    discount: 15,
+                    image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "shoes"
+                },
+                {
+                    id: "shoes-3",
+                    name: "Tenis Deportivos Negros",
+                    price: 59.99,
+                    discount: 20,
+                    image: "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "shoes"
+                },
+                {
+                    id: "shoes-4",
+                    name: "Zapatillas Casuales Grises",
+                    price: 44.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "shoes"
+                },
+                {
+                    id: "shoes-5",
+                    name: "Botines de Ante Negro",
+                    price: 69.99,
+                    discount: 10,
+                    image: "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "shoes"
+                },
+                {
+                    id: "shoes-6",
+                    name: "Sandalias de Playa",
+                    price: 29.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "shoes"
+                },
+                {
+                    id: "shoes-7",
+                    name: "Tacones Elegantes Nude",
+                    price: 54.99,
+                    discount: 15,
+                    image: "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "shoes"
+                },
+                {
+                    id: "shoes-8",
+                    name: "Mocasines de Cuero Negro",
+                    price: 49.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "shoes"
+                },
+                {
+                    id: "shoes-9",
+                    name: "Zapatos Formales Negros",
+                    price: 64.99,
+                    discount: 20,
+                    image: "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "shoes"
+                },
+                {
+                    id: "shoes-10",
+                    name: "Chanclas de Playa",
+                    price: 19.99,
+                    discount: 0,
+                    image: "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "shoes"
+                }
+            ],
+            offers: [
+                {
+                    id: "offers-1",
+                    name: "Vestido de Fiesta - Oferta Especial",
+                    price: 39.99,
+                    discount: 40,
+                    image: "https://images.unsplash.com/photo-1539533018447-63fcce2678e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "offers"
+                },
+                {
+                    id: "offers-2",
+                    name: "Traje Formal - Descuento",
+                    price: 69.99,
+                    discount: 35,
+                    image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "offers"
+                },
+                {
+                    id: "offers-3",
+                    name: "Conjunto Infantil - Liquidación",
+                    price: 19.99,
+                    discount: 50,
+                    image: "https://images.unsplash.com/photo-1519238263530-99bdd11dfd76?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "offers"
+                },
+                {
+                    id: "offers-4",
+                    name: "Bolso de Diseño - Promoción",
+                    price: 29.99,
+                    discount: 45,
+                    image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "offers"
+                },
+                {
+                    id: "offers-5",
+                    name: "Zapatos de Cuero - Oferta",
+                    price: 39.99,
+                    discount: 50,
+                    image: "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "offers"
+                },
+                {
+                    id: "offers-6",
+                    name: "Pack de 3 Playeras - Combo",
+                    price: 29.99,
+                    discount: 40,
+                    image: "https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "offers"
+                },
+                {
+                    id: "offers-7",
+                    name: "Jeans Slim Fit - Últimas Unidades",
+                    price: 34.99,
+                    discount: 30,
+                    image: "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "offers"
+                },
+                {
+                    id: "offers-8",
+                    name: "Reloj Elegante - Edición Limitada",
+                    price: 59.99,
+                    discount: 50,
+                    image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "offers"
+                },
+                {
+                    id: "offers-9",
+                    name: "Chaqueta de Cuero - Oferta Flash",
+                    price: 79.99,
+                    discount: 40,
+                    image: "https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "offers"
+                },
+                {
+                    id: "offers-10",
+                    name: "Botas de Invierno - Descuento",
+                    price: 49.99,
+                    discount: 45,
+                    image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    category: "offers"
+                }
+            ]
         };
-        
-        // Función para generar productos ficticios
-        function generateProducts(count, category) {
-            const categories = {
-                women: ['Vestido', 'Blusa', 'Falda', 'Jeans', 'Abrigo', 'Top', 'Short', 'Chamarra'],
-                men: ['Camisa', 'Pantalón', 'Sudadera', 'Chaqueta', 'Jeans', 'Playera', 'Short', 'Chaleco'],
-                kids: ['Vestido', 'Playera', 'Pantalón', 'Chamarra', 'Falda', 'Short', 'Sudadera', 'Pijama'],
-                accessories: ['Bolso', 'Cinturón', 'Gorra', 'Bufanda', 'Lentes', 'Collar', 'Reloj', 'Sombrero'],
-                shoes: ['Tenis', 'Zapatillas', 'Botas', 'Sandalias', 'Tacones', 'Mocasines', 'Zapatos formales', 'Chanclas'],
-                offers: ['Oferta Especial', 'Descuento', 'Liquidación', 'Promoción', 'Pack', 'Combo', 'Edición Limitada', 'Últimas Unidades']
-            };
-            
-            const adjectives = ['Elegante', 'Moderno', 'Cómodo', 'Estiloso', 'Fashion', 'Exclusivo', 'Premium', 'Básico'];
-            const colors = ['Negro', 'Blanco', 'Azul', 'Rojo', 'Verde', 'Rosa', 'Gris', 'Beige'];
-            
-            const result = [];
-            
-            for(let i = 1; i <= count; i++) {
-                let name, price, discount;
-                
-                if(category === 'all') {
-                    // Mezclar productos de todas las categorías
-                    const randomCategory = Object.keys(categories)[Math.floor(Math.random() * Object.keys(categories).length)];
-                    const type = categories[randomCategory][Math.floor(Math.random() * categories[randomCategory].length)];
-                    name = `${adjectives[Math.floor(Math.random() * adjectives.length)]} ${type} ${colors[Math.floor(Math.random() * colors.length)]}`;
-                } else {
-                    const type = categories[category][Math.floor(Math.random() * categories[category].length)];
-                    name = `${adjectives[Math.floor(Math.random() * adjectives.length)]} ${type} ${colors[Math.floor(Math.random() * colors.length)]}`;
-                }
-                
-                // Precios aleatorios con algunos en oferta
-                if(Math.random() > 0.7 && category !== 'offers') {
-                    const originalPrice = Math.floor(Math.random() * 100) + 20;
-                    discount = Math.floor(Math.random() * 50) + 10;
-                    price = originalPrice - (originalPrice * discount / 100);
-                } else if(category === 'offers') {
-                    const originalPrice = Math.floor(Math.random() * 100) + 20;
-                    discount = Math.floor(Math.random() * 70) + 20;
-                    price = originalPrice - (originalPrice * discount / 100);
-                } else {
-                    price = Math.floor(Math.random() * 80) + 10;
-                    discount = 0;
-                }
-                
-                // Imágenes aleatorias de Unsplash basadas en categoría
-                let imageUrl;
-                switch(category) {
-                    case 'women':
-                        imageUrl = `https://source.unsplash.com/random/300x400/?women,fashion,clothing,dress,${i}`;
-                        break;
-                    case 'men':
-                        imageUrl = `https://source.unsplash.com/random/300x400/?men,fashion,clothing,shirt,${i}`;
-                        break;
-                    case 'kids':
-                        imageUrl = `https://source.unsplash.com/random/300x400/?kids,fashion,clothing,children,${i}`;
-                        break;
-                    case 'accessories':
-                        imageUrl = `https://source.unsplash.com/random/300x400/?accessories,bag,hat,jewelry,${i}`;
-                        break;
-                    case 'shoes':
-                        imageUrl = `https://source.unsplash.com/random/300x400/?shoes,sneakers,boots,heels,${i}`;
-                        break;
-                    case 'offers':
-                        imageUrl = `https://source.unsplash.com/random/300x400/?sale,discount,offer,${i}`;
-                        break;
-                    default:
-                        imageUrl = `https://source.unsplash.com/random/300x400/?fashion,clothing,${i}`;
-                }
-                
-                result.push({
-                    id: `${category}-${i}`,
-                    name: name,
-                    price: price,
-                    discount: discount,
-                    image: imageUrl,
-                    category: category
-                });
-            }
-            
-            return result;
-        }
         
         // Función para renderizar productos
         function renderProducts(products, containerId) {
@@ -2050,22 +2686,6 @@
             
             // Limpiar formulario
             feedbackForm.reset();
-            
-            // En un caso real, aquí enviarías los datos a tu servidor
-            // Por ejemplo:
-            // fetch('tu-servidor.com/api/feedback', {
-            //   method: 'POST',
-            //   body: JSON.stringify({ name, email, message }),
-            //   headers: { 'Content-Type': 'application/json' }
-            // })
-            // .then(response => response.json())
-            // .then(data => {
-            //   alert('Gracias por tu comentario!');
-            //   feedbackForm.reset();
-            // })
-            // .catch(error => {
-            //   alert('Hubo un error al enviar tu mensaje. Por favor inténtalo de nuevo.');
-            // });
         }
     </script>
 </body>
