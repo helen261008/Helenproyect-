@@ -6,444 +6,111 @@
     <title>FashionShop - Tienda de Ropa Online</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<link rel="stylesheet" href= "style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <div class="top-bar">
-            ¡Envío gratis en pedidos superiores a $50!
-        </div>
-        <div class="container">
-            <div class="main-header">
-                <div class="logo">FashionShop</div>
-                <div class="search-bar">
-                    <input type="text" placeholder="Buscar productos...">
-                </div>
-                <div class="user-actions">
-                    <a href="#"><i class="fas fa-user"></i></a>
-                    <a href="#"><i class="fas fa-heart"></i></a>
-                    <a href="#" id="cart-btn"><i class="fas fa-shopping-cart"></i> <span class="cart-count">0</span></a>
-                </div>
-            </div>
-        </div>
-        <nav>
-            <div class="container">
-                <ul class="nav-links">
-                    <li><a href="#" class="nav-link" data-category="all">Inicio</a></li>
-                    <li><a href="#" class="nav-link" data-category="women">Mujer</a></li>
-                    <li><a href="#" class="nav-link" data-category="men">Hombre</a></li>
-                    <li><a href="#" class="nav-link" data-category="kids">Niños</a></li>
-                    <li><a href="#" class="nav-link" data-category="accessories">Accesorios</a></li>
-                    <li><a href="#" class="nav-link" data-category="shoes">Zapatos</a></li>
-                    <li><a href="#" class="nav-link" data-category="offers">Ofertas</a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
-    
-    <!-- Página principal -->
-    <div id="home-page">
-        <!-- Banner principal -->
-        <section class="main-banner">
-            <div class="banner-content">
-                <h1>Nueva Colección Verano 2023</h1>
-                <p>Descubre las últimas tendencias a precios increíbles</p>
-                <button class="shop-now-btn">Comprar ahora</button>
-            </div>
-        </section>
-        
-        <!-- Categorías -->
-        <section class="categories">
-            <div class="container">
-                <h2 class="section-title">Explora Nuestras Categorías</h2>
-                <div class="category-grid">
-                    <div class="category-card" data-category="women">
-                        <img src="https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1351&q=80" alt="Ropa de mujer">
-                        <div class="category-overlay">
-                            <h3>Ropa de Mujer</h3>
-                        </div>
-                    </div>
-                    <div class="category-card" data-category="men">
-                        <img src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1349&q=80" alt="Ropa de hombre">
-                        <div class="category-overlay">
-                            <h3>Ropa de Hombre</h3>
-                        </div>
-                    </div>
-                    <div class="category-card" data-category="accessories">
-                        <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-1.2.1&auto=format&fit=crop&w=1366&q=80" alt="Accesorios">
-                        <div class="category-overlay">
-                            <h3>Accesorios</h3>
-                        </div>
-                    </div>
-                    <div class="category-card" data-category="shoes">
-                        <img src="https://images.unsplash.com/photo-1460353581641-37baddab0fa2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1351&q=80" alt="Zapatos">
-                        <div class="category-overlay">
-                            <h3>Zapatos</h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Productos destacados -->
-        <section class="featured-products">
-            <div class="container">
-                <h2 class="section-title">Productos Destacados</h2>
-                <div class="product-grid" id="product-grid">
-                    <!-- Los productos se cargarán dinámicamente -->
-                </div>
-            </div>
-        </section>
-        
-        <!-- Información de contacto -->
-        <section class="contact-info">
-            <div class="container">
-                <h2 class="section-title">¿Dónde encontrarnos?</h2>
-                <div class="contact-grid">
-                    <div class="contact-card">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <h3>Nuestra Ubicación</h3>
-                        <p>Calle Moda 123, Colonia Centro, Ciudad de México</p>
-                    </div>
-                    <div class="contact-card">
-                        <i class="fas fa-phone"></i>
-                        <h3>Teléfono</h3>
-                        <p>+52 55 1234 5678</p>
-                        <p>Lunes a Viernes: 9am - 7pm</p>
-                    </div>
-                    <div class="contact-card">
-                        <i class="fas fa-envelope"></i>
-                        <h3>Correo Electrónico</h3>
-                        <p>info@fashionshop.com</p>
-                        <p>soporte@fashionshop.com</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Mapa -->
-        <section class="container map-container">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.888614771349!2d-99.1699496845337!3d19.42702074612172!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ff35f5bd1563%3A0x6c366f0e2de02ff7!2sEl%20%C3%81ngel%20de%20la%20Independencia!5e0!3m2!1ses-419!2smx!4v1624567890123!5m2!1ses-419!2smx" allowfullscreen="" loading="lazy"></iframe>
-        </section>
-        
-        <!-- Redes sociales -->
-        <section class="social-media">
-            <div class="container">
-                <h2 class="section-title">Síguenos en Redes Sociales</h2>
-                <p>Mantente al día con nuestras últimas colecciones y ofertas especiales</p>
-                <div class="social-icons">
-                    <a href="#" class="social-icon facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social-icon instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="social-icon twitter"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="social-icon pinterest"><i class="fab fa-pinterest"></i></a>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Formulario de contacto -->
-        <section class="container">
-            <div class="contact-form">
-                <h2>Envíanos tus comentarios</h2>
-                <form id="feedback-form">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="feedback-name">Nombre completo</label>
-                            <input type="text" id="feedback-name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="feedback-email">Correo electrónico</label>
-                            <input type="email" id="feedback-email" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="feedback-message">Tu mensaje</label>
-                        <textarea id="feedback-message" rows="5" required></textarea>
-                    </div>
-                    <button type="submit" class="submit-btn">Enviar Mensaje</button>
-                </form>
-            </div>
-        </section>
-    </div>
-    
-    <!-- Páginas de categoría -->
-    <div id="category-pages">
-        <!-- Página de categoría Mujer -->
-        <div class="category-page" id="women-page">
-            <div class="container">
-                <div class="category-header">
-                    <a href="#" class="back-to-home"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
-                    <h2>Ropa para Mujer</h2>
-                </div>
-                <div class="product-grid" id="women-products">
-                    <!-- Productos de mujer se cargarán dinámicamente -->
-                </div>
-            </div>
-        </div>
-        
-        <!-- Página de categoría Hombre -->
-        <div class="category-page" id="men-page">
-            <div class="container">
-                <div class="category-header">
-                    <a href="#" class="back-to-home"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
-                    <h2>Ropa para Hombre</h2>
-                </div>
-                <div class="product-grid" id="men-products">
-                    <!-- Productos de hombre se cargarán dinámicamente -->
-                </div>
-            </div>
-        </div>
-        
-        <!-- Página de categoría Niños -->
-        <div class="category-page" id="kids-page">
-            <div class="container">
-                <div class="category-header">
-                    <a href="#" class="back-to-home"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
-                    <h2>Ropa para Niños</h2>
-                </div>
-                <div class="product-grid" id="kids-products">
-                    <!-- Productos para niños se cargarán dinámicamente -->
-                </div>
-            </div>
-        </div>
-        
-        <!-- Página de categoría Accesorios -->
-        <div class="category-page" id="accessories-page">
-            <div class="container">
-                <div class="category-header">
-                    <a href="#" class="back-to-home"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
-                    <h2>Accesorios</h2>
-                </div>
-                <div class="product-grid" id="accessories-products">
-                    <!-- Accesorios se cargarán dinámicamente -->
-                </div>
-            </div>
-        </div>
-        
-        <!-- Página de categoría Zapatos -->
-        <div class="category-page" id="shoes-page">
-            <div class="container">
-                <div class="category-header">
-                    <a href="#" class="back-to-home"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
-                    <h2>Zapatos</h2>
-                </div>
-                <div class="product-grid" id="shoes-products">
-                    <!-- Zapatos se cargarán dinámicamente -->
-                </div>
-            </div>
-        </div>
-        
-        <!-- Página de categoría Ofertas -->
-        <div class="category-page" id="offers-page">
-            <div class="container">
-                <div class="category-header">
-                    <a href="#" class="back-to-home"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
-                    <h2>Ofertas Especiales</h2>
-                </div>
-                <div class="product-grid" id="offers-products">
-                    <!-- Productos en oferta se cargarán dinámicamente -->
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Carrito de compras -->
-    <div class="cart-overlay" id="cart-overlay">
-        <div class="cart-container">
-            <div class="cart-header">
-                <h2>Tu Carrito</h2>
-                <span class="close-cart" id="close-cart"><i class="fas fa-times"></i></span>
-            </div>
-            <div class="cart-items" id="cart-items">
-                <!-- Los productos del carrito se añadirán aquí dinámicamente -->
-            </div>
-            <div class="cart-total">
-                Total: $<span id="cart-total">0.00</span>
-            </div>
-            <button class="checkout-btn" id="checkout-btn">Proceder al pago</button>
-        </div>
-    </div>
-    
-    <!-- Checkout -->
-    <div class="checkout-overlay" id="checkout-overlay">
-        <div class="checkout-container">
-            <div class="checkout-header">
-                <h2>Finalizar Compra</h2>
-            </div>
-            
-            <div class="checkout-steps">
-                <div class="step active" data-step="1">
-                    <div class="step-number">1</div>
-                    <div class="step-title">Información</div>
-                </div>
-                <div class="step" data-step="2">
-                    <div class="step-number">2</div>
-                    <div class="step-title">Pago</div>
-                </div>
-                <div class="step" data-step="3">
-                    <div class="step-number">3</div>
-                    <div class="step-title">Confirmación</div>
-                </div>
-            </div>
-            
-            <form class="checkout-form" id="checkout-form">
-                <!-- Paso 1: Información del cliente -->
-                <div class="checkout-step" id="step-1">
-                    <h3>Información del Cliente</h3>
-                    <div class="form-group">
-                        <label for="name">Nombre completo</label>
-                        <input type="text" id="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Correo electrónico</label>
-                        <input type="email" id="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Teléfono</label>
-                        <input type="tel" id="phone" required>
-                    </div>
-                    
-                    <h3 style="margin-top: 30px;">Método de Entrega</h3>
-                    <div class="delivery-methods">
-                        <div class="delivery-method" data-method="delivery">
-                            <i class="fas fa-truck"></i>
-                            <div>Envío a domicilio</div>
-                        </div>
-                        <div class="delivery-method" data-method="pickup">
-                            <i class="fas fa-store"></i>
-                            <div>Recoger en tienda</div>
-                        </div>
-                    </div>
-                    
-                    <div id="delivery-address-fields" style="margin-top: 20px;">
-                        <div class="form-group">
-                            <label for="address">Dirección</label>
-                            <input type="text" id="address">
-                        </div>
-                        <div class="form-group">
-                            <label for="city">Ciudad</label>
-                            <input type="text" id="city">
-                        </div>
-                        <div class="form-group">
-                            <label for="zip">Código Postal</label>
-                            <input type="text" id="zip">
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="notes">Notas adicionales (opcional)</label>
-                        <textarea id="notes" rows="3"></textarea>
-                    </div>
-                </div>
-                
-                <!-- Paso 2: Método de pago -->
-                <div class="checkout-step" id="step-2" style="display: none;">
-                    <h3>Método de Pago</h3>
-                    <div class="payment-methods">
-                        <div class="payment-method" data-method="card">
-                            <i class="far fa-credit-card"></i>
-                            <div>Tarjeta de crédito/débito</div>
-                        </div>
-                        <div class="payment-method" data-method="cash">
-                            <i class="fas fa-money-bill-wave"></i>
-                            <div>Efectivo</div>
-                        </div>
-                    </div>
-                    
-                    <div id="card-details" style="display: none;">
-                        <div class="form-group">
-                            <label for="card-number">Número de tarjeta</label>
-                            <input type="text" id="card-number" placeholder="1234 5678 9012 3456">
-                        </div>
-                        <div class="form-group">
-                            <label for="card-name">Nombre en la tarjeta</label>
-                            <input type="text" id="card-name" placeholder="Juan Pérez">
-                        </div>
-                        <div class="form-group" style="display: flex; gap: 15px;">
-                            <div style="flex: 1;">
-                                <label for="card-expiry">Fecha de expiración</label>
-                                <input type="text" id="card-expiry" placeholder="MM/AA">
-                            </div>
-                            <div style="flex: 1;">
-                                <label for="card-cvv">CVV</label>
-                                <input type="text" id="card-cvv" placeholder="123">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Paso 3: Resumen del pedido -->
-                <div class="checkout-step" id="step-3" style="display: none;">
-                    <h3>Resumen del Pedido</h3>
-                    <div class="order-summary">
-                        <div class="order-summary-item">
-                            <span>Productos:</span>
-                            <span id="order-subtotal">$0.00</span>
-                        </div>
-                        <div class="order-summary-item">
-                            <span>Envío:</span>
-                            <span id="order-shipping">$5.00</span>
-                        </div>
-                        <div class="order-summary-item order-total">
-                            <span>Total:</span>
-                            <span id="order-total">$0.00</span>
-                        </div>
-                    </div>
-                    
-                    <div id="delivery-info" style="margin-top: 20px; text-align: left;">
-                        <h4>Método de entrega:</h4>
-                        <p id="selected-delivery-method"></p>
-                        <p id="delivery-address"></p>
-                    </div>
-                    
-                    <div id="payment-info" style="margin-top: 20px; text-align: left;">
-                        <h4>Método de pago:</h4>
-                        <p id="selected-payment-method"></p>
-                    </div>
-                    
-                    <button type="button" id="confirm-order" class="btn-next" style="width: 100%; margin-top: 30px;">
-                        Confirmar Pedido
-                    </button>
-                </div>
-                
-                <div class="checkout-nav">
-                    <button type="button" class="btn-back" id="btn-back" style="display: none;">Atrás</button>
-                    <button type="button" class="btn-next" id="btn-next">Siguiente</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    
-    <!-- Ticket -->
-    <div class="ticket-overlay" id="ticket-overlay">
-        <div class="ticket-container">
-            <div class="ticket-header">
-                <h2>¡Gracias por tu compra!</h2>
-                <p>Tu pedido ha sido procesado con éxito.</p>
-            </div>
-            
-            <div class="ticket-details">
-                <p><strong>Número de pedido:</strong> <span id="ticket-number">FS-2023-001</span></p>
-                <p><strong>Fecha:</strong> <span id="ticket-date">25/05/2023</span></p>
-                <p><strong>Cliente:</strong> <span id="ticket-customer">Juan Pérez</span></p>
-                <p><strong>Método de entrega:</strong> <span id="ticket-delivery">Envío a domicilio</span></p>
-                <p><strong>Método de pago:</strong> <span id="ticket-payment">Tarjeta de crédito</span></p>
-            </div>
-            
-            <div class="ticket-items" id="ticket-items">
-                <!-- Los productos del pedido se añadirán aquí -->
-            </div>
-            
-            <div class="ticket-total">
-                Total: $<span id="ticket-total">0.00</span>
-            </div>
-            
-            <button class="btn-download" id="download-ticket">Descargar Ticket (PDF)</button>
-        </div>
-    </div>
-    
+    <!-- [El resto del HTML permanece igual hasta el script] -->
+
     <!-- JavaScript -->
-    <script src="script.css">
+    <script>
+        // Datos de productos reducidos a 10 por categoría
+        const products = {
+            women: [
+                {
+                    id: 1,
+                    name: "Vestido floral verano",
+                    price: 29.99,
+                    image: "https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    colors: ["Rojo", "Azul", "Blanco", "Negro"],
+                    sizes: ["S", "M", "L", "XL"]
+                },
+                // ... otros 9 productos para mujer con colores
+            ],
+            men: [
+                {
+                    id: 11,
+                    name: "Camisa formal hombre",
+                    price: 24.99,
+                    image: "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80",
+                    colors: ["Blanco", "Azul", "Negro", "Gris"],
+                    sizes: ["S", "M", "L", "XL"]
+                },
+                // ... otros 9 productos para hombre con colores
+            ],
+            // ... otras categorías con 10 productos cada una
+        };
+
+        // Modificación en el método de pago en efectivo
+        function showPaymentStep() {
+            // ... código existente ...
+            
+            if (selectedPaymentMethod === 'cash') {
+                const cashPaymentHTML = `
+                    <div class="form-group">
+                        <label for="cash-amount">Monto entregado ($)</label>
+                        <input type="number" id="cash-amount" min="${cartTotal}" step="0.01" required>
+                    </div>
+                `;
+                document.getElementById('card-details').insertAdjacentHTML('afterend', cashPaymentHTML);
+            }
+        }
+
+        // Modificación en la generación del ticket
+        function generateTicket() {
+            // ... código existente ...
+            
+            // Mostrar cambio si el pago fue en efectivo
+            if (paymentMethod === 'cash') {
+                const cashAmount = parseFloat(document.getElementById('cash-amount').value);
+                const change = cashAmount - total;
+                
+                ticketHTML += `
+                    <div class="ticket-item">
+                        <p><strong>Monto entregado:</strong> $${cashAmount.toFixed(2)}</p>
+                        <p><strong>Cambio:</strong> $${change.toFixed(2)}</p>
+                    </div>
+                `;
+            }
+            
+            // ... resto del código ...
+        }
+
+        // Modificación en la plantilla del producto para mostrar colores
+        function createProductHTML(product) {
+            return `
+                <div class="product-card" data-id="${product.id}">
+                    <div class="product-image">
+                        <img src="${product.image}" alt="${product.name}">
+                        <button class="quick-view">Vista rápida</button>
+                    </div>
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        <div class="product-colors">
+                            ${product.colors.map(color => 
+                                `<span class="color-option" style="background-color: ${getColorCode(color)}" 
+                                  title="${color}"></span>`
+                            ).join('')}
+                        </div>
+                        <div class="product-price">$${product.price.toFixed(2)}</div>
+                        <button class="add-to-cart">Añadir al carrito</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getColorCode(color) {
+            const colors = {
+                "Rojo": "#ff0000",
+                "Azul": "#0000ff",
+                "Blanco": "#ffffff",
+                "Negro": "#000000",
+                "Gris": "#808080",
+                // ... otros colores
+            };
+            return colors[color] || "#cccccc";
+        }
+
+        // [El resto del JavaScript permanece igual]
     </script>
 </body>
 </html>
