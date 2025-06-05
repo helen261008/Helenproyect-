@@ -894,4 +894,36 @@
             .contact-form {
                 padding: 30px 15px;
             }
-        }
+        }/* Agrega esto a tu style.css */
+.product-colors {
+    display: flex;
+    gap: 5px;
+    margin: 8px 0;
+}
+
+.color-option {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.color-option:hover {
+    transform: scale(1.2);
+}
+
+.color-option.selected {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 2px #333;
+}
+
+/* Estilo para el campo de monto en efectivo */
+#cash-amount {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+    margin-top: 5px;
+}
