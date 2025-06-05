@@ -1908,47 +1908,58 @@
         }
         
         function completeOrder() {
-            // Aquí normalmente enviarías los datos a un servidor
-            // Por ahora solo mostraremos el ticket
-            
-            // Generar número de pedido aleatorio
-            const orderNumber = 'FS-' + new Date().getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000);
-            
-            // Obtener fecha actual
-            const today = new Date();
-            const date = today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear();
-            
-            // Obtener información del cliente
-            const name = document.getElementById('name').value;
-            const deliveryMethod = document.querySelector('.delivery-method.selected').textContent.trim();
-            const paymentMethod = document.querySelector('.payment-method.selected').textContent.trim();
-            
-            // Calcular total
-            const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-            const shipping = selectedDeliveryMethod === 'delivery' ? 5.00 : 0;
-            const total = subtotal + shipping;
-            
-            // Actualizar ticket
-            document.getElementById('ticket-number').textContent = orderNumber;
-            document.getElementById('ticket-date').textContent = date;
-            document.getElementById('ticket-customer').textContent = name;
-            document.getElementById('ticket-delivery').textContent = deliveryMethod;
-            document.getElementById('ticket-payment').textContent = paymentMethod;
-            document.getElementById('ticket-total').textContent = total.toFixed(2);
-            
-            // Añadir productos al ticket
-            const ticketItems = document.getElementById('ticket-items');
-            ticketItems.innerHTML = '';
-            
-            cart.forEach(item => {
-                const ticketItem = document.createElement('div');
-                ticketItem.className = 'ticket-item';
-                ticketItem.innerHTML = `
-                    <span>${item.name} x${item.quantity}</span>
-                    <span>$${(item.price * item.quantity).toFixed(2)}</span>
-                `;
-                ticketItems.appendChild(ticketItem);
-            });
+    // Generar número de pedido aleatorio
+    const orderNumber = 'FS-' + new Date().getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000);
+    
+    // Obtener fecha actual
+    const today = new Date();
+    const date = today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear();
+    
+    // Obtener información del cliente
+    const name = document.getElementById('name').value;
+    const deliveryMethod = document.querySelector('.delivery-method.selected').textContent.trim();
+    const paymentMethod = document.querySelector('.payment-method.selected').textContent.trim();
+    
+    // Calcular total
+    const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    const shipping = selectedDeliveryMethod === 'delivery' ? 5.00 : 0;
+    const total = subtotal + shipping;
+    
+    // Actualizar ticket
+    document.getElementById('ticket-number').textContent = orderNumber;
+    document.getElementById('ticket-date').textContent = date;
+    document.getElementById('ticket-customer').textContent = name;
+    document.getElementById('ticket-delivery').textContent = deliveryMethod;
+    document.getElementById('ticket-payment').textContent = paymentMethod;
+    document.getElementById('ticket-total').textContent = total.toFixed(2);
+    
+    // Añadir productos al ticket
+    const ticketItems = document.getElementById('ticket-items');
+    ticketItems.innerHTML = '';
+    
+    // Usar el carrito actual para mostrar los productos
+    cart.forEach(item => {
+        const ticketItem = document.createElement('div');
+        ticketItem.className = 'ticket-item';
+        ticketItem.innerHTML = `
+            <span>${item.name} x${item.quantity}</span>
+            <span>$${(item.price * item.quantity).toFixed(2)}</span>
+        `;
+        ticketItems.appendChild(ticketItem);
+    });
+    
+    // Mostrar ticket
+    checkoutOverlay.style.display = 'none';
+    ticketOverlay.style.display = 'flex';
+    
+    // Vaciar carrito SOLO DESPUÉS de mostrar el ticket
+    setTimeout(() => {
+        cart = [];
+        updateCart();
+        localStorage.removeItem('cart');
+    }, 0);
+        }
+        
             
             // Mostrar ticket
             checkoutOverlay.style.display = 'none';
@@ -1961,78 +1972,69 @@
         }
         
         // Generar PDF
-        function generatePDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            
-            // Encabezado
-            doc.setFontSize(20);
-            doc.setTextColor(255, 46, 99);
-            doc.text('FashionShop', 105, 20, { align: 'center' });
-            
-            doc.setFontSize(12);
-            doc.setTextColor(0, 0, 0);
-            doc.text('Ticket de Compra', 105, 30, { align: 'center' });
-            
-            // Información del pedido
-            doc.setFontSize(10);
-            doc.text(`Número de pedido: ${document.getElementById('ticket-number').textContent}`, 14, 40);
-            doc.text(`Fecha: ${document.getElementById('ticket-date').textContent}`, 14, 46);
-            doc.text(`Cliente: ${document.getElementById('ticket-customer').textContent}`, 14, 52);
-            doc.text(`Método de entrega: ${document.getElementById('ticket-delivery').textContent}`, 14, 58);
-            doc.text(`Método de pago: ${document.getElementById('ticket-payment').textContent}`, 14, 64);
-            
-            // Línea divisoria
-            doc.line(14, 70, 196, 70);
-            
-            // Productos
-            let y = 78;
-            doc.setFontSize(12);
-            doc.text('Productos', 14, y);
-            y += 8;
-            
-            doc.setFontSize(10);
-            cart.forEach(item => {
-                doc.text(`${item.name} x${item.quantity}`, 20, y);
-                doc.text(`$${(item.price * item.quantity).toFixed(2)}`, 180, y, { align: 'right' });
-                y += 6;
-            });
-            
-            // Línea divisoria
-            doc.line(14, y, 196, y);
-            y += 8;
-            
-            // Subtotal
-            doc.text('Subtotal:', 160, y);
-            doc.text(`$${document.getElementById('order-subtotal').textContent}`, 180, y, { align: 'right' });
-            y += 6;
-            
-            // Envío
-            doc.text('Envío:', 160, y);
-            doc.text(`${document.getElementById('order-shipping').textContent}`, 180, y, { align: 'right' });
-            y += 6;
-            
-            // Total
-            doc.setFontSize(12);
-            doc.text('Total:', 160, y);
-            doc.text(`$${document.getElementById('ticket-total').textContent}`, 180, y, { align: 'right' });
-            
-            // Pie de página
-            y += 20;
-            doc.setFontSize(8);
-            doc.setTextColor(100, 100, 100);
-            doc.text('Gracias por tu compra en FashionShop', 105, y, { align: 'center' });
-            y += 4;
-            doc.text('Para cualquier consulta, contacta a soporte@fashionshop.com', 105, y, { align: 'center' });
-            
-            // Guardar PDF
-            doc.save(`ticket-${document.getElementById('ticket-number').textContent}.pdf`);
-            
-            // Cerrar ticket después de descargar
-            setTimeout(() => {
-                ticketOverlay.style.display = 'none';
-            }, 1000);
-        }
+  function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // Encabezado
+    doc.setFontSize(20);
+    doc.setTextColor(255, 46, 99);
+    doc.text('FashionShop', 105, 20, { align: 'center' });
+    
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    doc.text('Ticket de Compra', 105, 30, { align: 'center' });
+    
+    // Información del pedido
+    doc.setFontSize(10);
+    doc.text(`Número de pedido: ${document.getElementById('ticket-number').textContent}`, 14, 40);
+    doc.text(`Fecha: ${document.getElementById('ticket-date').textContent}`, 14, 46);
+    doc.text(`Cliente: ${document.getElementById('ticket-customer').textContent}`, 14, 52);
+    doc.text(`Método de entrega: ${document.getElementById('ticket-delivery').textContent}`, 14, 58);
+    doc.text(`Método de pago: ${document.getElementById('ticket-payment').textContent}`, 14, 64);
+    
+    // Línea divisoria
+    doc.line(14, 70, 196, 70);
+    
+    // Productos
+    let y = 78;
+    doc.setFontSize(12);
+    doc.text('Productos', 14, y);
+    y += 8;
+    
+    doc.setFontSize(10);
+    // Usar el carrito actual para el PDF
+    cart.forEach(item => {
+        doc.text(`${item.name} x${item.quantity}`, 20, y);
+        doc.text(`$${(item.price * item.quantity).toFixed(2)}`, 180, y, { align: 'right' });
+        y += 6;
+    });
+    
+    // Línea divisoria
+    doc.line(14, y, 196, y);
+    y += 8;
+    
+    // Total
+    doc.setFontSize(12);
+    doc.text('Total:', 160, y);
+    doc.text(`$${document.getElementById('ticket-total').textContent}`, 180, y, { align: 'right' });
+    
+    // Pie de página
+    y += 20;
+    doc.setFontSize(8);
+    doc.setTextColor(100, 100, 100);
+    doc.text('Gracias por tu compra en FashionShop', 105, y, { align: 'center' });
+    y += 4;
+    doc.text('Para cualquier consulta, contacta a soporte@fashionshop.com', 105, y, { align: 'center' });
+    
+    // Guardar PDF
+    doc.save(`ticket-${document.getElementById('ticket-number').textContent}.pdf`);
+    
+    // Cerrar ticket después de descargar
+    setTimeout(() => {
+        ticketOverlay.style.display = 'none';
+    }, 1000);
+             }
         
         // Enviar comentario
         function submitFeedback(e) {
