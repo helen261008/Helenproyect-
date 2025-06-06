@@ -706,6 +706,10 @@
             border-top: 1px solid #eee;
             color: #333;
         }
+
+        #payment-info p {
+            margin-bottom: 5px;
+        }
         
         /* Ticket */
         .ticket-overlay {
@@ -770,6 +774,9 @@
             font-size: 18px;
             margin-top: 20px;
             color: #333;
+            text-align: right; /* Alineado a la derecha para consistencia */
+            padding-top: 10px;
+            border-top: 1px solid #ccc;
         }
         
         .btn-download {
@@ -1364,7 +1371,7 @@
                         </div>
                     </div>
                     
-                    <div id="delivery-address-fields" style="margin-top: 20px;">
+                    <div id="delivery-address-fields" style="display: none; margin-top: 20px;">
                         <div class="form-group">
                             <label for="address">Dirección</label>
                             <input type="text" id="address">
@@ -1419,6 +1426,15 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- CAMBIO: NUEVO DIV PARA EL PAGO EN EFECTIVO -->
+                    <div id="cash-details" style="display: none; margin-top: 20px;">
+                        <div class="form-group">
+                            <label for="cash-amount">Paga con:</label>
+                            <input type="number" id="cash-amount" placeholder="Ej: 500.00" step="0.01">
+                        </div>
+                    </div>
+
                 </div>
                 
                 <!-- Paso 3: Resumen del pedido -->
@@ -1448,6 +1464,9 @@
                     <div id="payment-info" style="margin-top: 20px; text-align: left;">
                         <h4>Método de pago:</h4>
                         <p id="selected-payment-method"></p>
+                        <!-- CAMBIO: PÁRRAFOS PARA MOSTRAR PAGO Y CAMBIO -->
+                        <p id="cash-paid-info" style="display: none;"></p>
+                        <p id="cash-change-info" style="display: none; font-weight: bold;"></p>
                     </div>
                     
                     <button type="button" id="confirm-order" class="btn-next" style="width: 100%; margin-top: 30px;">
@@ -1477,6 +1496,9 @@
                 <p><strong>Cliente:</strong> <span id="ticket-customer">Juan Pérez</span></p>
                 <p><strong>Método de entrega:</strong> <span id="ticket-delivery">Envío a domicilio</span></p>
                 <p><strong>Método de pago:</strong> <span id="ticket-payment">Tarjeta de crédito</span></p>
+                <!-- CAMBIO: ELEMENTOS PARA MOSTRAR PAGO Y CAMBIO EN EL TICKET -->
+                <p id="ticket-cash-paid-container" style="display: none;"><strong>Paga con:</strong> <span id="ticket-cash-paid"></span></p>
+                <p id="ticket-cash-change-container" style="display: none;"><strong>Cambio:</strong> <span id="ticket-cash-change"></span></p>
             </div>
             
             <div class="ticket-items" id="ticket-items">
@@ -1484,7 +1506,7 @@
             </div>
             
             <div class="ticket-total">
-                Total: $<span id="ticket-total">0.00</span>
+                Total: <span id="ticket-total-final">0.00</span>
             </div>
             
             <button class="btn-download" id="download-ticket">Descargar Ticket (PDF)</button>
@@ -1497,7 +1519,8 @@
         let cart = [];
         let currentStep = 1;
         let selectedDeliveryMethod = '';
-        let lastOrderItems = [];
+        let lastOrderData = {}; // Guardará todos los datos de la última orden
+        
         // Elementos del DOM
         const cartBtn = document.getElementById('cart-btn');
         const cartOverlay = document.getElementById('cart-overlay');
@@ -1522,584 +1545,16 @@
         const deliveryAddressFields = document.getElementById('delivery-address-fields');
         const feedbackForm = document.getElementById('feedback-form');
         
-        // Datos de productos (simulados)
-        const products = {
-            all: [
-                {
-                    id: "women-1",
-                    name: "Elegante Vestido Negro",
-                    price: 59.99,
-                    discount: 20,
-                    image: "https://m.media-amazon.com/images/I/41dxRYpZZ+L._AC_SY1000_.jpg",
-                    category: "women"
-                },
-                {
-                    id: "men-1",
-                    name: "Moderno Traje Azul",
-                    price: 89.99,
-                    discount: 15,
-                    image: "https://cdn0.bodas.com.mx/article-dress/9631/original/1280/jpg/m851369.jpeg",
-                    category: "men"
-                },
-                {
-                    id: "kids-1",
-                    name: "Divertido Conjunto Rosa",
-                    price: 29.99,
-                    discount: 10,
-                    image: "https://www.gerat.com.mx/cdn/shop/files/4220.jpg?v=1726269356",
-                    category: "kids"
-                },
-                {
-                    id: "accessories-1",
-                    name: "Estiloso Bolso Negro",
-                    price: 39.99,
-                    discount: 0,
-                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpUGITJJK3xB3LlDKuUojxGgWRymGUieKWIQ&s",
-                    category: "accessories"
-                },
-                {
-                    id: "shoes-1",
-                    name: "Cómodos Zapatos Blancos",
-                    price: 49.99,
-                    discount: 25,
-                    image: "https://img.kwcdn.com/product/fancy/d9b20ec8-4c58-414b-ac5d-a35cd61283ab.jpg?imageMogr2/auto-orient%7CimageView2/2/w/800/q/70/format/webp",
-                    category: "shoes"
-                },
-                {
-                    id: "women-2",
-                    name: "Blusa Elegante Blanca",
-                    price: 34.99,
-                    discount: 0,
-                    image: "https://http2.mlstatic.com/D_NQ_NP_785203-CBT75318563788_032024-O-blusa-blanca-con-botones-moda-casual-elegante-para-mujer.webp",
-                    category: "women"
-                },
-                {
-                    id: "men-2",
-                    name: "Camisa Formal Gris",
-                    price: 44.99,
-                    discount: 10,
-                    image: "https://m.media-amazon.com/images/I/61m7p0-n0lL._AC_UF894,1000_QL80_.jpg",
-                    category: "men"
-                },
-                {
-                    id: "kids-2",
-                    name: "Conjunto Deportivo Azul",
-                    price: 24.99,
-                    discount: 0,
-                    image: "https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/0582a451101949409d55b11f2bb36fb7_9366/Conjunto_Deportivo_Adicolor_SST_Azul_IP6694_21_model.jpg",
-                    category: "kids"
-                },
-                {
-                    id: "accessories-2",
-                    name: "Reloj de Lujo Dorado",
-                    price: 99.99,
-                    discount: 30,
-                    image: "https://m.media-amazon.com/images/I/51xnhnd8wES._AC_SY900_.jpg",
-                    category: "accessories"
-                },
-                {
-                    id: "shoes-2",
-                    name: "Botas de Cuero Marrón",
-                    price: 79.99,
-                    discount: 15,
-                    image: "https://i.etsystatic.com/20690652/r/il/c86e3c/6102406728/il_570xN.6102406728_m2yg.jpg",
-                    category: "shoes"
-                }
-            ],
-            women: [
-                {
-                    id: "women-1",
-                    name: "Elegante Vestido Rosa",
-                    price: 59.99,
-                    discount: 20,
-                    image: "https://m.media-amazon.com/images/I/41mX4D1UBtL._AC_.jpg",
-                    category: "women"
-                },
-                {
-                    id: "women-2",
-                    name: "Blusa Elegante rosa",
-                    price: 34.99,
-                    discount: 0,
-                    image: "https://i5.walmartimages.com/asr/dd4a1b42-7bdb-414b-addd-667d37ef270f.d14463b6d79de52724af2e078c5d27ff.jpeg?odnHeight=612&odnWidth=612&odnBg=FFFFFF",
-                    category: "women"
-                },
-                {
-                    id: "women-3",
-                    name: "Falda Plisada Roja",
-                    price: 39.99,
-                    discount: 15,
-                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuHFhhK_Rp3zFLA-jTRWp3uQlQlb98Hprtqw&s",
-                    category: "women"
-                },
-                {
-                    id: "women-4",
-                    name: "Jeans Skinny Azul",
-                    price: 49.99,
-                    discount: 10,
-                    image: "https://pantalonesdemezclilla.mx/cdn/shop/files/Skinny-Jeans-Damas-Azul-Claro.png?v=1713382780",
-                    category: "women"
-                },
-                {
-                    id: "women-5",
-                    name: "Abrigo Largo Beige",
-                    price: 89.99,
-                    discount: 25,
-                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQL6WYkw105WcHsPlpobDdvLf_ur0hJpGUl0w&s",
-                    category: "women"
-                },
-                {
-                    id: "women-6",
-                    name: "Top de Encaje Negro",
-                    price: 29.99,
-                    discount: 0,
-                    image: "https://lh5.googleusercontent.com/proxy/wHPmvOK7mZazIpJ1aptU2XN9gZhleBSlNh_V74x8vAXB6752YMpVfGAdFi4LzB02cbLAYoy2KRnJPLdUHfwHDaFKPENRPNS0x8PGMUtH_fQ",
-                    category: "women"
-                },
-                {
-                    id: "women-7",
-                    name: "Short Denim Azul",
-                    price: 34.99,
-                    discount: 0,
-                    image: "https://i.etsystatic.com/14706918/r/il/dd1912/1166619688/il_1080xN.1166619688_jk0o.jpg",
-                    category: "women"
-                },
-                {
-                    id: "women-8",
-                    name: "Chamarra de Cuero Negro",
-                    price: 99.99,
-                    discount: 30,
-                    image: "https://casapiel.com.mx/cdn/shop/files/casa-piel-chamarra-de-piel-dama-alemania-negro-1_549c2455-695a-4dfc-9765-f720bb777c20.jpg?v=1719603409",
-                    category: "women"
-                },
-                {
-                    id: "women-9",
-                    name: "Vestido Floral Veraniego",
-                    price: 44.99,
-                    discount: 15,
-                    image: "https://i.pinimg.com/736x/bd/17/77/bd17779372daf2fa380b459c5a5336ad.jpg",
-                    category: "women"
-                },
-                {
-                    id: "women-10",
-                    name: "Blazer Formal Gris",
-                    price: 69.99,
-                    discount: 0,
-                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1kdqYdf2LLIxwtx5o7eqO5KbdJaW0ir7Q2A&s",
-                    category: "women"
-                }
-            ],
-            men: [
-                {
-                    id: "men-1",
-                    name: "Moderno Traje Negro",
-                    price: 89.99,
-                    discount: 15,
-                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUNGGv9h42HYmxVQop6uRFLRW8YiI8jHgHDw&s",
-                    category: "men"
-                },
-                {
-                    id: "men-2",
-                    name: "Camisa Formal Verde",
-                    price: 44.99,
-                    discount: 10,
-                    image: "https://i.ebayimg.com/images/g/PU8AAOSwWAxlxpYz/s-l400.jpg",
-                    category: "men"
-                },
-                {
-                    id: "men-3",
-                    name: "Pantalón de Vestir Negro",
-                    price: 49.99,
-                    discount: 0,
-                    image: "https://ss855.suburbia.com.mx/xl/5004219599.jpg",
-                    category: "men"
-                },
-                {
-                    id: "men-4",
-                    name: "Sudadera con Capucha",
-                    price: 39.99,
-                    discount: 20,
-                    image: "https://m.media-amazon.com/images/I/51l2Q9HhtuL._AC_UF894,1000_QL80_.jpg",
-                    category: "men"
-                },
-                {
-                    id: "men-5",
-                    name: "Chaqueta de Mezclilla",
-                    price: 59.99,
-                    discount: 0,
-                    image: "https://www.tntjeans.com.mx/wp-content/uploads/2023/02/502-1.jpg",
-                    category: "men"
-                },
-                {
-                    id: "men-6",
-                    name: "Jeans Slim Fit",
-                    price: 49.99,
-                    discount: 10,
-                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8tyApQWBPtz5qbX1VAmg-RHSx-1qzJRiNKg&s",
-                    category: "men"
-                },
-                {
-                    id: "men-7",
-                    name: "Playera Básica Blanca",
-                    price: 19.99,
-                    discount: 0,
-                    image: "https://eurocotton.vtexassets.com/arquivos/ids/163257/TCOMADCBLA-2.jpg?v=638842373182270000",
-                    category: "men"
-                },
-                {
-                    id: "men-8",
-                    name: "Short Deportivo Negro",
-                    price: 29.99,
-                    discount: 15,
-                    image: "https://acide.com.mx/cdn/shop/files/ShortMexicocaballerofrente_1024x1024@2x.png?v=1701984228",
-                    category: "men"
-                },
-                {
-                    id: "men-9",
-                    name: "Chaleco Elegante Gris",
-                    price: 39.99,
-                    discount: 0,
-                    image: "https://m.media-amazon.com/images/I/51nlN9tWplL._AC_UY1000_.jpg",
-                    category: "men"
-                },
-                {
-                    id: "men-10",
-                    name: "Traje de Baño Azul",
-                    price: 34.99,
-                    discount: 0,
-                    image: "https://m.media-amazon.com/images/I/31MP9sBsnAL._AC_.jpg",
-                    category: "men"
-                }
-            ],
-            kids: [
-                {
-                    id: "kids-1",
-                    name: "Divertido Conjunto Morado",
-                    price: 29.99,
-                    discount: 10,
-                    image: "https://www.gerat.com.mx/cdn/shop/files/3885_mod_1880x.jpg?v=1715715532",
-                    category: "kids"
-                },
-                {
-                    id: "kids-2",
-                    name: "Conjunto Deportivo Celeste",
-                    price: 24.99,
-                    discount: 0,
-                    image: "https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/dbd6bf2f098342699648af62010a8f13_9366/Conjunto_Deportivo_Adicolor_SST_Azul_IC9186_21_model.jpg",
-                    category: "kids"
-                },
-                {
-                    id: "kids-3",
-                    name: "Vestido de Niña con Flores",
-                    price: 34.99,
-                    discount: 15,
-                    image: "https://m.media-amazon.com/images/I/51wttJjuC6L._AC_SY1000_.jpg",
-                    category: "kids"
-                },
-                {
-                    id: "kids-4",
-                    name: "Playera Infantil con Estampado",
-                    price: 19.99,
-                    discount: 0,
-                    image: "https://imagena1.lacoste.com/dw/image/v2/AAUP_PRD/on/demandware.static/-/Sites-master/default/dw0ca9c87f/TJ2463_BMY_20.jpg?imwidth=615&impolicy=pctp",
-                    category: "kids"
-                },
-                {
-                    id: "kids-5",
-                    name: "Pantalón de Niño Café",
-                    price: 24.99,
-                    discount: 0,
-                    image: "https://cdn1.coppel.com/images/catalog/pr/2165642-1.jpg?iresize=width:400,height:320",
-                    category: "kids"
-                },
-                {
-                    id: "kids-6",
-                    name: "Champara Infantil Amarilla",
-                    price: 39.99,
-                    discount: 20,
-                    image: "https://m.media-amazon.com/images/I/41i8MsKMzDL._AC_.jpg",
-                    category: "kids"
-                },
-                {
-                    id: "kids-7",
-                    name: "Falda de Niña Roja",
-                    price: 22.99,
-                    discount: 0,
-                    image: "https://m.media-amazon.com/images/I/41acZEyawFL._AC_SY1000_.jpg",
-                    category: "kids"
-                },
-                {
-                    id: "kids-8",
-                    name: "Short Deportivo Negro",
-                    price: 19.99,
-                    discount: 0,
-                    image: "https://assets.adidas.com/images/w_383,h_383,f_auto,q_auto,fl_lossy,c_fill,g_auto/1bc789c5d50a43f69f793afdd6e72b74_9366/shorts-essentials-kids.jpg",
-                    category: "kids"
-                },
-                {
-                    id: "kids-9",
-                    name: "Sudadera Infantil con Capucha",
-                    price: 29.99,
-                    discount: 10,
-                    image: "https://m.media-amazon.com/images/I/314c9bS-QJL._AC_SY1000_.jpg",
-                    category: "kids"
-                },
-                {
-                    id: "kids-10",
-                    name: "Pijama Infantil de Dinosaurios",
-                    price: 34.99,
-                    discount: 0,
-                    image: "https://i5.walmartimages.com/asr/c38b271b-0e81-4b8a-bd23-9b5ba2becb4f.813e2b6672ef1b704e5900bc6ee3ce84.jpeg?odnHeight=612&odnWidth=612&odnBg=FFFFFF&format=avif",
-                    category: "kids"
-                }
-            ],
-            accessories: [
-                {
-                    id: "accessories-1",
-                    name: "Estiloso Bolso Rosa",
-                    price: 39.99,
-                    discount: 0,
-                    image: "https://i5.walmartimages.com/asr/6d0014e3-35c4-4858-8cea-fcf207a3946b.561390dd9a00aa3a76b0087634798abf.png?odnHeight=612&odnWidth=612&odnBg=FFFFFF",
-                    category: "accessories"
-                },
-                {
-                    id: "accessories-2",
-                    name: "Reloj de Lujo Plateado",
-                    price: 99.99,
-                    discount: 30,
-                    image: "https://m.media-amazon.com/images/I/71StpOumTjL.jpg",
-                    category: "accessories"
-                },
-                {
-                    id: "accessories-3",
-                    name: "Cinturón de Cuero Negro",
-                    price: 29.99,
-                    discount: 0,
-                    image: "https://i5.walmartimages.com/asr/d3872d0a-45e6-4d52-ac18-df9a1c92b57f.28de6d11a19c7d028fce25d133500cb4.jpeg?odnHeight=612&odnWidth=612&odnBg=FFFFFF",
-                    category: "accessories"
-                },
-                {
-                    id: "accessories-4",
-                    name: "Gorra Deportiva Negra",
-                    price: 24.99,
-                    discount: 0,
-                    image: "https://cdn1.coppel.com/images/catalog/mkp/9912/3000/99121094-1.jpg",
-                    category: "accessories"
-                },
-                {
-                    id: "accessories-5",
-                    name: "Bufanda de Lana Gris",
-                    price: 19.99,
-                    discount: 15,
-                    image: "https://m.media-amazon.com/images/I/615FO3wsLnL.jpg",
-                    category: "accessories"
-                },
-                {
-                    id: "accessories-6",
-                    name: "Lentes de Sol Aviador",
-                    price: 49.99,
-                    discount: 20,
-                    image: "https://lux.mx/cdn/shop/products/8056597259828_2.jpg?v=1675201276",
-                    category: "accessories"
-                },
-                {
-                    id: "accessories-7",
-                    name: "Collar Elegante Plateado",
-                    price: 34.99,
-                    discount: 0,
-                    image: "https://accesoriosmonani.com/wp-content/uploads/2024/04/1000210390.jpg",
-                    category: "accessories"
-                },
-                {
-                    id: "accessories-8",
-                    name: "Sombrero de Paja",
-                    price: 29.99,
-                    discount: 0,
-                    image: "https://i.etsystatic.com/22196987/r/il/8c8b7d/2430005524/il_fullxfull.2430005524_453i.jpg",
-                    category: "accessories"
-                },
-                {
-                    id: "accessories-9",
-                    name: "Mochila Urbana Negra",
-                    price: 59.99,
-                    discount: 10,
-                    image: "https://http2.mlstatic.com/D_NQ_NP_816736-MLU75847718568_042024-O.webp",
-                    category: "accessories"
-                },
-                {
-                    id: "accessories-10",
-                    name: "Billetera de Cuero Marrón",
-                    price: 39.99,
-                    discount: 0,
-                    image: "https://cdn1.coppel.com/images/catalog/mkp/6126/3000/61261308-1.jpg",
-                    category: "accessories"
-                }
-            ],
-            shoes: [
-                {
-                    id: "shoes-1",
-                    name: "Cómodos Zapatos Negros",
-                    price: 49.99,
-                    discount: 25,
-                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuygFQDpJlZ8bwOAPmaBOmlnaZN9SLmX8IPw&s",
-                    category: "shoes"
-                },
-                {
-                    id: "shoes-2",
-                    name: "Botas de Cuero Marrón",
-                    price: 79.99,
-                    discount: 15,
-                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnJt5qWW1dPoIMGQrDy26rpYef2zIFpyOndQ&s",
-                    category: "shoes"
-                },
-                {
-                    id: "shoes-3",
-                    name: "Tenis Deportivos Negros",
-                    price: 59.99,
-                    discount: 20,
-                    image: "https://lhesh.mx/245600-large_default/tenis-deportivo-de-inyeccion-para-dama-talla-mx-25-europea-40-voltix.jpg",
-                    category: "shoes"
-                },
-                {
-                    id: "shoes-4",
-                    name: "Zapatillas Casuales Grises",
-                    price: 44.99,
-                    discount: 0,
-                    image: "https://i5.walmartimages.com/asr/2ef78428-aa01-4b37-a05f-bee398d4e8d6.60d14045b24fb0c79b1c424c8d3be2e1.jpeg?odnHeight=612&odnWidth=612&odnBg=FFFFFF",
-                    category: "shoes"
-                },
-                {
-                    id: "shoes-5",
-                    name: "Botines de Ante Negro",
-                    price: 69.99,
-                    discount: 10,
-                    image: "https://skkoencalzado.com/67-medium_default/bellos-botines-de-ante-y-gamuza.jpg",
-                    category: "shoes"
-                },
-                {
-                    id: "shoes-6",
-                    name: "Sandalias de Playa",
-                    price: 29.99,
-                    discount: 0,
-                    image: "https://i5.walmartimages.com/asr/5594be80-5ac9-488d-b0ff-849ede729067.3b5c0242c6a67281b33eae1c93353c9c.jpeg?odnHeight=612&odnWidth=612&odnBg=FFFFFF",
-                    category: "shoes"
-                },
-                {
-                    id: "shoes-7",
-                    name: "Tacones Elegantes Nude",
-                    price: 54.99,
-                    discount: 15,
-                    image: "https://i.pinimg.com/1200x/1a/49/cd/1a49cd03238d76827024413d22a1b3b0.jpg",
-                    category: "shoes"
-                },
-                {
-                    id: "shoes-8",
-                    name: "Mocasines de Cuero Negro",
-                    price: 49.99,
-                    discount: 0,
-                    image: "https://brantano.com.mx/cdn/shop/files/JR510_NGOPIEHA.jpg?v=1738354923",
-                    category: "shoes"
-                },
-                {
-                    id: "shoes-9",
-                    name: "Zapatos Formales Negros",
-                    price: 64.99,
-                    discount: 20,
-                    image: "https://m.media-amazon.com/images/I/71aQfqEX2lL._AC_UY300_.jpg",
-                    category: "shoes"
-                },
-                {
-                    id: "shoes-10",
-                    name: "Chanclas de Playa",
-                    price: 19.99,
-                    discount: 0,
-                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhPI3l4nneO9pPu1J9eoCsrkIKGt0_DmsdBg&s",
-                    category: "shoes"
-                }
-            ],
-            offers: [
-                {
-                    id: "offers-1",
-                    name: "Vestido de Fiesta - Oferta Especial",
-                    price: 39.99,
-                    discount: 40,
-                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeyY2tBc3ejC7TvRMiHZy2CEvsaQimU1M3yQ&s",
-                    category: "offers"
-                },
-                {
-                    id: "offers-2",
-                    name: "Traje Formal - Descuento",
-                    price: 69.99,
-                    discount: 35,
-                    image: "https://vittorioforti.com.mx/cdn/shop/files/VTR026NE_04.jpg?v=1748228116",
-                    category: "offers"
-                },
-                {
-                    id: "offers-3",
-                    name: "Conjunto Infantil - Liquidación",
-                    price: 19.99,
-                    discount: 50,
-                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMV6rD_TS1ApYhmbXeG_NfagGCNmdbLc9Npg&s",
-                    category: "offers"
-                },
-                {
-                    id: "offers-4",
-                    name: "Bolso de Diseño - Promoción",
-                    price: 29.99,
-                    discount: 45,
-                    image: "https://i5.walmartimages.com/asr/84f64a65-b7d1-440c-b22e-a3662848acae.9d15fd91e5af58401128ff3fd0104df8.jpeg?odnHeight=612&odnWidth=612&odnBg=FFFFFF",
-                    category: "offers"
-                },
-                {
-                    id: "offers-5",
-                    name: "Zapatos de Cuero - Oferta",
-                    price: 39.99,
-                    discount: 50,
-                    image: "https://m.media-amazon.com/images/I/617v-o7I80L._AC_UF894,1000_QL80_.jpg",
-                    category: "offers"
-                },
-                {
-                    id: "offers-6",
-                    name: "Pack de 3 Playeras - Combo",
-                    price: 29.99,
-                    discount: 40,
-                    image: "https://m.media-amazon.com/images/I/31Za1reZJ4L._AC_SY1000_.jpg",
-                    category: "offers"
-                },
-                {
-                    id: "offers-7",
-                    name: "Jeans Slim  - Últimas Unidades",
-                    price: 34.99,
-                    discount: 30,
-                    image: "https://pantalonesdemezclilla.mx/cdn/shop/files/Rotos-Slim-Jeans-Azules-Para-Hombre_2_8b9acbe3-0983-4593-801f-bd38b7fd8b1f.jpg?v=1741616663",
-                    category: "offers"
-                },
-                {
-                    id: "offers-8",
-                    name: "Reloj Elegante - Edición Limitada",
-                    price: 59.99,
-                    discount: 50,
-                    image: "https://m.media-amazon.com/images/I/51uTaNeNbtL._AC_SY900_.jpg",
-                    category: "offers"
-                },
-                {
-                    id: "offers-9",
-                    name: "Chaqueta de Cuero - Oferta Flash",
-                    price: 79.99,
-                    discount: 40,
-                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiV8IK1mklHD-yn8roZnfbRnXGnewzDDKBWA&s",
-                    category: "offers"
-                },
-                {
-                    id: "offers-10",
-                    name: "Botas de Invierno - Descuento",
-                    price: 49.99,
-                    discount: 45,
-                    image: "https://i5.walmartimages.com/asr/97f7b2d3-6cc8-4e2a-84c9-5e3b47b743d5.8560ebabb165e85631279a35f3067cee.jpeg?odnHeight=612&odnWidth=612&odnBg=FFFFFF",
-                    category: "offers"
-                }
-            ]
-        };
-        
+        // Datos de productos (simulados) - (El objeto de productos es muy grande, se omite aquí por brevedad, pero debe estar presente en tu código)
+        const products = { all:[{id:"women-1",name:"Elegante Vestido Negro",price:59.99,discount:20,image:"https://m.media-amazon.com/images/I/41dxRYpZZ+L._AC_SY1000_.jpg",category:"women"},{id:"men-1",name:"Moderno Traje Azul",price:89.99,discount:15,image:"https://cdn0.bodas.com.mx/article-dress/9631/original/1280/jpg/m851369.jpeg",category:"men"},{id:"kids-1",name:"Divertido Conjunto Rosa",price:29.99,discount:10,image:"https://www.gerat.com.mx/cdn/shop/files/4220.jpg?v=1726269356",category:"kids"},{id:"accessories-1",name:"Estiloso Bolso Negro",price:39.99,discount:0,image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpUGITJJK3xB3LlDKuUojxGgWRymGUieKWIQ&s",category:"accessories"},{id:"shoes-1",name:"Cómodos Zapatos Blancos",price:49.99,discount:25,image:"https://img.kwcdn.com/product/fancy/d9b20ec8-4c58-414b-ac5d-a35cd61283ab.jpg?imageMogr2/auto-orient%7CimageView2/2/w/800/q/70/format/webp",category:"shoes"},{id:"women-2",name:"Blusa Elegante Blanca",price:34.99,discount:0,image:"https://http2.mlstatic.com/D_NQ_NP_785203-CBT75318563788_032024-O-blusa-blanca-con-botones-moda-casual-elegante-para-mujer.webp",category:"women"},{id:"men-2",name:"Camisa Formal Gris",price:44.99,discount:10,image:"https://m.media-amazon.com/images/I/61m7p0-n0lL._AC_UF894,1000_QL80_.jpg",category:"men"},{id:"kids-2",name:"Conjunto Deportivo Azul",price:24.99,discount:0,image:"https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/0582a451101949409d55b11f2bb36fb7_9366/Conjunto_Deportivo_Adicolor_SST_Azul_IP6694_21_model.jpg",category:"kids"},{id:"accessories-2",name:"Reloj de Lujo Dorado",price:99.99,discount:30,image:"https://m.media-amazon.com/images/I/51xnhnd8wES._AC_SY900_.jpg",category:"accessories"},{id:"shoes-2",name:"Botas de Cuero Marrón",price:79.99,discount:15,image:"https://i.etsystatic.com/20690652/r/il/c86e3c/6102406728/il_570xN.6102406728_m2yg.jpg",category:"shoes"}],women:[{id:"women-1",name:"Elegante Vestido Rosa",price:59.99,discount:20,image:"https://m.media-amazon.com/images/I/41mX4D1UBtL._AC_.jpg",category:"women"},{id:"women-2",name:"Blusa Elegante rosa",price:34.99,discount:0,image:"https://i5.walmartimages.com/asr/dd4a1b42-7bdb-414b-addd-667d37ef270f.d14463b6d79de52724af2e078c5d27ff.jpeg?odnHeight=612&odnWidth=612&odnBg=FFFFFF",category:"women"},{id:"women-3",name:"Falda Plisada Roja",price:39.99,discount:15,image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuHFhhK_Rp3zFLA-jTRWp3uQlQlb98Hprtqw&s",category:"women"},{id:"women-4",name:"Jeans Skinny Azul",price:49.99,discount:10,image:"https://pantalonesdemezclilla.mx/cdn/shop/files/Skinny-Jeans-Damas-Azul-Claro.png?v=1713382780",category:"women"},{id:"women-5",name:"Abrigo Largo Beige",price:89.99,discount:25,image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQL6WYkw105WcHsPlpobDdvLf_ur0hJpGUl0w&s",category:"women"},{id:"women-6",name:"Top de Encaje Negro",price:29.99,discount:0,image:"https://lh5.googleusercontent.com/proxy/wHPmvOK7mZazIpJ1aptU2XN9gZhleBSlNh_V74x8vAXB6752YMpVfGAdFi4LzB02cbLAYoy2KRnJPLdUHfwHDaFKPENRPNS0x8PGMUtH_fQ",category:"women"},{id:"women-7",name:"Short Denim Azul",price:34.99,discount:0,image:"https://i.etsystatic.com/14706918/r/il/dd1912/1166619688/il_1080xN.1166619688_jk0o.jpg",category:"women"},{id:"women-8",name:"Chamarra de Cuero Negro",price:99.99,discount:30,image:"https://casapiel.com.mx/cdn/shop/files/casa-piel-chamarra-de-piel-dama-alemania-negro-1_549c2455-695a-4dfc-9765-f720bb777c20.jpg?v=1719603409",category:"women"},{id:"women-9",name:"Vestido Floral Veraniego",price:44.99,discount:15,image:"https://i.pinimg.com/736x/bd/17/77/bd17779372daf2fa380b459c5a5336ad.jpg",category:"women"},{id:"women-10",name:"Blazer Formal Gris",price:69.99,discount:0,image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1kdqYdf2LLIxwtx5o7eqO5KbdJaW0ir7Q2A&s",category:"women"}],men:[{id:"men-1",name:"Moderno Traje Negro",price:89.99,discount:15,image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUNGGv9h42HYmxVQop6uRFLRW8YiI8jHgHDw&s",category:"men"},{id:"men-2",name:"Camisa Formal Verde",price:44.99,discount:10,image:"https://i.ebayimg.com/images/g/PU8AAOSwWAxlxpYz/s-l400.jpg",category:"men"},{id:"men-3",name:"Pantalón de Vestir Negro",price:49.99,discount:0,image:"https://ss855.suburbia.com.mx/xl/5004219599.jpg",category:"men"},{id:"men-4",name:"Sudadera con Capucha",price:39.99,discount:20,image:"https://m.media-amazon.com/images/I/51l2Q9HhtuL._AC_UF894,1000_QL80_.jpg",category:"men"},{id:"men-5",name:"Chaqueta de Mezclilla",price:59.99,discount:0,image:"https://www.tntjeans.com.mx/wp-content/uploads/2023/02/502-1.jpg",category:"men"},{id:"men-6",name:"Jeans Slim Fit",price:49.99,discount:10,image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8tyApQWBPtz5qbX1VAmg-RHSx-1qzJRiNKg&s",category:"men"},{id:"men-7",name:"Playera Básica Blanca",price:19.99,discount:0,image:"https://eurocotton.vtexassets.com/arquivos/ids/163257/TCOMADCBLA-2.jpg?v=638842373182270000",category:"men"},{id:"men-8",name:"Short Deportivo Negro",price:29.99,discount:15,image:"https://acide.com.mx/cdn/shop/files/ShortMexicocaballerofrente_1024x1024@2x.png?v=1701984228",category:"men"},{id:"men-9",name:"Chaleco Elegante Gris",price:39.99,discount:0,image:"https://m.media-amazon.com/images/I/51nlN9tWplL._AC_UY1000_.jpg",category:"men"},{id:"men-10",name:"Traje de Baño Azul",price:34.99,discount:0,image:"https://m.media-amazon.com/images/I/31MP9sBsnAL._AC_.jpg",category:"men"}],kids:[{id:"kids-1",name:"Divertido Conjunto Morado",price:29.99,discount:10,image:"https://www.gerat.com.mx/cdn/shop/files/3885_mod_1880x.jpg?v=1715715532",category:"kids"},{id:"kids-2",name:"Conjunto Deportivo Celeste",price:24.99,discount:0,image:"https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/dbd6bf2f098342699648af62010a8f13_9366/Conjunto_Deportivo_Adicolor_SST_Azul_IC9186_21_model.jpg",category:"kids"},{id:"kids-3",name:"Vestido de Niña con Flores",price:34.99,discount:15,image:"https://m.media-amazon.com/images/I/51wttJjuC6L._AC_SY1000_.jpg",category:"kids"},{id:"kids-4",name:"Playera Infantil con Estampado",price:19.99,discount:0,image:"https://imagena1.lacoste.com/dw/image/v2/AAUP_PRD/on/demandware.static/-/Sites-master/default/dw0ca9c87f/TJ2463_BMY_20.jpg?imwidth=615&impolicy=pctp",category:"kids"},{id:"kids-5",name:"Pantalón de Niño Café",price:24.99,discount:0,image:"https://cdn1.coppel.com/images/catalog/pr/2165642-1.jpg?iresize=width:400,height:320",category:"kids"},{id:"kids-6",name:"Champara Infantil Amarilla",price:39.99,discount:20,image:"https://m.media-amazon.com/images/I/41i8MsKMzDL._AC_.jpg",category:"kids"},{id:"kids-7",name:"Falda de Niña Roja",price:22.99,discount:0,image:"https://m.media-amazon.com/images/I/41acZEyawFL._AC_SY1000_.jpg",category:"kids"},{id:"kids-8",name:"Short Deportivo Negro",price:19.99,discount:0,image:"https://assets.adidas.com/images/w_383,h_383,f_auto,q_auto,fl_lossy,c_fill,g_auto/1bc789c5d50a43f69f793afdd6e72b74_9366/shorts-essentials-kids.jpg",category:"kids"},{id:"kids-9",name:"Sudadera Infantil con Capucha",price:29.99,discount:10,image:"https://m.media-amazon.com/images/I/314c9bS-QJL._AC_SY1000_.jpg",category:"kids"},{id:"kids-10",name:"Pijama Infantil de Dinosaurios",price:34.99,discount:0,image:"https://i5.walmartimages.com/asr/c38b271b-0e81-4b8a-bd23-9b5ba2becb4f.813e2b6672ef1b704e5900bc6ee3ce84.jpeg?odnHeight=612&odnWidth=612&odnBg=FFFFFF&format=avif",category:"kids"}],accessories:[{id:"accessories-1",name:"Estiloso Bolso Rosa",price:39.99,discount:0,image:"https://i5.walmartimages.com/asr/6d0014e3-35c4-4858-8cea-fcf207a3946b.561390dd9a00aa3a76b0087634798abf.png?odnHeight=612&odnWidth=612&odnBg=FFFFFF",category:"accessories"},{id:"accessories-2",name:"Reloj de Lujo Plateado",price:99.99,discount:30,image:"https://m.media-amazon.com/images/I/71StpOumTjL.jpg",category:"accessories"},{id:"accessories-3",name:"Cinturón de Cuero Negro",price:29.99,discount:0,image:"https://i5.walmartimages.com/asr/d3872d0a-45e6-4d52-ac18-df9a1c92b57f.28de6d11a19c7d028fce25d133500cb4.jpeg?odnHeight=612&odnWidth=612&odnBg=FFFFFF",category:"accessories"},{id:"accessories-4",name:"Gorra Deportiva Negra",price:24.99,discount:0,image:"https://cdn1.coppel.com/images/catalog/mkp/9912/3000/99121094-1.jpg",category:"accessories"},{id:"accessories-5",name:"Bufanda de Lana Gris",price:19.99,discount:15,image:"https://m.media-amazon.com/images/I/615FO3wsLnL.jpg",category:"accessories"},{id:"accessories-6",name:"Lentes de Sol Aviador",price:49.99,discount:20,image:"https://lux.mx/cdn/shop/products/8056597259828_2.jpg?v=1675201276",category:"accessories"},{id:"accessories-7",name:"Collar Elegante Plateado",price:34.99,discount:0,image:"https://accesoriosmonani.com/wp-content/uploads/2024/04/1000210390.jpg",category:"accessories"},{id:"accessories-8",name:"Sombrero de Paja",price:29.99,discount:0,image:"https://i.etsystatic.com/22196987/r/il/8c8b7d/2430005524/il_fullxfull.2430005524_453i.jpg",category:"accessories"},{id:"accessories-9",name:"Mochila Urbana Negra",price:59.99,discount:10,image:"https://http2.mlstatic.com/D_NQ_NP_816736-MLU75847718568_042024-O.webp",category:"accessories"},{id:"accessories-10",name:"Billetera de Cuero Marrón",price:39.99,discount:0,image:"https://cdn1.coppel.com/images/catalog/mkp/6126/3000/61261308-1.jpg",category:"accessories"}],shoes:[{id:"shoes-1",name:"Cómodos Zapatos Negros",price:49.99,discount:25,image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuygFQDpJlZ8bwOAPmaBOmlnaZN9SLmX8IPw&s",category:"shoes"},{id:"shoes-2",name:"Botas de Cuero Marrón",price:79.99,discount:15,image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnJt5qWW1dPoIMGQrDy26rpYef2zIFpyOndQ&s",category:"shoes"},{id:"shoes-3",name:"Tenis Deportivos Negros",price:59.99,discount:20,image:"https://lhesh.mx/245600-large_default/tenis-deportivo-de-inyeccion-para-dama-talla-mx-25-europea-40-voltix.jpg",category:"shoes"},{id:"shoes-4",name:"Zapatillas Casuales Grises",price:44.99,discount:0,image:"https://i5.walmartimages.com/asr/2ef78428-aa01-4b37-a05f-bee398d4e8d6.60d14045b24fb0c79b1c424c8d3be2e1.jpeg?odnHeight=612&odnWidth=612&odnBg=FFFFFF",category:"shoes"},{id:"shoes-5",name:"Botines de Ante Negro",price:69.99,discount:10,image:"https://skkoencalzado.com/67-medium_default/bellos-botines-de-ante-y-gamuza.jpg",category:"shoes"},{id:"shoes-6",name:"Sandalias de Playa",price:29.99,discount:0,image:"https://i5.walmartimages.com/asr/5594be80-5ac9-488d-b0ff-849ede729067.3b5c0242c6a67281b33eae1c93353c9c.jpeg?odnHeight=612&odnWidth=612&odnBg=FFFFFF",category:"shoes"},{id:"shoes-7",name:"Tacones Elegantes Nude",price:54.99,discount:15,image:"https://i.pinimg.com/1200x/1a/49/cd/1a49cd03238d76827024413d22a1b3b0.jpg",category:"shoes"},{id:"shoes-8",name:"Mocasines de Cuero Negro",price:49.99,discount:0,image:"https://brantano.com.mx/cdn/shop/files/JR510_NGOPIEHA.jpg?v=1738354923",category:"shoes"},{id:"shoes-9",name:"Zapatos Formales Negros",price:64.99,discount:20,image:"https://m.media-amazon.com/images/I/71aQfqEX2lL._AC_UY300_.jpg",category:"shoes"},{id:"shoes-10",name:"Chanclas de Playa",price:19.99,discount:0,image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhPI3l4nneO9pPu1J9eoCsrkIKGt0_DmsdBg&s",category:"shoes"}],offers:[{id:"offers-1",name:"Vestido de Fiesta - Oferta Especial",price:39.99,discount:40,image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeyY2tBc3ejC7TvRMiHZy2CEvsaQimU1M3yQ&s",category:"offers"},{id:"offers-2",name:"Traje Formal - Descuento",price:69.99,discount:35,image:"https://vittorioforti.com.mx/cdn/shop/files/VTR026NE_04.jpg?v=1748228116",category:"offers"},{id:"offers-3",name:"Conjunto Infantil - Liquidación",price:19.99,discount:50,image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMV6rD_TS1ApYhmbXeG_NfagGCNmdbLc9Npg&s",category:"offers"},{id:"offers-4",name:"Bolso de Diseño - Promoción",price:29.99,discount:45,image:"https://i5.walmartimages.com/asr/84f64a65-b7d1-440c-b22e-a3662848acae.9d15fd91e5af58401128ff3fd0104df8.jpeg?odnHeight=612&odnWidth=612&odnBg=FFFFFF",category:"offers"},{id:"offers-5",name:"Zapatos de Cuero - Oferta",price:39.99,discount:50,image:"https://m.media-amazon.com/images/I/617v-o7I80L._AC_UF894,1000_QL80_.jpg",category:"offers"},{id:"offers-6",name:"Pack de 3 Playeras - Combo",price:29.99,discount:40,image:"https://m.media-amazon.com/images/I/31Za1reZJ4L._AC_SY1000_.jpg",category:"offers"},{id:"offers-7",name:"Jeans Slim  - Últimas Unidades",price:34.99,discount:30,image:"https://pantalonesdemezclilla.mx/cdn/shop/files/Rotos-Slim-Jeans-Azules-Para-Hombre_2_8b9acbe3-0983-4593-801f-bd38b7fd8b1f.jpg?v=1741616663",category:"offers"},{id:"offers-8",name:"Reloj Elegante - Edición Limitada",price:59.99,discount:50,image:"https://m.media-amazon.com/images/I/51uTaNeNbtL._AC_SY900_.jpg",category:"offers"},{id:"offers-9",name:"Chaqueta de Cuero - Oferta Flash",price:79.99,discount:40,image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiV8IK1mklHD-yn8roZnfbRnXGnewzDDKBWA&s",category:"offers"},{id:"offers-10",name:"Botas de Invierno - Descuento",price:49.99,discount:45,image:"https://i5.walmartimages.com/asr/97f7b2d3-6cc8-4e2a-84c9-5e3b47b743d5.8560ebabb165e85631279a35f3067cee.jpeg?odnHeight=612&odnWidth=612&odnBg=FFFFFF",category:"offers"}]};
+
+        // Función para calcular el total del pedido
+        function getOrderTotal() {
+            const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            const shipping = selectedDeliveryMethod === 'delivery' ? 5.00 : (cart.length > 0 && subtotal < 50 ? 5.00 : 0);
+            return subtotal + shipping;
+        }
+
         // Función para renderizar productos
         function renderProducts(products, containerId) {
             const container = document.getElementById(containerId);
@@ -2121,8 +1576,8 @@
                     <div class="product-info">
                         <h3 class="product-title">${product.name}</h3>
                         <div class="product-price">
-                            <span class="current-price">$${product.price.toFixed(2)}</span>
-                            ${product.discount > 0 ? `<span class="original-price">$${(product.price / (1 - product.discount/100)).toFixed(2)}</span>` : ''}
+                            <span class="current-price">$${(product.price * (1 - product.discount/100)).toFixed(2)}</span>
+                            ${product.discount > 0 ? `<span class="original-price">$${product.price.toFixed(2)}</span>` : ''}
                         </div>
                         <button class="add-to-cart">Añadir al carrito</button>
                     </div>
@@ -2131,29 +1586,21 @@
                 container.appendChild(productCard);
             });
             
-            // Añadir event listeners a los botones de añadir al carrito
             document.querySelectorAll('.add-to-cart').forEach(button => {
                 button.addEventListener('click', addToCart);
             });
         }
         
-        // Event listeners
         document.addEventListener('DOMContentLoaded', () => {
-            // Cargar carrito desde localStorage si existe
             if(localStorage.getItem('cart')) {
                 cart = JSON.parse(localStorage.getItem('cart'));
                 updateCart();
             }
-            
-            // Renderizar productos iniciales
             renderProducts(products.all, 'product-grid');
-            
-            // Navegación por categorías
             navLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
                     const category = this.dataset.category;
-                    
                     if(category === 'all') {
                         homePage.style.display = 'block';
                         categoryPages.style.display = 'none';
@@ -2161,26 +1608,14 @@
                     } else {
                         homePage.style.display = 'none';
                         categoryPages.style.display = 'block';
-                        
-                        // Ocultar todas las páginas de categoría
-                        document.querySelectorAll('.category-page').forEach(page => {
-                            page.style.display = 'none';
-                        });
-                        
-                        // Mostrar la categoría seleccionada
+                        document.querySelectorAll('.category-page').forEach(page => page.style.display = 'none');
                         document.getElementById(`${category}-page`).style.display = 'block';
-                        
-                        // Renderizar productos de la categoría
                         renderProducts(products[category], `${category}-products`);
                     }
-                    
-                    // Marcar como activo
                     navLinks.forEach(l => l.classList.remove('active'));
                     this.classList.add('active');
                 });
             });
-            
-            // Tarjetas de categoría
             categoryCards.forEach(card => {
                 card.addEventListener('click', function() {
                     const category = this.dataset.category;
@@ -2188,8 +1623,6 @@
                     link.click();
                 });
             });
-            
-            // Volver al inicio
             backToHomeLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -2198,82 +1631,41 @@
                     document.querySelector('.nav-link[data-category="all"]').click();
                 });
             });
-            
-            // Carrito
             cartBtn.addEventListener('click', openCart);
             closeCart.addEventListener('click', closeCartFunc);
             checkoutBtn.addEventListener('click', openCheckout);
-            
-            // Checkout
             btnNext.addEventListener('click', nextStep);
             btnBack.addEventListener('click', prevStep);
             confirmOrder.addEventListener('click', completeOrder);
-            
-            // Métodos de entrega
-            deliveryMethods.forEach(method => {
-                method.addEventListener('click', selectDeliveryMethod);
-            });
-            
-            // Métodos de pago
-            const paymentMethods = document.querySelectorAll('.payment-method');
-            paymentMethods.forEach(method => {
-                method.addEventListener('click', selectPaymentMethod);
-            });
-            
-            // Ticket
+            deliveryMethods.forEach(method => method.addEventListener('click', selectDeliveryMethod));
+            document.querySelectorAll('.payment-method').forEach(method => method.addEventListener('click', selectPaymentMethod));
             downloadTicket.addEventListener('click', generatePDF);
-            
-            // Formulario de comentarios
             feedbackForm.addEventListener('submit', submitFeedback);
         });
         
-        // Funciones del carrito
         function addToCart(e) {
-            const button = e.target;
-            const productCard = button.closest('.product-card');
-            const productId = productCard.dataset.id;
-            const productName = productCard.dataset.name;
-            const productPrice = parseFloat(productCard.dataset.price);
-            const productImage = productCard.dataset.image;
-            
-            // Verificar si el producto ya está en el carrito
-            const existingItem = cart.find(item => item.id === productId);
-            
+            const productCard = e.target.closest('.product-card');
+            const product = {
+                id: productCard.dataset.id,
+                name: productCard.dataset.name,
+                price: parseFloat(productCard.querySelector('.current-price').textContent.replace('$', '')),
+                image: productCard.dataset.image,
+            };
+            const existingItem = cart.find(item => item.id === product.id);
             if(existingItem) {
                 existingItem.quantity += 1;
             } else {
-                cart.push({
-                    id: productId,
-                    name: productName,
-                    price: productPrice,
-                    image: productImage,
-                    quantity: 1
-                });
+                cart.push({ ...product, quantity: 1 });
             }
-            
             updateCart();
-            showAddedToCart(productName);
+            showNotification(`¡${product.name} añadido al carrito!`);
         }
-        
+
         function updateCart() {
-            // Guardar carrito en localStorage
             localStorage.setItem('cart', JSON.stringify(cart));
-            
-            // Actualizar contador del carrito
-            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-            cartCount.textContent = totalItems;
-            
-            // Actualizar lista de productos en el carrito
-            cartItemsContainer.innerHTML = '';
-            
-            if(cart.length === 0) {
-                cartItemsContainer.innerHTML = '<p>Tu carrito está vacío</p>';
-                cartTotal.textContent = '0.00';
-                return;
-            }
-            
+            cartCount.textContent = cart.reduce((total, item) => total + item.quantity, 0);
+            cartItemsContainer.innerHTML = cart.length === 0 ? '<p>Tu carrito está vacío</p>' : '';
             let total = 0;
-            
             cart.forEach(item => {
                 const cartItem = document.createElement('div');
                 cartItem.className = 'cart-item';
@@ -2290,392 +1682,320 @@
                         </div>
                     </div>
                 `;
-                
                 cartItemsContainer.appendChild(cartItem);
                 total += item.price * item.quantity;
             });
-            
-            // Actualizar total
             cartTotal.textContent = total.toFixed(2);
-            
-            // Añadir event listeners a los botones de cantidad y eliminar
-            document.querySelectorAll('.quantity-btn').forEach(button => {
-                button.addEventListener('click', updateQuantity);
-            });
-            
-            document.querySelectorAll('.quantity-input').forEach(input => {
-                input.addEventListener('change', updateQuantityInput);
-            });
-            
-            document.querySelectorAll('.cart-item-remove').forEach(button => {
-                button.addEventListener('click', removeItem);
-            });
+            document.querySelectorAll('.quantity-btn').forEach(b => b.addEventListener('click', updateQuantity));
+            document.querySelectorAll('.quantity-input').forEach(i => i.addEventListener('change', updateQuantityInput));
+            document.querySelectorAll('.cart-item-remove').forEach(b => b.addEventListener('click', removeItem));
         }
-        
+
         function updateQuantity(e) {
-            const button = e.target;
-            const id = button.dataset.id;
+            const { id } = e.target.dataset;
             const item = cart.find(item => item.id === id);
-            
-            if(button.classList.contains('plus')) {
-                item.quantity += 1;
-            } else if(button.classList.contains('minus')) {
-                if(item.quantity > 1) {
-                    item.quantity -= 1;
-                }
+            if (e.target.classList.contains('plus')) {
+                item.quantity++;
+            } else if (e.target.classList.contains('minus') && item.quantity > 1) {
+                item.quantity--;
             }
-            
             updateCart();
         }
-        
+
         function updateQuantityInput(e) {
-            const input = e.target;
-            const id = input.dataset.id;
+            const { id } = e.target.dataset;
             const item = cart.find(item => item.id === id);
-            const newQuantity = parseInt(input.value);
-            
-            if(newQuantity > 0) {
-                item.quantity = newQuantity;
-                updateCart();
-            } else {
-                input.value = item.quantity;
-            }
+            const newQuantity = parseInt(e.target.value);
+            item.quantity = newQuantity > 0 ? newQuantity : item.quantity;
+            updateCart();
         }
-        
+
         function removeItem(e) {
-            const button = e.target;
-            const id = button.dataset.id;
-            
-            cart = cart.filter(item => item.id !== id);
+            cart = cart.filter(item => item.id !== e.target.dataset.id);
             updateCart();
         }
         
-        function showAddedToCart(productName) {
+        function showNotification(message) {
             const notification = document.createElement('div');
             notification.className = 'notification';
-            notification.style.position = 'fixed';
-            notification.style.bottom = '20px';
-            notification.style.right = '20px';
-            notification.style.backgroundColor = '#4CAF50';
-            notification.style.color = 'white';
-            notification.style.padding = '15px';
-            notification.style.borderRadius = '5px';
-            notification.style.zIndex = '1000';
-            notification.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
-            notification.innerHTML = `¡${productName} añadido al carrito!`;
-            
+            notification.textContent = message;
             document.body.appendChild(notification);
-            
             setTimeout(() => {
                 notification.style.opacity = '0';
-                setTimeout(() => {
-                    document.body.removeChild(notification);
-                }, 500);
+                setTimeout(() => document.body.removeChild(notification), 500);
             }, 2000);
         }
+
+        function openCart() { cartOverlay.style.display = 'flex'; }
+        function closeCartFunc() { cartOverlay.style.display = 'none'; }
         
-        function openCart() {
-            cartOverlay.style.display = 'flex';
-        }
-        
-        function closeCartFunc() {
-            cartOverlay.style.display = 'none';
-        }
-        
-        // Funciones del checkout
         function openCheckout() {
-            if(cart.length === 0) {
+            if (cart.length === 0) {
                 alert('Tu carrito está vacío');
                 return;
             }
-            
             closeCartFunc();
             checkoutOverlay.style.display = 'flex';
-            
-            // Actualizar resumen del pedido
             updateOrderSummary();
         }
-        
+
         function nextStep() {
-            if(currentStep === 1) {
-                // Validar información del cliente
-                const name = document.getElementById('name').value;
-                const email = document.getElementById('email').value;
-                const phone = document.getElementById('phone').value;
-                
-                if(!name || !email || !phone) {
-                    alert('Por favor completa todos los campos obligatorios');
+            if (currentStep === 1) {
+                if (!document.getElementById('name').value || !document.getElementById('email').value || !document.getElementById('phone').value) {
+                    alert('Por favor completa todos los campos de cliente.');
                     return;
                 }
-                
-                // Validar dirección si es envío a domicilio
-                if(selectedDeliveryMethod === 'delivery') {
-                    const address = document.getElementById('address').value;
-                    const city = document.getElementById('city').value;
-                    const zip = document.getElementById('zip').value;
-                    
-                    if(!address || !city || !zip) {
-                        alert('Por favor completa todos los campos de dirección');
-                        return;
-                    }
+                if (selectedDeliveryMethod === 'delivery' && (!document.getElementById('address').value || !document.getElementById('city').value || !document.getElementById('zip').value)) {
+                    alert('Por favor completa todos los campos de dirección.');
+                    return;
                 }
-                
-                document.getElementById('step-1').style.display = 'none';
-                document.getElementById('step-2').style.display = 'block';
-                document.querySelector(`.step[data-step="1"]`).classList.remove('active');
-                document.querySelector(`.step[data-step="2"]`).classList.add('active');
-                btnBack.style.display = 'block';
                 currentStep = 2;
-            } else if(currentStep === 2) {
-                // Validar método de pago
-                const selectedMethod = document.querySelector('.payment-method.selected');
-                
-                if(!selectedMethod) {
-                    alert('Por favor selecciona un método de pago');
+            } else if (currentStep === 2) {
+                const selectedPayment = document.querySelector('.payment-method.selected');
+                if (!selectedPayment) {
+                    alert('Por favor selecciona un método de pago.');
                     return;
                 }
-                
-                if(selectedMethod.dataset.method === 'card') {
-                    const cardNumber = document.getElementById('card-number').value;
-                    const cardName = document.getElementById('card-name').value;
-                    const cardExpiry = document.getElementById('card-expiry').value;
-                    const cardCvv = document.getElementById('card-cvv').value;
-                    
-                    if(!cardNumber || !cardName || !cardExpiry || !cardCvv) {
-                        alert('Por favor completa todos los campos de la tarjeta');
+                if (selectedPayment.dataset.method === 'card') {
+                    if (!document.getElementById('card-number').value || !document.getElementById('card-name').value || !document.getElementById('card-expiry').value || !document.getElementById('card-cvv').value) {
+                        alert('Por favor completa todos los campos de la tarjeta.');
+                        return;
+                    }
+                } else if (selectedPayment.dataset.method === 'cash') {
+                    const cashAmount = parseFloat(document.getElementById('cash-amount').value);
+                    const total = getOrderTotal();
+                    if (isNaN(cashAmount) || cashAmount < total) {
+                        alert(`La cantidad a pagar debe ser de al menos $${total.toFixed(2)}.`);
                         return;
                     }
                 }
-                
-                document.getElementById('step-2').style.display = 'none';
-                document.getElementById('step-3').style.display = 'block';
-                document.querySelector(`.step[data-step="2"]`).classList.remove('active');
-                document.querySelector(`.step[data-step="3"]`).classList.add('active');
-                btnNext.style.display = 'none';
                 currentStep = 3;
-                
-                // Mostrar información de entrega
-                const deliveryMethod = document.querySelector('.delivery-method.selected').textContent.trim();
-                document.getElementById('selected-delivery-method').textContent = deliveryMethod;
-                
-                if(selectedDeliveryMethod === 'delivery') {
-                    const name = document.getElementById('name').value;
-                    const address = document.getElementById('address').value;
-                    const city = document.getElementById('city').value;
-                    const zip = document.getElementById('zip').value;
-                    document.getElementById('delivery-address').textContent = `${name}, ${address}, ${city}, ${zip}`;
-                } else {
-                    document.getElementById('delivery-address').textContent = 'Recoger en tienda: Calle Moda 123, Colonia Centro, Ciudad de México';
-                }
-                
-                // Mostrar información de pago
-                const paymentMethod = document.querySelector('.payment-method.selected').textContent.trim();
-                document.getElementById('selected-payment-method').textContent = paymentMethod;
+                prepareConfirmationScreen();
             }
+            updateCheckoutView();
         }
         
         function prevStep() {
-            if(currentStep === 2) {
-                document.getElementById('step-2').style.display = 'none';
-                document.getElementById('step-1').style.display = 'block';
-                document.querySelector(`.step[data-step="2"]`).classList.remove('active');
-                document.querySelector(`.step[data-step="1"]`).classList.add('active');
-                btnBack.style.display = 'none';
-                currentStep = 1;
-            } else if(currentStep === 3) {
-                document.getElementById('step-3').style.display = 'none';
-                document.getElementById('step-2').style.display = 'block';
-                document.querySelector(`.step[data-step="3"]`).classList.remove('active');
-                document.querySelector(`.step[data-step="2"]`).classList.add('active');
-                btnNext.style.display = 'block';
-                currentStep = 2;
-            }
+            if (currentStep > 1) currentStep--;
+            updateCheckoutView();
         }
         
+        function updateCheckoutView() {
+            document.querySelectorAll('.checkout-step').forEach(step => step.style.display = 'none');
+            document.getElementById(`step-${currentStep}`).style.display = 'block';
+            
+            document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+            document.querySelector(`.step[data-step="${currentStep}"]`).classList.add('active');
+            
+            btnBack.style.display = currentStep > 1 ? 'block' : 'none';
+            btnNext.style.display = currentStep < 3 ? 'block' : 'none';
+        }
+
         function selectDeliveryMethod(e) {
+            deliveryMethods.forEach(m => m.classList.remove('selected'));
             const method = e.currentTarget;
-            
-            document.querySelectorAll('.delivery-method').forEach(m => {
-                m.classList.remove('selected');
-            });
-            
             method.classList.add('selected');
             selectedDeliveryMethod = method.dataset.method;
-            
-            // Mostrar/ocultar campos de dirección
-            if(selectedDeliveryMethod === 'delivery') {
-                deliveryAddressFields.style.display = 'block';
-                document.getElementById('address').required = true;
-                document.getElementById('city').required = true;
-                document.getElementById('zip').required = true;
-            } else {
-                deliveryAddressFields.style.display = 'none';
-                document.getElementById('address').required = false;
-                document.getElementById('city').required = false;
-                document.getElementById('zip').required = false;
-            }
+            deliveryAddressFields.style.display = selectedDeliveryMethod === 'delivery' ? 'block' : 'none';
+            ['address', 'city', 'zip'].forEach(id => document.getElementById(id).required = selectedDeliveryMethod === 'delivery');
+            updateOrderSummary();
         }
         
         function selectPaymentMethod(e) {
+            document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
             const method = e.currentTarget;
-            
-            document.querySelectorAll('.payment-method').forEach(m => {
-                m.classList.remove('selected');
-            });
-            
             method.classList.add('selected');
-            
-            // Mostrar/ocultar detalles de tarjeta
-            if(method.dataset.method === 'card') {
-                document.getElementById('card-details').style.display = 'block';
-            } else {
-                document.getElementById('card-details').style.display = 'none';
+            document.getElementById('card-details').style.display = method.dataset.method === 'card' ? 'block' : 'none';
+            document.getElementById('cash-details').style.display = method.dataset.method === 'cash' ? 'block' : 'none';
+            if (method.dataset.method === 'cash') {
+                const total = getOrderTotal();
+                document.getElementById('cash-amount').min = total.toFixed(2);
+                document.getElementById('cash-amount').placeholder = `Total a pagar: $${total.toFixed(2)}`;
             }
         }
         
         function updateOrderSummary() {
             const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-            const shipping = selectedDeliveryMethod === 'delivery' ? 5.00 : 0;
-            const total = subtotal + shipping;
-            
+            const shipping = getOrderTotal() - subtotal;
             document.getElementById('order-subtotal').textContent = `$${subtotal.toFixed(2)}`;
             document.getElementById('order-shipping').textContent = `$${shipping.toFixed(2)}`;
-            document.getElementById('order-total').textContent = `$${total.toFixed(2)}`;
+            document.getElementById('order-total').textContent = `$${(subtotal + shipping).toFixed(2)}`;
+        }
+
+        function prepareConfirmationScreen() {
+            const total = getOrderTotal();
+            const deliveryMethodEl = document.querySelector('.delivery-method.selected');
+            const paymentMethodEl = document.querySelector('.payment-method.selected');
+            
+            document.getElementById('selected-delivery-method').textContent = deliveryMethodEl.textContent.trim();
+            document.getElementById('delivery-address').textContent = selectedDeliveryMethod === 'delivery' ? 
+                `${document.getElementById('name').value}, ${document.getElementById('address').value}, ${document.getElementById('city').value}` :
+                'Recoger en tienda: Calle Moda 123, CDMX';
+
+            document.getElementById('selected-payment-method').textContent = paymentMethodEl.textContent.trim();
+
+            const cashPaidInfo = document.getElementById('cash-paid-info');
+            const cashChangeInfo = document.getElementById('cash-change-info');
+
+            if (paymentMethodEl.dataset.method === 'cash') {
+                const cashAmount = parseFloat(document.getElementById('cash-amount').value);
+                const change = cashAmount - total;
+                cashPaidInfo.textContent = `Paga con: $${cashAmount.toFixed(2)}`;
+                cashChangeInfo.textContent = `Su cambio: $${change.toFixed(2)}`;
+                cashPaidInfo.style.display = 'block';
+                cashChangeInfo.style.display = 'block';
+            } else {
+                cashPaidInfo.style.display = 'none';
+                cashChangeInfo.style.display = 'none';
+            }
+        }
+
+        function completeOrder() {
+            const total = getOrderTotal();
+            const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            const paymentMethod = document.querySelector('.payment-method.selected').dataset.method;
+            
+            lastOrderData = {
+                items: JSON.parse(JSON.stringify(cart)),
+                orderNumber: 'FS-' + new Date().getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000),
+                date: new Date().toLocaleDateString('es-MX'),
+                customer: document.getElementById('name').value,
+                deliveryMethod: document.querySelector('.delivery-method.selected').textContent.trim(),
+                paymentMethod: document.querySelector('.payment-method.selected').textContent.trim(),
+                paymentMethodType: paymentMethod,
+                total: total.toFixed(2),
+                subtotal: subtotal.toFixed(2),
+                shipping: (total - subtotal).toFixed(2),
+            };
+
+            if (paymentMethod === 'cash') {
+                const cashAmount = parseFloat(document.getElementById('cash-amount').value);
+                lastOrderData.cashPaid = cashAmount.toFixed(2);
+                lastOrderData.changeDue = (cashAmount - total).toFixed(2);
+            }
+            
+            showTicket();
+
+            cart = [];
+            updateCart();
+            localStorage.removeItem('cart');
+            resetCheckout();
+        }
+
+        function showTicket() {
+            document.getElementById('ticket-number').textContent = lastOrderData.orderNumber;
+            document.getElementById('ticket-date').textContent = lastOrderData.date;
+            document.getElementById('ticket-customer').textContent = lastOrderData.customer;
+            document.getElementById('ticket-delivery').textContent = lastOrderData.deliveryMethod;
+            document.getElementById('ticket-payment').textContent = lastOrderData.paymentMethod;
+            
+            const cashPaidContainer = document.getElementById('ticket-cash-paid-container');
+            const cashChangeContainer = document.getElementById('ticket-cash-change-container');
+
+            if (lastOrderData.paymentMethodType === 'cash') {
+                document.getElementById('ticket-cash-paid').textContent = `$${lastOrderData.cashPaid}`;
+                document.getElementById('ticket-cash-change').textContent = `$${lastOrderData.changeDue}`;
+                cashPaidContainer.style.display = 'block';
+                cashChangeContainer.style.display = 'block';
+            } else {
+                cashPaidContainer.style.display = 'none';
+                cashChangeContainer.style.display = 'none';
+            }
+
+            const ticketItems = document.getElementById('ticket-items');
+            ticketItems.innerHTML = '';
+            lastOrderData.items.forEach(item => {
+                ticketItems.innerHTML += `
+                    <div class="ticket-item">
+                        <span>${item.name} (x${item.quantity})</span>
+                        <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                    </div>
+                `;
+            });
+
+            document.getElementById('ticket-total-final').textContent = `$${lastOrderData.total}`;
+            checkoutOverlay.style.display = 'none';
+            ticketOverlay.style.display = 'flex';
+        }
+
+        function resetCheckout() {
+            currentStep = 1;
+            checkoutForm.reset();
+            updateCheckoutView();
         }
         
-        function completeOrder() {
-            // Aquí normalmente enviarías los datos a un servidor
-            // Por ahora solo mostraremos el ticket
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            let y = 20;
+
+            doc.setFontSize(20);
+            doc.setTextColor(255, 46, 99);
+            doc.text('FashionShop', 105, y, { align: 'center' });
+            y += 10;
+
+            doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0);
+            doc.text('Ticket de Compra', 105, y, { align: 'center' });
+            y += 15;
+
+            doc.setFontSize(10);
+            doc.text(`Número de pedido: ${lastOrderData.orderNumber}`, 14, y); y += 6;
+            doc.text(`Fecha: ${lastOrderData.date}`, 14, y); y += 6;
+            doc.text(`Cliente: ${lastOrderData.customer}`, 14, y); y += 6;
+            doc.text(`Método de entrega: ${lastOrderData.deliveryMethod}`, 14, y); y += 6;
+            doc.text(`Método de pago: ${lastOrderData.paymentMethod}`, 14, y); y += 10;
+
+            doc.line(14, y - 4, 196, y - 4);
+
+            lastOrderData.items.forEach(item => {
+                doc.text(`${item.name} (x${item.quantity})`, 20, y);
+                doc.text(`$${(item.price * item.quantity).toFixed(2)}`, 190, y, { align: 'right' });
+                y += 7;
+                if (y > 270) { doc.addPage(); y = 20; }
+            });
+
+            doc.line(14, y, 196, y);
+            y += 8;
+
+            doc.text('Subtotal:', 150, y, { align: 'right' });
+            doc.text(`$${lastOrderData.subtotal}`, 190, y, { align: 'right' });
+            y += 7;
+
+            doc.text('Envío:', 150, y, { align: 'right' });
+            doc.text(`$${lastOrderData.shipping}`, 190, y, { align: 'right' });
+            y += 7;
             
-            // Generar número de pedido aleatorio
-            const orderNumber = 'FS-' + new Date().getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000);
+            doc.setFontSize(12).setFont(undefined, 'bold');
+            doc.text('Total:', 150, y, { align: 'right' });
+            doc.text(`$${lastOrderData.total}`, 190, y, { align: 'right' });
+            y += 7;
+            doc.setFont(undefined, 'normal');
+
+            if (lastOrderData.paymentMethodType === 'cash') {
+                doc.setFontSize(10);
+                doc.text('Paga con:', 150, y, { align: 'right' });
+                doc.text(`$${lastOrderData.cashPaid}`, 190, y, { align: 'right' });
+                y += 7;
+                doc.setFont(undefined, 'bold');
+                doc.text('Cambio:', 150, y, { align: 'right' });
+                doc.text(`$${lastOrderData.changeDue}`, 190, y, { align: 'right' });
+                y += 7;
+            }
+
+            y += 10;
+            doc.setFontSize(8).setTextColor(100, 100, 100);
+            doc.text('¡Gracias por tu compra en FashionShop!', 105, y, { align: 'center' });
             
-            // Obtener fecha actual
-            const today = new Date();
-            const date = today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear();
-            
-            // Obtener información del cliente
-            const name = document.getElementById('name').value;
-            const deliveryMethod = document.querySelector('.delivery-method.selected').textContent.trim();
-            const paymentMethod = document.querySelector('.payment-method.selected').textContent.trim();
-            
-            // Calcular total
-            const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-            const shipping = selectedDeliveryMethod === 'delivery' ? 5.00 : 0;
-            const total = subtotal + shipping;
-            
-            // Actualizar ticket
-            document.getElementById('ticket-number').textContent = orderNumber;
-            document.getElementById('ticket-date').textContent = date;
-            document.getElementById('ticket-customer').textContent = name;
-            document.getElementById('ticket-delivery').textContent = deliveryMethod;
-            document.getElementById('ticket-payment').textContent = paymentMethod;
-            document.getElementById('ticket-total').textContent = total.toFixed(2);
-            
-            // Añadir productos al ticket
-          const ticketItems = document.getElementById('ticket-items');
-    ticketItems.innerHTML = '';
-    cart.forEach(item => {
-        const ticketItem = document.createElement('div');
-        ticketItem.className = 'ticket-item';
-        ticketItem.innerHTML = `
-            <span>${item.name} x${item.quantity}</span>
-            <span>$${(item.price * item.quantity).toFixed(2)}</span>
-        `;
-        ticketItem.style.display = "flex";
-        ticketItem.style.justifyContent = "space-between";
-        ticketItem.style.marginBottom = "8px"; // <-- Espacio entre productos
-        ticketItems.appendChild(ticketItem);
-    });
-
-    // Mostrar ticket
-    checkoutOverlay.style.display = 'none';
-    ticketOverlay.style.display = 'flex';
-
-    lastOrderItems = cart.map(item => ({ ...item })); // <--- GUARDA LOS PRODUCTOS ANTES DE VACÍAR
-
-    // Vaciar carrito
-    cart = [];
-    updateCart();
-    localStorage.removeItem('cart');
-}
-
-// Generar PDF ordenado y bonito
-function generatePDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-
-    // Encabezado
-    doc.setFontSize(20);
-    doc.setTextColor(255, 46, 99);
-    doc.text('FashionShop', 105, 20, { align: 'center' });
-
-    doc.setFontSize(12);
-    doc.setTextColor(0, 0, 0);
-    doc.text('Ticket de Compra', 105, 30, { align: 'center' });
-
-    // Información del pedido
-    doc.setFontSize(10);
-    doc.text(`Número de pedido: ${document.getElementById('ticket-number').textContent}`, 14, 40);
-    doc.text(`Fecha: ${document.getElementById('ticket-date').textContent}`, 14, 46);
-    doc.text(`Cliente: ${document.getElementById('ticket-customer').textContent}`, 14, 52);
-    doc.text(`Método de entrega: ${document.getElementById('ticket-delivery').textContent}`, 14, 58);
-    doc.text(`Método de pago: ${document.getElementById('ticket-payment').textContent}`, 14, 64);
-
-    // Línea divisoria
-    doc.line(14, 70, 196, 70);
-
-    // Productos
-    let y = 78;
-    doc.setFontSize(12);
-    doc.text('Productos', 14, y);
-    y += 8;
-
-    doc.setFontSize(10);
-
-    // Usa lastOrderItems para que SIEMPRE salgan los productos elegidos
-    lastOrderItems.forEach(item => {
-        doc.text(`${item.name} x${item.quantity}`, 20, y);
-        doc.text(`$${(item.price * item.quantity).toFixed(2)}`, 180, y, { align: 'right' });
-        y += 8; // <-- Más espacio entre productos (puedes cambiar a 10 si quieres más separación)
-        if (y > 270) { // Si se pasa de la hoja, crea una nueva
-            doc.addPage();
-            y = 20;
+            doc.save(`ticket-${lastOrderData.orderNumber}.pdf`);
+            ticketOverlay.style.display = 'none';
         }
-    });
 
-    // Línea divisoria
-    doc.line(14, y, 196, y);
-    y += 8;
-
-    // Subtotal, envío y total
-    doc.text('Subtotal:', 160, y);
-    doc.text(`${document.getElementById('order-subtotal').textContent}`, 180, y, { align: 'right' });
-    y += 6;
-    doc.text('Envío:', 160, y);
-    doc.text(`${document.getElementById('order-shipping').textContent}`, 180, y, { align: 'right' });
-    y += 6;
-    doc.setFontSize(12);
-    doc.text('Total:', 160, y);
-    doc.text(`$${document.getElementById('ticket-total').textContent}`, 180, y, { align: 'right' });
-
-    // Pie de página
-    y += 20;
-    doc.setFontSize(8);
-    doc.setTextColor(100, 100, 100);
-    doc.text('Gracias por tu compra en FashionShop', 105, y, { align: 'center' });
-    y += 4;
-    doc.text('Para cualquier consulta, contacta a soporte@fashionshop.com', 105, y, { align: 'center' });
-
-    // Guardar PDF
-    doc.save(`ticket-${document.getElementById('ticket-number').textContent}.pdf`);
-
-    // Cerrar ticket después de descargar
-    setTimeout(() => {
-        ticketOverlay.style.display = 'none';
-    }, 1000);
-}
-</script>
+        function submitFeedback(e) {
+            e.preventDefault();
+            showNotification('¡Gracias por tus comentarios!');
+            feedbackForm.reset();
+        }
     </script>
 </body>
-</html> 
+</html>
